@@ -68,7 +68,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: var(--san
 }
 
 /* ── COMMENT PANEL ───────────────────────────────────── */
-.comment-panel { background: var(--bg); border-left: 2px solid var(--line); display: flex; flex-direction: column; overflow: hidden; }
+.comment-panel { background: var(--bg); border-left: 2px solid var(--line); display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
 
 .panel-header { background: var(--surface); border-bottom: 1px solid var(--line); padding: 14px 16px 12px; flex-shrink: 0; }
 .panel-slide-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); margin-bottom: 3px; font-family: var(--head); }
@@ -89,7 +89,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: var(--san
 .empty-state p { font-size: 13px; line-height: 1.5; }
 
 /* ── COMMENT CARD ────────────────────────────────────── */
-.comment-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: visible; transition: box-shadow .15s; }
+.comment-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; transition: box-shadow .15s; }
 .comment-card:hover { box-shadow: 0 2px 12px rgba(0,59,113,.08); }
 .comment-card.resolved { opacity: .65; border-color: #c8ddb8; background: #f6faf0; }
 .comment-main { padding: 12px 14px 10px; }
@@ -118,9 +118,9 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: var(--san
 .reply-toggle-btn svg { width: 11px; height: 11px; }
 
 /* ── REPLIES ─────────────────────────────────────────── */
-.replies-section { border-top: 1px solid var(--line); background: #F7FAFD; display: none; border-left: 3px solid var(--teal); overflow: visible; }
-.replies-section.open { display: block; }
-.replies-inner { padding: 10px 14px 4px; display: flex; flex-direction: column; gap: 8px; overflow: visible; }
+.replies-section { border-top: 1px solid var(--line); background: #F7FAFD; display: none; border-left: 3px solid var(--teal); }
+.replies-section.open { display: block; border-radius: 0 0 10px 10px; }
+.replies-inner { padding: 10px 14px 8px; display: flex; flex-direction: column; gap: 8px; }
 .reply-card { display: flex; gap: 9px; }
 .reply-avatar { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #fff; font-family: var(--head); flex-shrink: 0; text-transform: uppercase; margin-top: 1px; }
 .reply-content { flex: 1; min-width: 0; }
@@ -264,7 +264,8 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: var(--san
 // ── CONFIG — update SHANNON_EMAIL to your actual HM email ─────────────────
 var WRITE_URL     = 'https://default7218dbf5328642dc9b7ec61ab35f8f.3f.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/393a263b2415495686549bad5ff8456f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=TvdPtJlQoHFlL3QCjo4Fy_abNPuEt9_k1khkUUC0Rfw';
 var READ_URL      = 'https://default7218dbf5328642dc9b7ec61ab35f8f.3f.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/737d82cc52994db1b6a1d6bd833631aa/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=dyIZYBKRaXI-oNqOEBN7TRZEbEkK6ndMLMTsJSxT5qM';
-var SHANNON_EMAIL = 'smdonaldson@houstonmethodist.org';
+var SHANNON_EMAIL  = 'smdonaldson@houstonmethodist.org';
+var RESOLVE_URL   = 'https://default7218dbf5328642dc9b7ec61ab35f8f.3f.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/f7fdf0a0e444407e8ae6d30e9e3a6ef0/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9ewYxi9Dw9KyfQrwpPZRE2xrdJ-oP91BPB18raXYia8';
 
 var SLIDES = {
   1:'Welcome', 2:'Course Overview', 3:'Culture Framework',
@@ -493,8 +494,14 @@ function toggleResolve(cid, btn) {
   btn.classList.toggle('resolved-state', nowResolved);
   btn.title = nowResolved ? 'Mark open' : 'Mark resolved';
   allComments.forEach(function(c){ if (Number(itemId(c)) === Number(cid)) c.Resolved = nowResolved; });
-  showToast(nowResolved ? '✓ Marked as resolved' : 'Marked as open');
-  // Note: this updates local view only. To persist, update the item directly in your SharePoint list.
+  showToast(nowResolved ? '✓ Marking resolved...' : 'Marking open...');
+  fetch(RESOLVE_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ItemId: Number(cid), Resolved: nowResolved })
+  })
+  .then(function(r) { showToast(nowResolved ? '✓ Resolved' : 'Marked open'); })
+  .catch(function() { showToast('Could not save — try again.', true); });
 }
 
 // ── POST COMMENT ──────────────────────────────────────
