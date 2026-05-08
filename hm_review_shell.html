@@ -118,7 +118,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: var(--san
 .reply-toggle-btn svg { width: 11px; height: 11px; }
 
 /* ── REPLIES ─────────────────────────────────────────── */
-.replies-section { border-top: 1px solid var(--line); background: #F7FAFD; display: none; }
+.replies-section { border-top: 1px solid var(--line); background: #F7FAFD; display: none; border-left: 3px solid var(--teal); }
 .replies-section.open { display: block; }
 .replies-inner { padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; }
 .reply-card { display: flex; gap: 9px; }
@@ -262,9 +262,9 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: var(--san
 
 <script>
 // ── CONFIG — update SHANNON_EMAIL to your actual HM email ─────────────────
-var WRITE_URL     = 'https://default7218dbf5328642dc9b7ec61ab35f8f.3f.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/393a263b2415495686549bad5ff8456f/triggers/manual/paths/invoke?api-version=1';
-var READ_URL      = 'https://default7218dbf5328642dc9b7ec61ab35f8f.3f.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/737d82cc52994db1b6a1d6bd833631aa/triggers/manual/paths/invoke?api-version=1';
-var SHANNON_EMAIL = 'YOUREMAIL@houstonmethodist.org'; // ← replace with your actual email
+var WRITE_URL     = 'https://default7218dbf5328642dc9b7ec61ab35f8f.3f.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/393a263b2415495686549bad5ff8456f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=TvdPtJlQoHFlL3QCjo4Fy_abNPuEt9_k1khkUUC0Rfw';
+var READ_URL      = 'https://default7218dbf5328642dc9b7ec61ab35f8f.3f.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/737d82cc52994db1b6a1d6bd833631aa/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=dyIZYBKRaXI-oNqOEBN7TRZEbEkK6ndMLMTsJSxT5qM';
+var SHANNON_EMAIL = 'smdonaldson@houstonmethodist.org';
 
 var SLIDES = {
   1:'Welcome', 2:'Course Overview', 3:'Culture Framework',
@@ -329,21 +329,28 @@ function startSession() {
 // ── NAVIGATION ────────────────────────────────────────
 window.addEventListener('message', function(e) {
   var msg = e.data;
-  if (msg === 'next')     { navigateTo(currentSlide + 1); return; }
-  if (msg === 'prev')     { navigateTo(currentSlide - 1); return; }
-  if (msg === 'complete') { return; }
-  if (msg && msg.type === 'goto' && msg.slide) { navigateTo(msg.slide); return; }
+  if (msg === 'next' || (msg && msg.type === 'next'))     { navigateTo(currentSlide + 1); return; }
+  if (msg === 'prev' || (msg && msg.type === 'prev'))     { navigateTo(currentSlide - 1); return; }
+  if (msg === 'complete' || (msg && msg.type === 'complete')) { return; } // last slide — do nothing extra
+  if (msg && msg.type === 'goto' && msg.slide)            { navigateTo(msg.slide); return; }
 });
 
 function navigateTo(n) {
   if (n < 1 || n > 16) return;
   currentSlide = n;
-  document.getElementById('courseFrame').src          = 'slide_' + n + '.html';
+  var frame = document.getElementById('courseFrame');
+  frame.src = 'slide_' + n + '.html';
   document.getElementById('slideIndicator').textContent = 'Slide ' + n + ' of 16';
   document.getElementById('panelSlideTitle').textContent = SLIDES[n] || ('Slide ' + n);
   currentFilter = 'all';
   document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.filter === 'all'); });
   renderComments();
+  frame.onload = function() {
+    setTimeout(function() {
+      frame.contentWindow.postMessage('playAudio', '*');
+    }, 300);
+    frame.onload = null;
+  };
 }
 
 // ── LOAD COMMENTS ─────────────────────────────────────
@@ -404,7 +411,7 @@ function buildCard(c, replies) {
       '</button>' : '';
 
   var replyCount = replies.length;
-  var replyLabel = replyCount > 0 ? replyCount + ' ' + (replyCount === 1 ? 'reply' : 'replies') : 'Reply';
+  var replyLabel = replyCount > 0 ? (replyCount === 1 ? '1 reply' : replyCount + ' replies') + ' — click to collapse' : 'Reply';
 
   var card = document.createElement('div');
   card.className = 'comment-card' + (isResolved ? ' resolved' : '');
@@ -431,7 +438,7 @@ function buildCard(c, replies) {
         '</button>' +
       '</div>' +
     '</div>' +
-    '<div class="replies-section" id="replies-' + cid + '">' + buildRepliesHTML(replies, cid) + '</div>';
+    '<div class="replies-section' + (replyCount > 0 ? ' open' : '') + '" id="replies-' + cid + '">' + buildRepliesHTML(replies, cid) + '</div>';
 
   return card;
 }
