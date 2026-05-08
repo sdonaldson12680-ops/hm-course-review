@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="HM_Experience_2026" version="1.0"
+  xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
+  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2
+                      imscp_rootv1p1p2.xsd
+                      http://www.adlnet.org/xsd/adlcp_rootv1p2
+                      adlcp_rootv1p2.xsd">
+
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>1.2</schemaversion>
+  </metadata>
+
+  <organizations default="HM_Experience_ORG">
+    <organization identifier="HM_Experience_ORG">
+      <title>The Houston Methodist Experience</title>
+      <item identifier="ITEM_1" identifierref="RESOURCE_1">
+        <title>The Houston Methodist Experience</title>
+      </item>
+    </organization>
+  </organizations>
+
+  <resources>
+    <resource identifier="RESOURCE_1"
+              type="webcontent"
+              adlcp:scormtype="sco"
+              href="index.html">
+
+      <file href="index.html"/>
+
+      <!-- Slide files -->
+      <file href="slide_1.html"/>
+      <file href="slide_2.html"/>
+      <file href="slide_3.html"/>
+      <file href="slide_4.html"/>
+      <file href="slide_5.html"/>
+      <file href="slide_6.html"/>
+      <file href="slide_7.html"/>
+      <file href="slide_8.html"/>
+      <file href="slide_9.html"/>
+      <file href="slide_10.html"/>
+      <file href="slide_11.html"/>
+      <file href="slide_12.html"/>
+      <file href="slide_13.html"/>
+      <file href="slide_14.html"/>
+      <file href="slide_15.html"/>
+      <file href="slide_16.html"/>
+
+      <!-- Audio files — main VO tracks -->
+      <file href="audio/audio_1.mp3"/>
+      <file href="audio/audio_2.mp3"/>
+      <file href="audio/audio_3.mp3"/>
+      <file href="audio/audio_4.mp3"/>
+      <file href="audio/audio_5.mp3"/>
+      <file href="audio/audio_6.mp3"/>
+      <file href="audio/audio_7.mp3"/>
+      <file href="audio/audio_8.mp3"/>
+      <file href="audio/audio_9.mp3"/>
+      <file href="audio/audio_10.mp3"/>
+      <file href="audio/audio_11.mp3"/>
+      <file href="audio/audio_12.mp3"/>
+      <file href="audio/audio_13.mp3"/>
+      <file href="audio/audio_14.mp3"/>
+      <file href="audio/audio_15.mp3"/>
+      <file href="audio/audio_16.mp3"/>
+
+      <!-- Audio sub-clips (interaction-triggered) -->
+      <!-- Slide 3 (I CARE card flips) -->
+      <file href="audio/audio_3-1.mp3"/>
+      <file href="audio/audio_3-2.mp3"/>
+      <file href="audio/audio_3-3.mp3"/>
+      <file href="audio/audio_3-4.mp3"/>
+      <file href="audio/audio_3-5.mp3"/>
+      <!-- Slide 5 (AIDET / Key Words) -->
+      <file href="audio/audio_5-1.mp3"/>
+      <file href="audio/audio_5-2.mp3"/>
+      <file href="audio/audio_5-3.mp3"/>
+      <file href="audio/audio_5-4.mp3"/>
+      <file href="audio/audio_5-5.mp3"/>
+      <file href="audio/audio_5-6.mp3"/>
+      <!-- Add additional sub-clips here as needed -->
+
+      <!-- Images -->
+      <file href="images/Methodist_Leading_Medicine_White_png.png"/>
+      <file href="images/image_1.jpg"/>
+      <file href="images/image_2.jpg"/>
+      <file href="images/image_3.jpg"/>
+      <file href="images/image_4.jpg"/>
+      <file href="images/image_5.jpg"/>
+      <file href="images/image_6.jpg"/>
+      <file href="images/image_7.jpg"/>
+      <file href="images/image_8.jpg"/>
+      <file href="images/image_9.jpg"/>
+      <file href="images/image_10.jpg"/>
+      <file href="images/image_11.jpg"/>
+      <file href="images/image_12.jpg"/>
+      <file href="images/image_13.jpg"/>
+      <file href="images/image_14.jpg"/>
+      <file href="images/image_15.jpg"/>
+      <file href="images/image_16.jpg"/>
+
+    </resource>
+  </resources>
+
+</manifest>

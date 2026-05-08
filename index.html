@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>The Houston Methodist Experience</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: 'Franklin Gothic Book', Arial, sans-serif;
+  }
+  #slideFrame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+<iframe id="slideFrame" src="slide_1.html" allowfullscreen></iframe>
+
+<script>
+// ── SCORM 1.2 API ─────────────────────────────────────────────────────────
+var scormAPI = null;
+
+function findAPI(win) {
+  var attempts = 0;
+  while (win.API == null && win.parent != null && win.parent != win) {
+    attempts++;
+    if (attempts > 500) return null;
+    win = win.parent;
+  }
+  return win.API;
+}
+
+function getAPI() {
+  if (scormAPI) return scormAPI;
+  scormAPI = findAPI(window);
+  if (!scormAPI && window.opener) scormAPI = findAPI(window.opener);
+  return scormAPI;
+}
+
+function scormInit() {
+  var api = getAPI();
+  if (api) {
+    api.LMSInitialize('');
+    api.LMSSetValue('cmi.core.lesson_status', 'incomplete');  // SCORM 1.2: incomplete
+    api.LMSCommit('');
+  }
+}
+
+function scormComplete() {
+  var api = getAPI();
+  if (api) {
+    api.LMSSetValue('cmi.core.lesson_status', 'complete');    // SCORM 1.2: complete (no 'd')
+    api.LMSSetValue('cmi.core.score.raw', '100');
+    api.LMSSetValue('cmi.core.score.min', '0');
+    api.LMSSetValue('cmi.core.score.max', '100');
+    api.LMSCommit('');
+    api.LMSFinish('');
+  }
+}
+
+function scormSaveProgress(slideNum) {
+  var api = getAPI();
+  if (api) {
+    api.LMSSetValue('cmi.core.lesson_location', String(slideNum));
+    api.LMSCommit('');
+  }
+}
+
+function scormGetBookmark() {
+  var api = getAPI();
+  if (api) {
+    var loc = api.LMSGetValue('cmi.core.lesson_location');
+    var n = parseInt(loc, 10);
+    if (!isNaN(n) && n >= 1 && n <= TOTAL_SLIDES) return n;
+  }
+  return 1;
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────
+var TOTAL_SLIDES = 16;
+var currentSlide = 1;
+var slideFrame   = document.getElementById('slideFrame');
+
+function goTo(n) {
+  if (n < 1) n = 1;
+  if (n > TOTAL_SLIDES) n = TOTAL_SLIDES;
+  currentSlide = n;
+  slideFrame.src = 'slide_' + n + '.html';
+  scormSaveProgress(n);
+  if (n === TOTAL_SLIDES) {
+    // Mark complete when last slide loads
+    // (the slide itself should also call 'complete' if desired)
+  }
+}
+
+function goNext() {
+  if (currentSlide < TOTAL_SLIDES) {
+    goTo(currentSlide + 1);
+  } else {
+    scormComplete();
+  }
+}
+
+function goPrev() {
+  if (currentSlide > 1) {
+    goTo(currentSlide - 1);
+  }
+}
+
+// ── MESSAGE LISTENER (from slides) ───────────────────────────────────────
+window.addEventListener('message', function(e) {
+  var msg = e.data;
+
+  // String format: 'next' | 'prev' | 'complete'
+  if (msg === 'next')     { goNext(); return; }
+  if (msg === 'prev')     { goPrev(); return; }
+  if (msg === 'complete') { scormComplete(); return; }
+
+  // Object format: { type: 'next' | 'prev' | 'complete' }
+  if (msg && typeof msg === 'object') {
+    if (msg.type === 'next')     { goNext(); return; }
+    if (msg.type === 'prev')     { goPrev(); return; }
+    if (msg.type === 'complete') { scormComplete(); return; }
+    // Optional: { type: 'goto', slide: N }
+    if (msg.type === 'goto' && msg.slide) { goTo(msg.slide); return; }
+  }
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+scormInit();
+
+// Resume from bookmark if available
+var bookmark = scormGetBookmark();
+if (bookmark > 1) {
+  currentSlide = bookmark;
+  slideFrame.src = 'slide_' + bookmark + '.html';
+} else {
+  slideFrame.src = 'slide_1.html';
+}
+
+// Graceful exit
+window.addEventListener('beforeunload', function() {
+  var api = getAPI();
+  if (api) {
+    scormSaveProgress(currentSlide);
+    api.LMSFinish('');
+  }
+});
+</script>
+</body>
+</html>
