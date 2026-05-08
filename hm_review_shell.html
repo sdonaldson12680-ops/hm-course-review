@@ -89,7 +89,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: var(--san
 .empty-state p { font-size: 13px; line-height: 1.5; }
 
 /* ── COMMENT CARD ────────────────────────────────────── */
-.comment-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; transition: box-shadow .15s; }
+.comment-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: visible; transition: box-shadow .15s; }
 .comment-card:hover { box-shadow: 0 2px 12px rgba(0,59,113,.08); }
 .comment-card.resolved { opacity: .65; border-color: #c8ddb8; background: #f6faf0; }
 .comment-main { padding: 12px 14px 10px; }
@@ -118,9 +118,9 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: var(--san
 .reply-toggle-btn svg { width: 11px; height: 11px; }
 
 /* ── REPLIES ─────────────────────────────────────────── */
-.replies-section { border-top: 1px solid var(--line); background: #F7FAFD; display: none; border-left: 3px solid var(--teal); }
+.replies-section { border-top: 1px solid var(--line); background: #F7FAFD; display: none; border-left: 3px solid var(--teal); overflow: visible; }
 .replies-section.open { display: block; }
-.replies-inner { padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; }
+.replies-inner { padding: 10px 14px 4px; display: flex; flex-direction: column; gap: 8px; overflow: visible; }
 .reply-card { display: flex; gap: 9px; }
 .reply-avatar { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #fff; font-family: var(--head); flex-shrink: 0; text-transform: uppercase; margin-top: 1px; }
 .reply-content { flex: 1; min-width: 0; }
