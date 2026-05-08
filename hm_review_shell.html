@@ -330,8 +330,8 @@ function startSession() {
 // ── NAVIGATION ────────────────────────────────────────
 window.addEventListener('message', function(e) {
   var msg = e.data;
-  if (msg === 'next' || (msg && msg.type === 'next'))     { navigateTo(currentSlide + 1); return; }
-  if (msg === 'prev' || (msg && msg.type === 'prev'))     { navigateTo(currentSlide - 1); return; }
+  if (msg === 'next')     { navigateTo(currentSlide + 1); return; }
+  if (msg === 'prev')     { navigateTo(currentSlide - 1); return; }
   if (msg === 'complete' || (msg && msg.type === 'complete')) { return; } // last slide — do nothing extra
   if (msg && msg.type === 'goto' && msg.slide)            { navigateTo(msg.slide); return; }
 });
