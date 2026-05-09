@@ -417,10 +417,14 @@ function renderComments() {
   if (filtered.length === 0) { empty.style.display = 'flex'; return; }
   empty.style.display = 'none';
   filtered.forEach(function(c){
-    var replies = allComments.filter(function(r){
-  return Number(parentId(r)) === Number(itemId(c));
-    list.appendChild(buildCard(c, replies));
+
+  var replies = allComments.filter(function(r){
+    return Number(parentId(r)) === Number(itemId(c));
   });
+
+  list.appendChild(buildCard(c, replies));
+
+});
 }
 
 function resolvedVal(c) {
