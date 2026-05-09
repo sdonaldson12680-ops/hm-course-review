@@ -509,7 +509,7 @@ html, body {
 
     <!-- Continue button -->
     <div class="continue-prompt">
-      <button class="continue-btn" onclick="window.parent.postMessage('next','*')">
+      <button class="continue-btn">
         Begin
         <svg viewBox="0 0 16 16">
           <polyline points="3,8 9,8 9,4 14,8 9,12 9,8"/>
@@ -649,10 +649,14 @@ apBarWrap.addEventListener('click', (e) => {
 });
 
 // ====== NAV ======
+let hasNavigated = false;
+
 function goNext(){
-  window.parent.postMessage('next','*');
+  if (hasNavigated) return;
+  hasNavigated = true;
   window.parent.postMessage({ type:'next' }, '*');
 }
+
 document.querySelector('.continue-btn').onclick = goNext;
 </script>
 </body>
