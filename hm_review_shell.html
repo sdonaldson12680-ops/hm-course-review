@@ -50,6 +50,31 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: var(--san
 .topbar-title { font-family: var(--head); font-size: 13px; color: rgba(255,255,255,.9); letter-spacing: .04em; }
 .topbar-badge { font-size: 10px; font-family: var(--sans); background: var(--teal); color: #fff; padding: 2px 9px; border-radius: 99px; letter-spacing: .07em; text-transform: uppercase; font-weight: 600; }
 .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .panel-toggle-btn {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.18);
+  color: #fff;
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: var(--head);
+  transition: .2s;
+}
+
+.panel-toggle-btn:hover {
+  background: var(--teal);
+}
+
+.shell.panel-hidden {
+  grid-template-columns: 1fr 0px;
+}
+
+.shell.panel-hidden .comment-panel {
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
 .reviewer-chip { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.13); border-radius: 99px; padding: 4px 12px 4px 5px; }
 .reviewer-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; font-family: var(--head); flex-shrink: 0; text-transform: uppercase; }
 .reviewer-info { display: flex; flex-direction: column; gap: 1px; }
@@ -185,6 +210,30 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: var(--san
 .modal-field input:focus { outline: none; border-color: var(--teal); }
 .modal-submit { width: 100%; padding: 13px; background: var(--navy); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; font-family: var(--head); letter-spacing: .04em; cursor: pointer; margin-top: 8px; transition: .15s; }
 .modal-submit:hover { background: var(--teal); }
+  @media (max-width: 900px) {
+
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .comment-panel {
+    position: fixed;
+    top: 50px;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    z-index: 200;
+    transition: transform .25s ease;
+  }
+
+  .shell.panel-hidden .comment-panel {
+    transform: translateX(100%);
+    opacity: 1;
+    pointer-events: none;
+  }
+
+}
 </style>
 </head>
 <body>
@@ -219,6 +268,9 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: var(--san
       <span class="topbar-title">Unparalleled, Every Day</span>
       <span class="topbar-badge">Stakeholder Review</span>
     </div>
+    <button class="panel-toggle-btn" onclick="togglePanel()">
+  Comments
+</button>
     <div class="topbar-right">
       <div class="reviewer-chip">
         <div class="reviewer-avatar" id="topAvatar"></div>
@@ -301,6 +353,7 @@ var reviewer      = { name:'', email:'' };
 var currentSlide  = 1;
 var allComments   = [];
 var currentFilter = 'all';
+var panelHidden = false;
 
 // ── IDENTITY ──────────────────────────────────────────
 function getInitials(name) {
@@ -352,7 +405,15 @@ window.addEventListener('message', function(e) {
   if (msg === 'complete' || (msg && msg.type === 'complete')) { return; } // last slide — do nothing extra
   if (msg && msg.type === 'goto' && msg.slide)            { navigateTo(msg.slide); return; }
 });
+function togglePanel() {
 
+  panelHidden = !panelHidden;
+
+  var shell = document.getElementById('mainShell');
+
+  shell.classList.toggle('panel-hidden', panelHidden);
+
+}
 function navigateTo(n) {
   if (n < 1 || n > 16) return;
   currentSlide = n;
