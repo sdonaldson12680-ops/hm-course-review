@@ -421,7 +421,18 @@ function renderComments() {
   });
 }
 
-function resolvedVal(c) { return c.Resolved === true || c.Resolved === 'Yes' || c.Resolved === 1 || c.Resolved === 'True' || c.Resolved === 'true'; }
+function resolvedVal(c) {
+  var v = c.Resolved;
+
+  if (v === true || v === 1) return true;
+
+  if (typeof v === 'string') {
+    v = v.trim().toLowerCase();
+    return v === 'true' || v === 'yes' || v === '1';
+  }
+
+  return false;
+}
 function itemId(c)      { return c.ID || c.Id || c.id || 0; }
 
 // ── BUILD COMMENT CARD ────────────────────────────────
