@@ -401,8 +401,8 @@ function renderComments() {
   var empty = document.getElementById('emptyState');
 
   var topLevel = allComments.filter(function(c){
-    return Number(c.SlideNumber) === currentSlide && (!c.ParentId || Number(c.ParentId) === 0);
-  });
+  return Number(c.SlideNumber) === currentSlide && Number(parentId(c)) === 0;
+});
 
   var filtered = topLevel;
   if (currentFilter === 'open')     filtered = topLevel.filter(function(c){ return !resolvedVal(c); });
@@ -417,7 +417,8 @@ function renderComments() {
   if (filtered.length === 0) { empty.style.display = 'flex'; return; }
   empty.style.display = 'none';
   filtered.forEach(function(c){
-    var replies = allComments.filter(function(r){ return r.ParentId && Number(r.ParentId) === Number(itemId(c)); });
+    var replies = allComments.filter(function(r){
+  return Number(parentId(r)) === Number(itemId(c));
     list.appendChild(buildCard(c, replies));
   });
 }
@@ -440,6 +441,9 @@ function resolvedVal(c) {
   return false;
 }
 function itemId(c)      { return c.ID || c.Id || c.id || 0; }
+function parentId(c) {
+return c.ParentID || c.ParentId || c.parentId || c.parentID || 0;
+}
 
 // ── BUILD COMMENT CARD ────────────────────────────────
 function buildCard(c, replies) {
@@ -615,7 +619,8 @@ function submitReply(btn, parentId) {
   post({
     SlideNumber: currentSlide, SlideTitle: SLIDES[currentSlide] || ('Slide ' + currentSlide),
     ReviewerName: reviewer.name, ReviewerEmail: reviewer.email,
-    CommentText: text, CommentType: '', ParentId: parentId, Timestamp: new Date().toISOString()
+    CommentText: text, CommentType: '', ParentId: parentId,
+ParentID: parentId, Timestamp: new Date().toISOString()
   }, function(ok){
     btn.disabled = false;
     if (ok) { ta.value = ''; showToast('Reply posted.'); loadComments(); }
