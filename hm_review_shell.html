@@ -377,6 +377,7 @@ function loadComments() {
     .then(function(r){ return r.json(); })
     .then(function(data){
       var items = data.value || data;
+      console.log('READ FLOW DATA:', items);
       if (Array.isArray(items)) {
         // Preserve any locally-resolved state so optimistic UI doesn't flicker
         // while Flow 3 is still writing back to SharePoint
