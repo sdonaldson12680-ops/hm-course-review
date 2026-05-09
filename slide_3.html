@@ -1206,12 +1206,19 @@ Object.values(cardAudio).forEach(clip => {
 });
 
 // ====== NAVIGATION ======
+let hasNavigated = false;
+
 function postNav(action) {
-  window.parent.postMessage(action, '*');
+  if (hasNavigated) return;
+  hasNavigated = true;
   window.parent.postMessage({ type: action }, '*');
 }
+
 document.getElementById('btnPrev').onclick = () => postNav('prev');
 document.getElementById('continueBtn').onclick = () => postNav('next');
+window.addEventListener('message', function(e) {
+  if (e.data === 'playAudio') { startAudio(); }
+});
 </script>
 </body>
 </html>
