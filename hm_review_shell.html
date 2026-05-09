@@ -425,11 +425,16 @@ function renderComments() {
 function resolvedVal(c) {
   var v = c.Resolved;
 
+  // Handle SharePoint object format
+  if (v && typeof v === 'object') {
+    v = v.Value;
+  }
+
   if (v === true || v === 1) return true;
 
   if (typeof v === 'string') {
     v = v.trim().toLowerCase();
-    return v === 'true' || v === 'yes' || v === '1';
+    return v === 'true' || v === 'yes' || v === '1' || v === 'resolved';
   }
 
   return false;
