@@ -690,10 +690,7 @@ button {
           <em>More tools than ever.</em>
         </h1>
         <p class="intro-body">
-          In the next 16 minutes, you'll reconnect with the culture
-          you already live — and see the newer tools HM has built
-          to support and sustain it. The old stuff and the new stuff
-          are the same story, told with more precision.
+          In the next 20 minutes, you'll reconnect with the culture you already live every day and explore the tools Houston Methodist has built to support your growth, development, and impact.
         </p>
       </div>
 
@@ -719,7 +716,7 @@ button {
         </div>
         <div class="split-card tools">
           <span class="split-card-label">The Newer Tools</span>
-          <div class="split-card-title">How HM supports your growth</div>
+          <div class="split-card-title">How Houston Methodist supports your growth</div>
           <div class="split-items">
             <div class="split-item">Leadership Behaviors Model</div>
             <div class="split-item">Leading Self behaviors</div>
@@ -733,7 +730,7 @@ button {
 
     <!-- RIGHT: scene overview -->
     <div class="right-col">
-      <span class="scenes-label">Course at a glance — 5 scenes · ~16 min</span>
+      <span class="scenes-label">Course at a glance — 5 scenes · ~20 min</span>
 
       <div class="scene-card s01 active">
         <div class="scene-num">01</div>
@@ -859,13 +856,19 @@ button {
     </button>
   </div>
   <div class="tp-body">
-    <p>Here's how this is going to go.</p>
-    <p>Five short scenes. About sixteen minutes total.</p>
-    <p>We'll start with the foundation — our mission, our values, and the way we communicate with patients and each other. Then we'll look at the leadership behaviors that show up in your day, no matter your role or title.</p>
-    <p>After that, we'll talk about how you grow here. The Focal Point Review. Your development. The support around you.</p>
-    <p>We'll close with the forces shaping healthcare and why your growth matters beyond your own career — and then we'll bring it all together and send you off with one clear next step.</p>
-    <p>Same foundation you already know. More tools than ever.</p>
-    <p>Let's go.</p>
+  <p>In the next 20 minutes, you'll reconnect with the culture you already live and explore the tools Houston Methodist has built to support your growth, development, and impact.</p>
+
+<p>We’ll begin with the culture that shapes how we show up every day — with patients, families, and each other — and the mission, values, and service standards that guide our work.</p>
+
+<p>From there, we’ll explore the leadership behaviors that show up in your day-to-day experience, no matter your role or title.</p>
+
+<p>Then we’ll look at how growth happens here — through development, feedback, the Focal Point Review process, and the support systems around you.</p>
+
+<p>We’ll close with the forces shaping healthcare, why your growth matters beyond your own career, and one clear next step you can take moving forward.</p>
+
+<p>Same foundation you already know. More tools than ever.</p>
+
+<p>Let’s go.</p>
   </div>
 </div>
 
@@ -909,13 +912,13 @@ window.addEventListener('load', () => {
 // These timings carry over from the original Storyline-synced build.
 // Adjust 'at' values (in seconds) after listening to re-recorded audio.
 const CUES = [
-  { at: 1.5,  label: 'Scene 01 card',        do: () => document.querySelector('.scene-card.s01').classList.add('cued') },
-  { at: 6.3,  label: 'Scene 02 card',        do: () => document.querySelector('.scene-card.s02').classList.add('cued') },
-  { at: 10.8, label: 'Scene 03 card',        do: () => document.querySelector('.scene-card.s03').classList.add('cued') },
-  { at: 16.0, label: 'Scene 04 card',        do: () => document.querySelector('.scene-card.s04').classList.add('cued') },
-  { at: 19.6, label: 'Scene 05 card',        do: () => document.querySelector('.scene-card.s05').classList.add('cued') },
-  { at: 22.0, label: 'Foundation/Tools split', do: () => document.querySelector('.split-row').classList.add('cued') },
-  { at: 26.2, label: 'Bridge card',          do: () => document.querySelector('.bridge-card').classList.add('cued') }
+  { at: 9,  label: 'Scene 01 card',        do: () => document.querySelector('.scene-card.s01').classList.add('cued') },
+  { at: 16,  label: 'Scene 02 card',        do: () => document.querySelector('.scene-card.s02').classList.add('cued') },
+  { at: 19.0, label: 'Scene 03 card',        do: () => document.querySelector('.scene-card.s03').classList.add('cued') },
+  { at: 27.0, label: 'Scene 04 card',        do: () => document.querySelector('.scene-card.s04').classList.add('cued') },
+  { at: 33.0, label: 'Scene 05 card',        do: () => document.querySelector('.scene-card.s05').classList.add('cued') },
+  { at: 40.0, label: 'Foundation/Tools split', do: () => document.querySelector('.split-row').classList.add('cued') },
+  { at: 10.0, label: 'Bridge card',          do: () => document.querySelector('.bridge-card').classList.add('cued') }
 ];
 
 // Track which cues have fired
@@ -1022,12 +1025,19 @@ apBarWrap.addEventListener('click', (e) => {
 });
 
 // ====== NAVIGATION ======
+let hasNavigated = false;
+
 function postNav(action) {
-  window.parent.postMessage(action, '*');
+  if (hasNavigated) return;
+  hasNavigated = true;
   window.parent.postMessage({ type: action }, '*');
 }
 document.getElementById('btnPrev').onclick = () => postNav('prev');
 document.getElementById('btnNext').onclick = () => postNav('next');
+// Listen for audio trigger from parent shell
+window.addEventListener('message', function(e) {
+  if (e.data === 'playAudio') { startAudio(); }
+});
 </script>
 </body>
 </html>
