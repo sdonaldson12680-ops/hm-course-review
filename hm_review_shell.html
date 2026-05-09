@@ -57,7 +57,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: var(--san
 .reviewer-email { font-size: 10px; color: rgba(255,255,255,.4); line-height: 1; }
 
 /* ── COURSE FRAME ────────────────────────────────────── */
-.course-area { position: relative; background: #000; overflow: hidden; }
+.course-area { position: relative; background: #000; overflow: hidden; min-height: 0; }
 #courseFrame { width: 100%; height: 100%; border: none; display: block; }
 .slide-indicator {
   position: absolute; bottom: 12px; left: 12px;
@@ -68,7 +68,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: var(--san
 }
 
 /* ── COMMENT PANEL ───────────────────────────────────── */
-.comment-panel { background: var(--bg); border-left: 2px solid var(--line); display: flex; flex-direction: column; overflow: hidden; min-height: 0; height: 100%; }
+.comment-panel { background: var(--bg); border-left: 2px solid var(--line); display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
 
 .panel-header { background: var(--surface); border-bottom: 1px solid var(--line); padding: 14px 16px 12px; flex-shrink: 0; }
 .panel-slide-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); margin-bottom: 3px; font-family: var(--head); }
@@ -330,8 +330,8 @@ function startSession() {
 // ── NAVIGATION ────────────────────────────────────────
 window.addEventListener('message', function(e) {
   var msg = e.data;
-  if (msg === 'next')     { navigateTo(currentSlide + 1); return; }
-  if (msg === 'prev')     { navigateTo(currentSlide - 1); return; }
+  if (msg === 'next' || (msg && msg.type === 'next'))     { navigateTo(currentSlide + 1); return; }
+  if (msg === 'prev' || (msg && msg.type === 'prev'))     { navigateTo(currentSlide - 1); return; }
   if (msg === 'complete' || (msg && msg.type === 'complete')) { return; } // last slide — do nothing extra
   if (msg && msg.type === 'goto' && msg.slide)            { navigateTo(msg.slide); return; }
 });
@@ -360,7 +360,19 @@ function loadComments() {
     .then(function(r){ return r.json(); })
     .then(function(data){
       var items = data.value || data;
-      if (Array.isArray(items)) { allComments = items; renderComments(); }
+      if (Array.isArray(items)) {
+        // Preserve any locally-resolved state so optimistic UI doesn't flicker
+        // while Flow 3 is still writing back to SharePoint
+        var localResolved = {};
+        allComments.forEach(function(c){
+          if (resolvedVal(c)) localResolved[itemId(c)] = true;
+        });
+        allComments = items.map(function(c){
+          if (localResolved[itemId(c)]) c.Resolved = true;
+          return c;
+        });
+        renderComments();
+      }
     })
     .catch(function(){ /* silent fail on poll */ });
 }
@@ -387,7 +399,7 @@ function renderComments() {
   if (filtered.length === 0) { empty.style.display = 'flex'; return; }
   empty.style.display = 'none';
   filtered.forEach(function(c){
-    var replies = allComments.filter(function(r){ return Number(r.ParentId) === Number(itemId(c)); });
+    var replies = allComments.filter(function(r){ return r.ParentId && Number(r.ParentId) === Number(itemId(c)); });
     list.appendChild(buildCard(c, replies));
   });
 }
