@@ -549,15 +549,12 @@ button {
   background: var(--white); color: var(--navy);
   border: 1px solid var(--line);
 }
-.btn-ghost:hover { transform: translateY(-1px); border-color: var(--ltblue); }
 .btn-primary {
   color: #fff;
   background: linear-gradient(160deg, var(--blue-m), var(--navy-d));
   box-shadow: 0 6px 18px rgba(0,59,113,.2);
-  opacity: .35; pointer-events: none;
   transition: opacity .35s, transform .18s;
 }
-.btn-primary.unlocked { opacity: 1; pointer-events: all; }
 .btn-primary.unlocked:hover { transform: translateY(-1px); filter: brightness(1.05); }
 
 /* ── ANIMATIONS ──────────────────────────────────────── */
@@ -1062,14 +1059,19 @@ button {
     <p>Each card behind me shows one of the values, and one specific example of what that value looks like in real work. Not in theory. In a Tuesday afternoon, in a hallway, in a chart note, in a conversation.</p>
     <p>Flip each card. Take a look. See yourself in them.</p>
     <span class="tp-cue-label">On flip — Integrity</span>
+    <p>"We are honeslty and ethical in all we say and do."<p>
     <p>You notice a documentation error. You correct it and notify the right person — even though no one would have caught it. Or maybe you're in registration and you notice a charge that doesn't look right — you flag it instead of letting it go. Integrity isn't about someone watching. It's about who you are when no one is.</p>
     <span class="tp-cue-label">On flip — Compassion</span>
+    <p>"We embrace the whole person."<p>
     <p>A patient seems anxious before a procedure. You pause, acknowledge their fear, and make sure the team knows before handoff. Or you're in facilities and you notice a colleague having a rough day — you check in, not because it's your job, but because it matters. Compassion isn't a clinical skill. It's a human one.</p>
     <span class="tp-cue-label">On flip — Accountability</span>
+    <p>"We hold ourselves accoutnable for our actions."<p>
     <p>You made a mistake that affected a patient. You own it directly, take corrective action, and share the learning with your team. Or you're in food services and a tray goes to the wrong room — you don't wait for someone else to fix it. You own it, correct it, and close the loop. Accountability means the buck stops with you, no matter your role.</p>
     <span class="tp-cue-label">On flip — Respect</span>
+    <p>"We treat every individual as a person of worth, dignity and value."<p>
     <p>You use a colleague's preferred name. You give the same warmth to the housekeeper as to the department director. Whether you're a surgeon or a shuttle driver, respect looks the same: listen fully, acknowledge people, and treat every interaction like it matters — because it does.</p>
     <span class="tp-cue-label">On flip — Excellence</span>
+    <p>"We strive to be the best at what we do."<p>
     <p>You finish your task — then ask: how can I do this better next time? Maybe you're in IT and you find a faster workflow. Maybe you're a tech and you mentor a new hire. Excellence isn't perfection — it's the habit of always pushing forward, and bringing others with you.</p>
   </div>
 </div>
@@ -1100,14 +1102,24 @@ function toggleTranscript() {
 }
 
 /* ── NAVIGATION (SCORM wrapper) ────────────────────── */
+let hasNavigated = false;
+
+function postNav(action) {
+  if (hasNavigated) return;
+  hasNavigated = true;
+  window.parent.postMessage({ type: action }, '*');
+}
+
 function navNext() {
-  window.parent.postMessage({ type: 'nav', action: 'next' }, '*');
+  postNav('next');
 }
+
 function navPrev() {
-  window.parent.postMessage({ type: 'nav', action: 'prev' }, '*');
+  postNav('prev');
 }
+
 function navComplete() {
-  window.parent.postMessage({ type: 'nav', action: 'complete' }, '*');
+  window.parent.postMessage({ type: 'complete' }, '*');
 }
 
 /* ── AUDIO ─────────────────────────────────────────── */
