@@ -522,12 +522,8 @@ button {
   color: #fff;
   background: linear-gradient(160deg, var(--blue-m), var(--navy-d));
   box-shadow: 0 6px 18px rgba(0,59,113,.2);
-  opacity: .4; pointer-events: none;
   transition: opacity .35s, transform .18s, box-shadow .18s;
   font-family: var(--head);
-}
-.btn-primary.unlocked {
-  opacity: 1; pointer-events: all;
 }
 .btn-primary.unlocked:hover { transform: translateY(-1px); filter: brightness(1.05); }
 
@@ -1053,7 +1049,6 @@ function togglePlayPause() {
 
 // ====== INTERACTION LOGIC ======
 const viewed = new Set();
-const total = 3;
 
 // Card audio elements
 const cardAudio = {
@@ -1124,12 +1119,6 @@ function clickLayer(id) {
 
   const dl = document.getElementById('dotsLabel');
   if (dl) dl.dataset.userInteracted = 'true';
-
-  if (n === total) {
-    document.getElementById('continueBtn').classList.add('unlocked');
-    document.getElementById('hintText').textContent = 'All three layers viewed — you\'re ready to continue.';
-    document.getElementById('dotsLabel').textContent = 'All layers explored ✓';
-  }
 }
 
 // ====== AUDIO PLAYER UI ======
