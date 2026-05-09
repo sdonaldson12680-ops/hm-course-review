@@ -80,7 +80,15 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: var(--san
 .filter-btn:hover, .filter-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
 
 /* ── COMMENTS LIST ───────────────────────────────────── */
-.comments-list { flex: 1; min-height: 0; overflow-y: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.comments-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 .comments-list::-webkit-scrollbar { width: 4px; }
 .comments-list::-webkit-scrollbar-track { background: transparent; }
 .comments-list::-webkit-scrollbar-thumb { background: var(--line); border-radius: 99px; }
@@ -89,7 +97,16 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: var(--san
 .empty-state p { font-size: 13px; line-height: 1.5; }
 
 /* ── COMMENT CARD ────────────────────────────────────── */
-.comment-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; transition: box-shadow .15s; }
+.comment-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: box-shadow .15s;
+
+  /* Prevent shrinking */
+  flex: 0 0 auto;
+}
 .comment-card:hover { box-shadow: 0 2px 12px rgba(0,59,113,.08); }
 .comment-card.resolved { opacity: .65; border-color: #c8ddb8; background: #f6faf0; }
 .comment-main { padding: 12px 14px 10px; }
@@ -500,20 +517,57 @@ function setFilter(f) {
 }
 
 function toggleResolve(cid, btn) {
-  var card       = btn.closest('.comment-card');
+  var card = btn.closest('.comment-card');
   var nowResolved = !card.classList.contains('resolved');
+
+  // Update UI immediately
   card.classList.toggle('resolved', nowResolved);
   btn.classList.toggle('resolved-state', nowResolved);
   btn.title = nowResolved ? 'Mark open' : 'Mark resolved';
-  allComments.forEach(function(c){ if (Number(itemId(c)) === Number(cid)) c.Resolved = nowResolved; });
+
+  // Update local state
+  allComments.forEach(function(c){
+    if (Number(itemId(c)) === Number(cid)) {
+      c.Resolved = nowResolved;
+    }
+  });
+
   showToast(nowResolved ? '✓ Marking resolved...' : 'Marking open...');
+
   fetch(RESOLVE_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ItemId: Number(cid), Resolved: nowResolved })
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      ItemId: Number(cid),
+      Resolved: nowResolved
+    })
   })
-  .then(function(r) { showToast(nowResolved ? '✓ Resolved' : 'Marked open'); })
-  .catch(function() { showToast('Could not save — try again.', true); });
+  .then(function(r) {
+    if (!r.ok) {
+      throw new Error('Resolve failed');
+    }
+
+    showToast(nowResolved ? '✓ Resolved' : 'Marked open');
+
+    // Wait briefly before refreshing comments
+    setTimeout(loadComments, 1500);
+  })
+  .catch(function() {
+
+    // Roll back UI if save failed
+    card.classList.toggle('resolved', !nowResolved);
+    btn.classList.toggle('resolved-state', !nowResolved);
+
+    allComments.forEach(function(c){
+      if (Number(itemId(c)) === Number(cid)) {
+        c.Resolved = !nowResolved;
+      }
+    });
+
+    showToast('Could not save — try again.', true);
+  });
 }
 
 // ── POST COMMENT ──────────────────────────────────────
