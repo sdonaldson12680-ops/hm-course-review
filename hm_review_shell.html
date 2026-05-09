@@ -539,10 +539,12 @@ function toggleResolve(cid, btn) {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({
-      ItemId: Number(cid),
-      Resolved: nowResolved
-    })
+body: JSON.stringify({
+  ItemId: Number(cid),
+  Resolved: nowResolved,
+  ResolvedText: nowResolved ? 'Yes' : 'No',
+  Status: nowResolved ? 'Resolved' : 'Open'
+})
   })
   .then(function(r) {
     if (!r.ok) {
