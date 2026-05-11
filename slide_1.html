@@ -843,25 +843,34 @@ html, body {
 <audio id="audio" preload="auto">
   <source src="audio/audio_1.mp3" type="audio/mpeg">
 </audio>
+
 // ====== START OVERLAY ======
-const startOverlay = document.getElementById('startOverlay');
-const startLessonBtn = document.getElementById('startLessonBtn');
+window.addEventListener('DOMContentLoaded', () => {
 
-startLessonBtn.addEventListener('click', async () => {
-  startOverlay.style.display = 'none';
+  const startOverlay = document.getElementById('startOverlay');
+  const startLessonBtn = document.getElementById('startLessonBtn');
 
-  audioMain.pause();
-  audioMain.currentTime = 0;
-  audioMain.load();
-
-  try {
-    await audioMain.play();
-  } catch (err) {
-    console.log('Audio did not start:', err);
+  if (!startOverlay || !startLessonBtn) {
+    console.log('Overlay elements not found');
+    return;
   }
 
-  updatePlayer();
+  startLessonBtn.addEventListener('click', async () => {
+
+    startOverlay.style.display = 'none';
+
+    try {
+      audioMain.currentTime = 0;
+      await audioMain.play();
+    } catch (err) {
+      console.log('Audio failed:', err);
+    }
+
+    updatePlayer();
+  });
+
 });
+
 <script>
 // ====== TRANSCRIPT PANEL ======
 function toggleTranscript(){
