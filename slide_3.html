@@ -1108,7 +1108,10 @@ function startAudio() {
 }
 window.addEventListener('load', () => {
   startAudio();
-  document.addEventListener('click', startAudio, { once: true });
+  // Fallback: any user gesture unlocks audio if autoplay was blocked
+  ['click', 'keydown', 'touchstart'].forEach(evt => {
+    document.addEventListener(evt, startAudio, { once: true });
+  });
 });
 
 // ====== AUDIO-CUED ANIMATIONS ======
@@ -1353,18 +1356,21 @@ Object.values(cardAudio).forEach(clip => {
 });
 
 // ====== NAVIGATION ======
-let hasNavigated = false;
+// Matches the message format used by the rest of the slides
+// so the SCORM wrapper shell handles them consistently.
+document.getElementById('btnPrev').addEventListener('click', () => {
+  window.parent.postMessage({ type: 'nav', action: 'prev' }, '*');
+});
+document.getElementById('continueBtn').addEventListener('click', () => {
+  window.parent.postMessage({ type: 'nav', action: 'next' }, '*');
+});
 
-function postNav(action) {
-  if (hasNavigated) return;
-  hasNavigated = true;
-  window.parent.postMessage({ type: action }, '*');
-}
-
-document.getElementById('btnPrev').onclick = () => postNav('prev');
-document.getElementById('continueBtn').onclick = () => postNav('next');
+// Listen for audio trigger from parent shell (sent after user gesture on slide 1)
 window.addEventListener('message', function(e) {
-  if (e.data === 'playAudio') { startAudio(); }
+  const d = e.data;
+  if (d === 'playAudio' || (d && d.type === 'playAudio')) {
+    startAudio();
+  }
 });
 </script>
 </body>
