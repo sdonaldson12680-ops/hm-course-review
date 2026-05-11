@@ -1270,22 +1270,21 @@ function toggleTranscript() {
 }
 
 /* ── NAVIGATION (SCORM wrapper) ────────────────────── */
-let hasNavigated = false;
-
-function postNav(action) {
-  if (hasNavigated) return;
-  hasNavigated = true;
-  window.parent.postMessage({ type: action }, '*');
-}
+// Matches the message format used by the rest of the slides
+// so the SCORM wrapper shell handles them consistently.
 
 function navNext() {
-  postNav('next');
+  window.parent.postMessage({ type: 'nav', action: 'next' }, '*');
 }
 
 function navPrev() {
-  postNav('prev');
+  window.parent.postMessage({ type: 'nav', action: 'prev' }, '*');
 }
 
+// Slide-completion ping (fires once all 5 I CARE cards are flipped).
+// Separate from navigation — tells the SCORM wrapper this slide's
+// interaction requirement is satisfied. Confirm this shape against
+// the wrapper's listener when it's built.
 function navComplete() {
   window.parent.postMessage({ type: 'complete' }, '*');
 }
@@ -1308,7 +1307,18 @@ function startAudio() {
 }
 window.addEventListener('load', () => {
   startAudio();
-  document.addEventListener('click', startAudio, { once: true });
+  // Fallback: any user gesture unlocks audio if autoplay was blocked
+  ['click', 'keydown', 'touchstart'].forEach(evt => {
+    document.addEventListener(evt, startAudio, { once: true });
+  });
+});
+
+// Listen for audio trigger from parent shell (sent after user gesture on slide 1)
+window.addEventListener('message', function(e) {
+  const d = e.data;
+  if (d === 'playAudio' || (d && d.type === 'playAudio')) {
+    startAudio();
+  }
 });
 
 function stopCardAudio() {
