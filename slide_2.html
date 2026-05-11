@@ -94,10 +94,13 @@ body::before {
 
 /* ── LEFT: intro + bridge statement ─────────────────── */
 .left-col {
-  display: flex; flex-direction: column;
+  display: flex;
+  flex-direction: column;
   gap: 22px;
+  height: 100%;
+  overflow-y: auto;
+  min-height: 0;
 }
-
 .intro-block {
   /* Visible from slide open — no entry animation, narration starts immediately */
 }
@@ -225,7 +228,13 @@ body::before {
 
 /* ── RIGHT: scene cards ──────────────────────────────── */
 .right-col {
-  display: flex; flex-direction: column; gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  overflow-y: auto;
+  min-height: 0;
+  padding-right: 4px;
 }
 .scenes-label {
   font-size: 13px;
