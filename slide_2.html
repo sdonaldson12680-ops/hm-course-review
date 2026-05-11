@@ -714,6 +714,95 @@ button {
     font-size: 11px;
   }
 }
+/* ── REVIEW MODE / LAPTOP SAFETY ────────────────────── */
+@media (max-height: 850px) {
+
+  .hdr {
+    height: 56px;
+    flex-basis: 56px;
+    padding: 0 28px;
+  }
+
+  .brand-logo {
+    height: 32px;
+  }
+
+  .main {
+    padding: 18px 34px 10px;
+    gap: 20px;
+  }
+
+  .intro-heading {
+    margin-bottom: 10px;
+  }
+
+  .intro-body {
+    line-height: 1.55;
+  }
+
+  .bridge-card {
+    padding: 18px 22px;
+  }
+
+  .split-card {
+    padding: 14px 16px;
+  }
+
+  .scene-card {
+    min-height: 0;
+  }
+
+  .ftr {
+    height: 50px;
+    flex-basis: 50px;
+    padding: 0 22px;
+  }
+
+  .audio-player {
+    width: 320px;
+  }
+}
+
+/* ── MOBILE / SMALL SCREEN STACKING ─────────────────── */
+@media (max-width: 900px) {
+
+  html, body {
+    overflow: auto;
+  }
+
+  .slide {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .main {
+    grid-template-columns: 1fr;
+    padding: 24px 22px 110px;
+    overflow: visible;
+  }
+
+  .left-col,
+  .right-col {
+    gap: 14px;
+  }
+
+  .scene-card {
+    min-height: 84px;
+  }
+
+  .scene-desc {
+    white-space: normal;
+  }
+
+  .ftr {
+    position: sticky;
+    bottom: 0;
+  }
+
+  .audio-player {
+    width: 240px;
+  }
+}
 </style>
 </head>
 <body>
@@ -977,13 +1066,19 @@ window.addEventListener('load', () => {
 // These timings carry over from the original Storyline-synced build.
 // Adjust 'at' values (in seconds) after listening to re-recorded audio.
 const CUES = [
-  { at: 9,  label: 'Scene 01 card',        do: () => document.querySelector('.scene-card.s01').classList.add('cued') },
-  { at: 16,  label: 'Scene 02 card',        do: () => document.querySelector('.scene-card.s02').classList.add('cued') },
-  { at: 19.0, label: 'Scene 03 card',        do: () => document.querySelector('.scene-card.s03').classList.add('cued') },
-  { at: 27.0, label: 'Scene 04 card',        do: () => document.querySelector('.scene-card.s04').classList.add('cued') },
-  { at: 33.0, label: 'Scene 05 card',        do: () => document.querySelector('.scene-card.s05').classList.add('cued') },
-  { at: 40.0, label: 'Foundation/Tools split', do: () => document.querySelector('.split-row').classList.add('cued') },
-  { at: 10.0, label: 'Bridge card',          do: () => document.querySelector('.bridge-card').classList.add('cued') }
+  { at: 9.0,  label: 'Scene 01 card', do: () => document.querySelector('.scene-card.s01').classList.add('cued') },
+
+  { at: 10.0, label: 'Bridge card', do: () => document.querySelector('.bridge-card').classList.add('cued') },
+
+  { at: 16.0, label: 'Scene 02 card', do: () => document.querySelector('.scene-card.s02').classList.add('cued') },
+
+  { at: 19.0, label: 'Scene 03 card', do: () => document.querySelector('.scene-card.s03').classList.add('cued') },
+
+  { at: 27.0, label: 'Scene 04 card', do: () => document.querySelector('.scene-card.s04').classList.add('cued') },
+
+  { at: 33.0, label: 'Scene 05 card', do: () => document.querySelector('.scene-card.s05').classList.add('cued') },
+
+  { at: 40.0, label: 'Foundation/Tools split', do: () => document.querySelector('.split-row').classList.add('cued') }
 ];
 
 // Track which cues have fired

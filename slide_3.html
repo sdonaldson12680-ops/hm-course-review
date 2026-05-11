@@ -738,6 +738,86 @@ button {
     font-size: 12.5px;
   }
 }
+/* ── REVIEW MODE / LAPTOP SAFETY ────────────────────── */
+@media (max-height: 850px) {
+
+  .hdr {
+    height: 56px;
+    flex-basis: 56px;
+    padding: 0 28px;
+  }
+
+  .brand-logo {
+    height: 32px;
+  }
+
+  .main {
+    padding: 18px 34px 10px;
+    gap: 22px;
+  }
+
+  .pyramid-wrap {
+    max-width: 500px;
+  }
+
+  .col-heading {
+    margin-bottom: 2px;
+  }
+
+  .col-intro {
+    padding-bottom: 10px;
+  }
+
+  .callout-card {
+    min-height: 0;
+  }
+
+  .ftr {
+    height: 50px;
+    flex-basis: 50px;
+    padding: 0 22px;
+  }
+
+  .audio-player {
+    width: 320px;
+  }
+}
+
+/* ── MOBILE / SMALL SCREEN STACKING ─────────────────── */
+@media (max-width: 900px) {
+
+  html, body {
+    overflow: auto;
+  }
+
+  .slide {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .main {
+    grid-template-columns: 1fr;
+    padding: 24px 20px 110px;
+    overflow: visible;
+  }
+
+  .pyramid-wrap {
+    max-width: 420px;
+  }
+
+  .callout-col {
+    gap: 12px;
+  }
+
+  .ftr {
+    position: sticky;
+    bottom: 0;
+  }
+
+  .audio-player {
+    width: 240px;
+  }
+}
 </style>
 </head>
 <body>
@@ -1117,7 +1197,7 @@ function restartAudio() {
   document.getElementById('continueBtn').classList.remove('unlocked');
   document.getElementById('dotsLabel').textContent = 'Watch each layer build, then click to explore';
   document.getElementById('dotsLabel').dataset.userInteracted = '';
-  document.getElementById('hintText').textContent = 'Each layer reveals as the narration introduces it. Click any layer or card to explore — all 3 must be viewed before continuing.';
+  document.getElementById('hintText').textContent = 'Each layer reveals as the narration introduces it. Click any layer or card to explore.'; continuing.';
   audio.play();
 }
 

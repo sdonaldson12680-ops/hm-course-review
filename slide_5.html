@@ -56,10 +56,14 @@ body::before {
   pointer-events: none; z-index: 0;
 }
 .slide {
-  width: 100vw; height: 100vh;
-  display: flex; flex-direction: column;
-  position: relative; z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
   overflow: hidden;
+  min-height: 0;
 }
 
 /* ── HEADER (matches slide 2 standard) ──────────────── */
@@ -840,6 +844,199 @@ body::before {
   transition: background .15s ease; padding: 0;
 }
 .dev-btn-s4:hover { background: rgba(255,255,255,.12); }
+/* ── LAPTOP / LMS SHELL OPTIMIZATION ───────────────── */
+@media (max-height: 850px) {
+
+  .hdr {
+    height: 56px;
+    flex-basis: 56px;
+    padding: 0 28px;
+  }
+
+  .brand-logo {
+    height: 34px;
+  }
+
+  .main {
+    padding: 16px 28px 10px;
+    gap: 12px;
+  }
+
+  .top-row {
+    align-items: flex-start;
+  }
+
+  .top-eyebrow {
+    margin-bottom: 4px;
+  }
+
+  .top-heading {
+    font-size: clamp(24px, 2.2vw, 34px);
+    line-height: 1.02;
+  }
+
+  .top-intro {
+    font-size: 13px;
+    line-height: 1.45;
+    max-width: 400px;
+  }
+
+  .content-cols {
+    gap: 14px;
+  }
+
+  .aidet-stack {
+    gap: 5px;
+  }
+
+  .aidet-header {
+    padding: 10px 14px;
+    gap: 10px;
+  }
+
+  .aidet-letter {
+    width: 32px;
+    height: 32px;
+    font-size: 17px;
+  }
+
+  .aidet-word-name {
+    font-size: 14px;
+  }
+
+  .aidet-word-sub {
+    font-size: 11px;
+  }
+
+  .aidet-row.open .aidet-body {
+    padding: 0 14px 10px 58px;
+  }
+
+  .aidet-body {
+    padding: 0 14px 0 58px;
+  }
+
+  .aidet-definition {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .aidet-example {
+    font-size: 11.5px;
+    line-height: 1.4;
+  }
+
+  .aidet-photo {
+    height: 120px;
+  }
+
+  .kw-grid {
+    gap: 6px;
+  }
+
+  .kw-tile {
+    padding: 11px 13px;
+    gap: 4px;
+  }
+
+  .kw-word {
+    font-size: 16px;
+  }
+
+  .kw-usage {
+    font-size: 11.5px;
+    line-height: 1.4;
+  }
+
+  .manage-up {
+    padding: 12px 15px;
+    gap: 10px;
+  }
+
+  .mu-title {
+    font-size: 13px;
+  }
+
+  .mu-text {
+    font-size: 11.5px;
+    line-height: 1.45;
+  }
+
+  .ftr {
+    height: 50px;
+    flex-basis: 50px;
+    padding: 0 22px;
+  }
+
+  .audio-player {
+    width: 320px;
+  }
+}
+
+/* ── SMALLER LAPTOPS / TABLETS ─────────────────────── */
+@media (max-width: 1180px) {
+
+  .content-cols {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .aidet-photo {
+    display: none;
+  }
+}
+
+/* ── MOBILE ────────────────────────────────────────── */
+@media (max-width: 900px) {
+
+  html,
+  body {
+    overflow: auto;
+  }
+
+  .slide {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .main {
+    overflow: visible;
+    padding: 18px 16px 90px;
+  }
+
+  .top-row {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .top-intro {
+    text-align: left;
+    max-width: 100%;
+  }
+
+  .kw-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kw-tile:nth-child(5) {
+    grid-column: auto;
+  }
+
+  .ftr {
+    position: sticky;
+    bottom: 0;
+  }
+
+  .audio-player {
+    width: 220px;
+  }
+
+  .tp-panel {
+    width: 100%;
+  }
+}
 </style>
 </head>
 <body>

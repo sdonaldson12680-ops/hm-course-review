@@ -722,6 +722,174 @@ button {
   transition: background .15s ease; padding: 0;
 }
 .dev-btn:hover { background: rgba(255,255,255,.12); }
+/* ── LAPTOP / REVIEW SHELL OPTIMIZATION ───────────── */
+@media (max-height: 850px) {
+
+  .hdr {
+    height: 56px;
+    flex-basis: 56px;
+    padding: 0 28px;
+  }
+
+  .brand-logo {
+    height: 34px;
+  }
+
+  .main {
+    padding: 18px 30px 10px;
+    gap: 14px;
+  }
+
+  .top-eyebrow {
+    margin-bottom: 4px;
+  }
+
+  .top-heading {
+    font-size: clamp(24px, 2.3vw, 34px);
+    line-height: 1.02;
+  }
+
+  .instruction {
+    font-size: 13px;
+  }
+
+  .cards-row {
+    gap: 12px;
+  }
+
+  .card {
+    min-height: 0;
+  }
+
+  .card-color-block {
+    padding: 14px 10px 10px;
+  }
+
+  .card-letter {
+    font-size: clamp(54px, 6vw, 90px);
+    margin-bottom: 4px;
+  }
+
+  .card-value-name {
+    font-size: 15px;
+  }
+
+  .card-strip {
+    padding: 10px 12px;
+    gap: 2px;
+  }
+
+  .card-definition {
+    font-size: 11.5px;
+    line-height: 1.3;
+  }
+
+  .card-cta {
+    font-size: 11px;
+    margin-top: 2px;
+  }
+
+  .card-back-header {
+    padding: 12px;
+  }
+
+  .back-letter {
+    font-size: 34px;
+  }
+
+  .back-value-name {
+    font-size: 16px;
+  }
+
+  .card-back-body {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .back-definition {
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .back-example {
+    font-size: 11.5px;
+    line-height: 1.4;
+  }
+
+  .flip-progress {
+    gap: 10px;
+  }
+
+  .ftr {
+    height: 50px;
+    flex-basis: 50px;
+    padding: 0 22px;
+  }
+
+  .audio-player {
+    width: 320px;
+  }
+}
+
+/* ── TABLET / SMALL LAPTOP ────────────────────────── */
+@media (max-width: 1200px) {
+
+  .cards-row {
+    grid-template-columns: repeat(3, 1fr);
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+}
+
+/* ── MOBILE ───────────────────────────────────────── */
+@media (max-width: 900px) {
+
+  html, body {
+    overflow: auto;
+  }
+
+  .slide {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .main {
+    padding: 22px 18px 100px;
+    overflow: visible;
+  }
+
+  .top-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .top-right {
+    align-items: flex-start;
+  }
+
+  .instruction {
+    text-align: left;
+  }
+
+  .cards-row {
+    grid-template-columns: 1fr;
+    overflow: visible;
+  }
+
+  .card {
+    min-height: 420px;
+  }
+
+  .ftr {
+    position: sticky;
+    bottom: 0;
+  }
+
+  .audio-player {
+    width: 220px;
+  }
+}
 </style>
 </head>
 <body>
@@ -758,7 +926,7 @@ button {
         </h1>
       </div>
       <div class="top-right">
-        <p class="instruction">Click each card to reveal what the value looks like in your work.</p>
+        <p class="instruction">Explore the cards to see how the I CARE Values show up in everyday work.</p>
         <span class="viewed-count"><b id="flipCount">0</b> of 5 revealed</span>
       </div>
     </div>
@@ -1059,13 +1227,13 @@ button {
     <p>Each card behind me shows one of the values, and one specific example of what that value looks like in real work. Not in theory. In a Tuesday afternoon, in a hallway, in a chart note, in a conversation.</p>
     <p>Flip each card. Take a look. See yourself in them.</p>
     <span class="tp-cue-label">On flip — Integrity</span>
-    <p>"We are honeslty and ethical in all we say and do."<p>
+    <p>"We are honest and ethical in all we say and do."<p>
     <p>You notice a documentation error. You correct it and notify the right person — even though no one would have caught it. Or maybe you're in registration and you notice a charge that doesn't look right — you flag it instead of letting it go. Integrity isn't about someone watching. It's about who you are when no one is.</p>
     <span class="tp-cue-label">On flip — Compassion</span>
     <p>"We embrace the whole person."<p>
     <p>A patient seems anxious before a procedure. You pause, acknowledge their fear, and make sure the team knows before handoff. Or you're in facilities and you notice a colleague having a rough day — you check in, not because it's your job, but because it matters. Compassion isn't a clinical skill. It's a human one.</p>
     <span class="tp-cue-label">On flip — Accountability</span>
-    <p>"We hold ourselves accoutnable for our actions."<p>
+    <p>"We hold ourselves accountable for our actions."<p>
     <p>You made a mistake that affected a patient. You own it directly, take corrective action, and share the learning with your team. Or you're in food services and a tray goes to the wrong room — you don't wait for someone else to fix it. You own it, correct it, and close the loop. Accountability means the buck stops with you, no matter your role.</p>
     <span class="tp-cue-label">On flip — Respect</span>
     <p>"We treat every individual as a person of worth, dignity and value."<p>
