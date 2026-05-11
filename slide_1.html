@@ -701,13 +701,16 @@ html, body {
 
 <div id="startOverlay" class="start-overlay">
   <div class="start-card">
-    <div class="start-kicker">Welcome to</div>
-    <h2>Pathway to Unparalleled</h2>
-    <p>This course includes narration. Select start when you’re ready to begin.</p>
-    <button id="startLessonBtn">
-      Start Course
-      <span>→</span>
+    <h2>Ready to begin?</h2>
+    <p>Click below to start the lesson and narration.</p>
+
+    <button
+      id="startLessonBtn"
+      type="button"
+      onclick="startLesson()">
+      Start Lesson
     </button>
+
   </div>
 </div>
 
@@ -845,31 +848,26 @@ html, body {
 </audio>
 
 // ====== START OVERLAY ======
-window.addEventListener('DOMContentLoaded', () => {
+async function startLesson() {
 
   const startOverlay = document.getElementById('startOverlay');
-  const startLessonBtn = document.getElementById('startLessonBtn');
 
-  if (!startOverlay || !startLessonBtn) {
-    console.log('Overlay elements not found');
-    return;
+  if (startOverlay) {
+    startOverlay.remove();
   }
 
-  startLessonBtn.addEventListener('click', async () => {
+  try {
+    audioMain.pause();
+    audioMain.currentTime = 0;
 
-    startOverlay.style.display = 'none';
+    await audioMain.play();
 
-    try {
-      audioMain.currentTime = 0;
-      await audioMain.play();
-    } catch (err) {
-      console.log('Audio failed:', err);
-    }
+  } catch (err) {
+    console.log('Audio failed:', err);
+  }
 
-    updatePlayer();
-  });
-
-});
+  updatePlayer();
+}
 
 <script>
 // ====== TRANSCRIPT PANEL ======
