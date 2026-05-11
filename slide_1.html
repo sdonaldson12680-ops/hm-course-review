@@ -675,7 +675,7 @@ html, body {
   </div>
 </div>
 
-<audio id="audio" preload="auto" autoplay>
+<audio id="audio" preload="auto">
   <source src="audio/audio_1.mp3" type="audio/mpeg">
 </audio>
 
@@ -744,7 +744,33 @@ function goNext(){
   window.parent.postMessage({ type:'next' }, '*');
 }
 
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    audioMain.pause();
+    updatePlayer();
+  }
+});
 document.querySelector('.continue-btn').onclick = goNext;
+// ====== AUTO PLAY WHEN SLIDE BECOMES ACTIVE ======
+window.addEventListener('load', () => {
+
+  // slight delay lets LMS/review shell finish rendering
+  setTimeout(() => {
+
+    // only autoplay if user is actually on this slide
+    const isVisible =
+      document.visibilityState === 'visible' &&
+      document.hasFocus();
+
+    if (isVisible) {
+      audioMain.play().catch(() => {
+        // browser may still require interaction
+        updatePlayer();
+      });
+    }
+
+  }, 400);
+});
 </script>
 </body>
 </html>
