@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HM · Slide 2 — Course Overview</title>
+<style>
+:root {
+  --navy:    #003B71;
+  --navy-d:  #002A52;
+  --blue:    #12497E;
+  --blue-m:  #1A5C9A;
+  --ltblue:  #749ABB;
+  --sky:     #C8DFF0;
+  --teal:    #1A7A8A;
+  --teal-lt: #A8D4DA;
+  --white:   #FFFFFF;
+  --bg:      #F2F6FA;
+  --soft:    #F8FAFC;
+  --line:    #DDE6F0;
+  --text:    #1A2B3C;
+  --muted:   #5A7080;
+  --head:    'Franklin Gothic Medium', 'Franklin Gothic Demi', 'Arial Narrow Bold', Arial, sans-serif;
+  --sans:    'Franklin Gothic Book', 'Franklin Gothic Medium', Calibri, Arial, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* subtle bg texture */
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse at 8% 50%, rgba(116,154,187,.08) 0%, transparent 55%),
+    radial-gradient(ellipse at 92% 15%, rgba(26,122,138,.06) 0%, transparent 50%);
+  pointer-events: none; z-index: 0;
+}
+
+.slide {
+  width: 100vw; height: 100vh;
+  display: flex; flex-direction: column;
+  position: relative; z-index: 1;
+}
+
+/* ── HEADER ──────────────────────────────────────────── */
+.hdr {
+  height: 68px; flex: 0 0 68px;
+  background: var(--navy);
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  position: relative;
+}
+.hdr::after {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--navy-d) 0%, var(--blue-m) 55%, var(--teal) 100%);
+}
+.brand-logo {
+  height: 40px;
+  width: auto;
+  flex-shrink: 0;
+}
+.hdr-right  { display: flex; align-items: center; gap: 20px; }
+.scene-tag  {
+  padding: 5px 14px; border-radius: 99px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.15);
+  font-size: 11px; font-weight: 500;
+  letter-spacing: .07em; text-transform: uppercase;
+  color: rgba(255,255,255,.65);
+  font-family: var(--sans);
+}
+.progress-wrap { display: flex; align-items: center; gap: 10px; }
+.progress-lbl  { font-size: 12px; color: rgba(255,255,255,.45); font-family: var(--sans); }
+.progress-bar  { width: 100px; height: 5px; border-radius: 99px; background: rgba(255,255,255,.15); overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--ltblue), var(--teal-lt)); }
+
+/* ── MAIN ────────────────────────────────────────────── */
+.main {
+  flex: 1; min-height: 0;
+  padding: 28px 44px 20px;
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 28px;
+}
+
+/* ── LEFT: intro + bridge statement ─────────────────── */
+.left-col {
+  display: flex; flex-direction: column;
+  gap: 22px;
+}
+.intro-block {
+  /* Visible from slide open — no entry animation, narration starts immediately */
+}
+.intro-eyebrow {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 14px;
+}
+.eyebrow-line { width: 28px; height: 2px; background: var(--teal); flex-shrink: 0; }
+.eyebrow-text {
+  font-size: 11px;
+  font-family: var(--head);
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--teal);
+}
+.intro-heading {
+  font-family: var(--head);
+  font-size: clamp(30px, 3.2vw, 50px);
+  line-height: 1.1;
+  color: var(--navy);
+  margin-bottom: 14px;
+  letter-spacing: -.01em;
+  font-weight: 500;
+}
+.intro-heading em {
+  font-style: italic;
+  color: var(--teal);
+}
+.intro-body {
+  font-size: clamp(15px, 1.25vw, 19px);
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 480px;
+  font-family: var(--sans);
+}
+
+/* Bridge card */
+.bridge-card {
+  background: var(--navy);
+  border-radius: 16px;
+  padding: 24px 26px;
+  border-left: 4px solid var(--teal);
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .55s ease, transform .55s ease;
+}
+.bridge-card.cued { opacity: 1; transform: translateY(0); }
+.bridge-card::after {
+  content: "";
+  position: absolute; top: -40px; right: -40px;
+  width: 140px; height: 140px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(26,122,138,.18) 0%, transparent 70%);
+}
+.bridge-label {
+  font-size: 12px;
+  font-family: var(--head);
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--teal-lt);
+  margin-bottom: 10px; display: block;
+}
+.bridge-text {
+  font-family: var(--head);
+  font-size: clamp(16px, 1.5vw, 22px);
+  font-style: italic;
+  line-height: 1.55;
+  color: rgba(200,223,240,.9);
+  font-weight: 400;
+}
+.bridge-text b { font-style: normal; color: var(--teal-lt); font-weight: 500; }
+
+/* Two-part foundation/tools split */
+.split-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .55s ease, transform .55s ease;
+}
+.split-row.cued { opacity: 1; transform: translateY(0); }
+.split-card {
+  border-radius: 14px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+}
+.split-card.foundation {
+  background: var(--soft);
+}
+.split-card.tools {
+  background: rgba(26,122,138,.05);
+  border-color: rgba(26,122,138,.2);
+}
+.split-card-label {
+  font-size: 12px;
+  font-family: var(--head);
+  letter-spacing: .15em; text-transform: uppercase;
+  margin-bottom: 10px; display: block;
+}
+.split-card.foundation .split-card-label { color: var(--blue); }
+.split-card.tools      .split-card-label { color: var(--teal); }
+.split-card-title {
+  font-size: clamp(15px, 1.25vw, 18px);
+  font-family: var(--head);
+  font-weight: 500; color: var(--navy);
+  margin-bottom: 8px; line-height: 1.2;
+}
+.split-items {
+  display: flex; flex-direction: column; gap: 5px;
+}
+.split-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: clamp(13px, 1.05vw, 15px);
+  color: var(--muted); line-height: 1.4;
+  font-family: var(--sans);
+}
+.split-item::before {
+  content: "";
+  width: 5px; height: 5px; border-radius: 50%;
+  flex-shrink: 0;
+}
+.split-card.foundation .split-item::before { background: var(--blue); }
+.split-card.tools      .split-item::before { background: var(--teal); }
+
+/* ── RIGHT: scene cards ──────────────────────────────── */
+.right-col {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.scenes-label {
+  font-size: 13px;
+  font-family: var(--head);
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 2px;
+}
+.scene-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 10px rgba(0,59,113,.05);
+  transition: opacity .55s ease, transform .55s ease, border-color .18s ease, box-shadow .18s ease;
+  cursor: default;
+  flex: 1;
+  opacity: 0;
+  transform: translateY(14px);
+}
+.scene-card.cued { opacity: 1; transform: translateY(0); }
+.scene-card.cued:hover {
+  transform: translateX(4px);
+}
+
+/* Accent left bar per scene */
+.scene-num {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700;
+  font-family: var(--head);
+  color: #fff;
+  flex-shrink: 0;
+}
+/* HM secondary color per scene */
+.s01 .scene-num { background: linear-gradient(160deg, var(--blue-m), var(--navy-d)); }
+.s02 .scene-num { background: linear-gradient(160deg, #69813A, #4A6228); }
+.s03 .scene-num { background: linear-gradient(160deg, #007078, #004E54); }
+.s04 .scene-num { background: linear-gradient(160deg, #AB0032, #7E0025); }
+.s05 .scene-num { background: linear-gradient(160deg, #E24301, #B53600); }
+
+/* Subtle left border + tinted bg per scene */
+.s01 { border-left: 3px solid var(--blue-m); }
+.s02 { border-left: 3px solid #69813A; }
+.s03 { border-left: 3px solid #007078; }
+.s04 { border-left: 3px solid #AB0032; }
+.s05 { border-left: 3px solid #E24301; }
+
+.s01.cued:hover { border-color: var(--blue-m); }
+.s02.cued:hover { border-color: #69813A; box-shadow: 0 4px 16px rgba(105,129,58,.12); }
+.s03.cued:hover { border-color: #007078; box-shadow: 0 4px 16px rgba(0,112,120,.12); }
+.s04.cued:hover { border-color: #AB0032; box-shadow: 0 4px 16px rgba(171,0,50,.10); }
+.s05.cued:hover { border-color: #E24301; box-shadow: 0 4px 16px rgba(226,67,1,.10); }
+
+/* Scene time color per scene */
+.s02 .scene-time { color: #69813A; }
+.s03 .scene-time { color: #007078; }
+.s04 .scene-time { color: #AB0032; }
+.s05 .scene-time { color: #E24301; }
+
+.scene-body { flex: 1; min-width: 0; }
+.scene-title {
+  font-size: clamp(15px, 1.25vw, 17px);
+  font-family: var(--head);
+  font-weight: 500; color: var(--navy);
+  margin-bottom: 3px; line-height: 1.2;
+}
+.scene-desc {
+  font-size: clamp(13px, 1vw, 15px);
+  font-weight: 400; color: var(--muted);
+  line-height: 1.45;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--sans);
+}
+.scene-meta {
+  display: flex; flex-direction: column;
+  align-items: flex-end; gap: 4px;
+  flex-shrink: 0;
+}
+.scene-time {
+  font-size: 14px; font-weight: 500;
+  color: var(--ltblue);
+  font-family: var(--head);
+}
+.scene-screens {
+  font-size: 12px; color: var(--muted);
+  letter-spacing: .04em;
+  font-family: var(--sans);
+}
+
+/* Active scene indicator */
+.scene-card.active {
+  border-left-width: 4px;
+  background: rgba(18,73,126,.04);
+}
+.scene-card.active .scene-title { color: var(--blue); }
+
+/* ── FOOTER ──────────────────────────────────────────── */
+.ftr {
+  height: 56px; flex: 0 0 56px;
+  background: var(--white);
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0 32px;
+  position: relative;
+  flex-shrink: 0;
+}
+.ftr::before {
+  content: "";
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--blue) 0%, var(--teal) 60%, transparent 100%);
+  opacity: .4;
+}
+.ftr-icare {
+  font-size: 11px; font-weight: 400;
+  letter-spacing: .07em; color: var(--muted);
+  font-family: var(--sans);
+}
+.ftr-icare b { font-weight: 700; color: var(--blue); letter-spacing: .1em; font-family: var(--head); }
+.btn-row { display: flex; gap: 10px; justify-content: flex-end; }
+
+/* ── AUDIO PLAYER — center zone of footer ────────────── */
+.audio-player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 380px;
+}
+.ap-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  background: var(--white);
+  color: var(--navy);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all .18s ease;
+  box-shadow: 0 2px 8px rgba(0,59,113,.10);
+  position: relative;
+}
+.ap-btn:hover {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+  transform: scale(1.08);
+  box-shadow: 0 4px 14px rgba(0,59,113,.22);
+}
+.ap-btn svg {
+  width: 14px; height: 14px;
+  fill: currentColor;
+  position: absolute;
+  transition: opacity .15s ease;
+}
+.ap-track {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.ap-bar-wrap {
+  position: relative;
+  height: 7px;
+  background: var(--line);
+  border-radius: 99px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: height .15s ease;
+}
+.ap-bar-wrap:hover {
+  height: 9px;
+  background: #c8d8e8;
+}
+.ap-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--blue-m), var(--teal));
+  width: 0%;
+  transition: width .25s linear;
+  pointer-events: none;
+}
+.ap-times {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--sans);
+  font-size: 10.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .02em;
+  line-height: 1;
+}
+button {
+  border: none; cursor: pointer; border-radius: 99px;
+  height: 36px; padding: 0 20px;
+  font-size: 13px; font-weight: 500;
+  font-family: var(--sans); transition: .18s ease;
+}
+.btn-ghost {
+  background: var(--white); color: var(--navy);
+  border: 1px solid var(--line);
+  box-shadow: 0 2px 8px rgba(0,59,113,.06);
+}
+.btn-ghost:hover { transform: translateY(-1px); border-color: var(--ltblue); }
+.btn-primary {
+  color: #fff;
+  background: linear-gradient(160deg, var(--blue-m), var(--navy-d));
+  box-shadow: 0 6px 18px rgba(0,59,113,.2);
+  font-family: var(--head);
+}
+.btn-primary:hover { transform: translateY(-1px); filter: brightness(1.05); }
+
+/* ── ANIMATIONS ──────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── TRANSCRIPT TAB (right edge) ────────────────────── */
+.transcript-tab {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background: rgba(0,30,60,.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,.12);
+  border-right: none;
+  border-radius: 10px 0 0 10px;
+  color: rgba(255,255,255,.9);
+  padding: 14px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-family: var(--head);
+  cursor: pointer;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  writing-mode: vertical-rl;
+  transition: background .18s ease, padding-right .18s ease, box-shadow .18s ease;
+  height: auto;
+}
+.transcript-tab:hover {
+  background: rgba(26,122,138,.95);
+  padding-right: 12px;
+  box-shadow: -4px 0 16px rgba(0,0,0,.2);
+}
+.transcript-tab svg {
+  width: 14px; height: 14px;
+  writing-mode: horizontal-tb;
+}
+
+/* ── TRANSCRIPT PANEL ───────────────────────────────── */
+.transcript-panel {
+  position: fixed;
+  top: 0; right: 0;
+  width: 380px;
+  height: 100vh;
+  background: rgba(10,20,35,.97);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-left: 1px solid rgba(168,212,218,.2);
+  z-index: 90;
+  transform: translateX(100%);
+  transition: transform .28s cubic-bezier(.4,0,.2,1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -16px 0 40px rgba(0,0,0,.3);
+}
+.transcript-panel.open { transform: translateX(0); }
+.tp-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  flex-shrink: 0;
+}
+.tp-head h3 {
+  font-family: var(--head);
+  font-size: 17px;
+  color: #fff;
+  font-weight: 500;
+  letter-spacing: -.005em;
+}
+.tp-close {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  color: rgba(255,255,255,.7);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .18s ease, color .18s ease;
+  height: 32px; padding: 0;
+}
+.tp-close:hover { background: rgba(255,255,255,.12); color: #fff; }
+.tp-close svg { width: 14px; height: 14px; }
+.tp-body {
+  padding: 18px 24px 28px;
+  overflow-y: auto;
+  flex: 1;
+}
+.tp-body p {
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: rgba(255,255,255,.78);
+  margin-bottom: 14px;
+  font-weight: 400;
+  font-family: var(--sans);
+}
+.tp-body p:last-child { margin-bottom: 0; }
+
+/* ── DEV TIMING OVERLAY (press D to toggle) ─────────── */
+.dev-overlay {
+  display: none;
+  position: fixed;
+  bottom: 60px; left: 20px;
+  width: 340px;
+  background: rgba(0,10,20,.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(168,212,218,.25);
+  border-radius: 14px;
+  padding: 18px 20px 14px;
+  z-index: 100;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 12px;
+  color: rgba(255,255,255,.85);
+  box-shadow: 0 12px 40px rgba(0,0,0,.5);
+}
+.dev-overlay.visible { display: block; }
+.dev-title {
+  font-family: var(--head);
+  font-size: 13px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--teal-lt);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dev-title span { font-size: 10px; color: rgba(255,255,255,.35); letter-spacing: .05em; text-transform: none; }
+.dev-time {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.dev-cue-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 14px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+.dev-cue-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(255,255,255,.04);
+  transition: background .2s ease;
+}
+.dev-cue-item.fired {
+  background: rgba(26,122,138,.2);
+}
+.dev-cue-item.fired .dev-cue-dot {
+  background: var(--teal-lt);
+  box-shadow: 0 0 6px rgba(168,212,218,.5);
+}
+.dev-cue-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.2);
+  flex-shrink: 0;
+  transition: background .2s ease;
+}
+.dev-cue-time {
+  width: 48px;
+  color: rgba(255,255,255,.5);
+  font-variant-numeric: tabular-nums;
+}
+.dev-cue-label {
+  flex: 1;
+  color: rgba(255,255,255,.7);
+}
+.dev-btns {
+  display: flex;
+  gap: 8px;
+}
+.dev-btn {
+  flex: 1;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.8);
+  font-family: var(--head);
+  font-size: 11px;
+  letter-spacing: .06em;
+  cursor: pointer;
+  transition: background .15s ease;
+  padding: 0;
+}
+.dev-btn:hover { background: rgba(255,255,255,.12); }
+/* ── RESPONSIVE HEIGHT ADJUSTMENTS ───────────────────── */
+@media (max-height: 760px) {
+  .main {
+    padding: 18px 36px 12px;
+    gap: 22px;
+  }
+
+  .left-col {
+    gap: 16px;
+  }
+
+  .intro-heading {
+    font-size: clamp(28px, 3vw, 42px);
+    margin-bottom: 10px;
+  }
+
+  .intro-body {
+    font-size: clamp(14px, 1.1vw, 16px);
+    line-height: 1.55;
+  }
+
+  .bridge-card {
+    padding: 18px 22px;
+  }
+
+  .bridge-text {
+    font-size: clamp(15px, 1.3vw, 18px);
+    line-height: 1.45;
+  }
+
+  .split-card {
+    padding: 14px 16px;
+  }
+
+  .split-item {
+    font-size: 13px;
+    line-height: 1.3;
+  }
+
+  .scene-card {
+    padding: 10px 14px;
+    gap: 12px;
+  }
+
+  .scene-num {
+    width: 38px;
+    height: 38px;
+    font-size: 14px;
+  }
+
+  .scene-title {
+    font-size: 14px;
+  }
+
+  .scene-desc {
+    font-size: 12.5px;
+  }
+
+  .scene-time {
+    font-size: 13px;
+  }
+
+  .scene-screens {
+    font-size: 11px;
+  }
+}
+/* ── REVIEW MODE / LAPTOP SAFETY ────────────────────── */
+@media (max-height: 850px) {
+
+  .hdr {
+    height: 56px;
+    flex-basis: 56px;
+    padding: 0 28px;
+  }
+
+  .brand-logo {
+    height: 32px;
+  }
+
+  .main {
+    padding: 18px 34px 10px;
+    gap: 20px;
+  }
+
+  .intro-heading {
+    margin-bottom: 10px;
+  }
+
+  .intro-body {
+    line-height: 1.55;
+  }
+
+  .bridge-card {
+    padding: 18px 22px;
+  }
+
+  .split-card {
+    padding: 14px 16px;
+  }
+
+  .scene-card {
+    min-height: 0;
+  }
+
+  .ftr {
+    height: 50px;
+    flex-basis: 50px;
+    padding: 0 22px;
+  }
+
+  .audio-player {
+    width: 320px;
+  }
+}
+
+/* ── MOBILE / SMALL SCREEN STACKING ─────────────────── */
+@media (max-width: 900px) {
+
+  html, body {
+    overflow: auto;
+  }
+
+  .slide {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .main {
+    grid-template-columns: 1fr;
+    padding: 24px 22px 110px;
+    overflow: visible;
+  }
+
+  .left-col,
+  .right-col {
+    gap: 14px;
+  }
+
+  .scene-card {
+    min-height: 84px;
+  }
+
+  .scene-desc {
+    white-space: normal;
+  }
+
+  .ftr {
+    position: sticky;
+    bottom: 0;
+  }
+
+  .audio-player {
+    width: 240px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Audio -->
+<audio id="slideAudio" preload="auto">
+  <source src="audio/audio_2.mp3" type="audio/mpeg">
+</audio>
+
+<div class="slide">
+
+  <!-- Header -->
+  <header class="hdr">
+    <img src="images/Methodist_Leading_Medicine_White_png.png" alt="Houston Methodist — Leading Medicine" class="brand-logo"/>
+    <div class="hdr-right">
+      <span class="scene-tag">Slide 2 — Course Overview</span>
+      <div class="progress-wrap">
+        <span class="progress-lbl">2 of 16</span>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 11%"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- LEFT -->
+    <div class="left-col">
+
+      <div class="intro-block">
+        <div class="intro-eyebrow">
+          <div class="eyebrow-line"></div>
+          <span class="eyebrow-text">What we're covering today</span>
+        </div>
+        <h1 class="intro-heading">
+          Same foundation.<br>
+          <em>More tools than ever.</em>
+        </h1>
+        <p class="intro-body">
+          In the next 20 minutes, you'll reconnect with the culture you already live and explore the tools Houston Methodist has built to support your growth, development, and impact.
+        </p>
+      </div>
+
+      <div class="bridge-card">
+        <span class="bridge-label">The through-line</span>
+        <p class="bridge-text">
+          <b>Pathway to Unparalleled isn't a class you take once a year.</b>
+          It's how you show up every single day — in every interaction,
+          every choice, every shift.
+        </p>
+      </div>
+
+      <div class="split-row">
+        <div class="split-card foundation">
+          <span class="split-card-label">The Foundation</span>
+          <div class="split-card-title">What you already know &amp; live</div>
+          <div class="split-items">
+            <div class="split-item">Mission, Vision &amp; I CARE Values</div>
+            <div class="split-item">AIDET &amp; Key Words</div>
+            <div class="split-item">Core Service Standards</div>
+            <div class="split-item">Compassionate communication</div>
+          </div>
+        </div>
+        <div class="split-card tools">
+          <span class="split-card-label">The Newer Tools</span>
+          <div class="split-card-title">How Houston Methodist supports your growth</div>
+          <div class="split-items">
+            <div class="split-item">Leadership Behaviors Model</div>
+            <div class="split-item">Leading Self behaviors</div>
+            <div class="split-item">FPR cycle &amp; development plan</div>
+            <div class="split-item">70-20-10 &amp; HMALL programs</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: scene overview -->
+    <div class="right-col">
+      <span class="scenes-label">Course at a glance — 5 scenes · ~20 min</span>
+
+      <div class="scene-card s01 active">
+        <div class="scene-num">01</div>
+        <div class="scene-body">
+          <div class="scene-title">Welcome — This Is Your Culture</div>
+          <div class="scene-desc">You're here. Pathway to Unparalleled is every day.</div>
+        </div>
+        <div class="scene-meta">
+          <span class="scene-time">~2 min</span>
+          <span class="scene-screens">2 slides</span>
+        </div>
+      </div>
+
+      <div class="scene-card s02">
+        <div class="scene-num">02</div>
+        <div class="scene-body">
+          <div class="scene-title">Our Culture Foundation</div>
+          <div class="scene-desc">Mission · Vision · I CARE · AIDET · Service Standards</div>
+        </div>
+        <div class="scene-meta">
+          <span class="scene-time">~4 min</span>
+          <span class="scene-screens">4 slides</span>
+        </div>
+      </div>
+
+      <div class="scene-card s03">
+        <div class="scene-num">03</div>
+        <div class="scene-body">
+          <div class="scene-title">Leadership Behaviors Model</div>
+          <div class="scene-desc">LBM overview · 3 domains · Leading Self behaviors</div>
+        </div>
+        <div class="scene-meta">
+          <span class="scene-time">~5 min</span>
+          <span class="scene-screens">4 slides</span>
+        </div>
+      </div>
+
+      <div class="scene-card s04">
+        <div class="scene-num">04</div>
+        <div class="scene-body">
+          <div class="scene-title">Talent Management &amp; The FPR</div>
+          <div class="scene-desc">Dev philosophy · FPR cycle · 70-20-10</div>
+        </div>
+        <div class="scene-meta">
+          <span class="scene-time">~4 min</span>
+          <span class="scene-screens">4 slides</span>
+        </div>
+      </div>
+
+      <div class="scene-card s05">
+        <div class="scene-num">05</div>
+        <div class="scene-body">
+          <div class="scene-title">The Vision &amp; Wrap-Up</div>
+          <div class="scene-desc">Forces of Change · it all connects · your next step</div>
+        </div>
+        <div class="scene-meta">
+          <span class="scene-time">~3 min</span>
+          <span class="scene-screens">2 slides</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="ftr">
+
+    <!-- Zone 1: I CARE -->
+    <span class="ftr-icare">
+      <b>I CARE</b> &nbsp;·&nbsp;
+      Integrity &nbsp;·&nbsp; Compassion &nbsp;·&nbsp;
+      Accountability &nbsp;·&nbsp; Respect &nbsp;·&nbsp; Excellence
+    </span>
+
+    <!-- Zone 2: Audio player (centered) -->
+    <div class="audio-player">
+      <button class="ap-btn" id="apBtn" title="Play / Pause" aria-label="Play / Pause">
+        <svg id="iconPlay" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M3 2.5v11l10-5.5z"/>
+        </svg>
+        <svg id="iconPause" viewBox="0 0 16 16" aria-hidden="true" style="opacity:0">
+          <path d="M4 2h2.5v12H4zm5.5 0H12v12H9.5z"/>
+        </svg>
+      </button>
+      <div class="ap-track">
+        <div class="ap-bar-wrap" id="apBarWrap">
+          <div class="ap-bar-fill" id="apBarFill"></div>
+        </div>
+        <div class="ap-times">
+          <span id="apCurrent">0:00</span>
+          <span id="apDuration">0:00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zone 3: Nav buttons -->
+    <div class="btn-row">
+      <button class="btn-ghost" id="btnPrev">← Back</button>
+      <button class="btn-primary" id="btnNext">Let's Go →</button>
+    </div>
+
+  </footer>
+
+</div>
+
+<!-- Transcript tab (right edge) -->
+<button class="transcript-tab" onclick="toggleTranscript()" aria-label="Show narration transcript">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+    <line x1="8" y1="13" x2="16" y2="13"/>
+    <line x1="8" y1="17" x2="16" y2="17"/>
+    <line x1="8" y1="9" x2="11" y2="9"/>
+  </svg>
+  Transcript
+</button>
+
+<div class="transcript-panel" id="transcriptPanel" role="dialog" aria-label="Narration transcript">
+  <div class="tp-head">
+    <h3>Narration Transcript</h3>
+    <button class="tp-close" onclick="toggleTranscript()" aria-label="Close transcript">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="tp-body">
+  <p>In the next 20 minutes, you'll reconnect with the culture you already live and explore the tools Houston Methodist has built to support your growth, development, and impact.</p>
+
+<p>We’ll begin with the culture that shapes how we show up every day — with patients, families, and each other — and the mission, values, and service standards that guide our work.</p>
+
+<p>From there, we’ll explore the leadership behaviors that show up in your day-to-day experience, no matter your role or title.</p>
+
+<p>Then we’ll look at how growth happens here — through development, feedback, the Focal Point Review process, and the support systems around you.</p>
+
+<p>We’ll close with the forces shaping healthcare, why your growth matters beyond your own career, and one clear next step you can take moving forward.</p>
+
+<p>Same foundation you already know. More tools than ever.</p>
+
+<p>Let’s go.</p>
+  </div>
+</div>
+
+<!-- Dev Timing Overlay (press D to toggle) -->
+<div class="dev-overlay" id="devOverlay">
+  <div class="dev-title">
+    Timing Dev Panel
+    <span>Press D to close</span>
+  </div>
+  <div class="dev-time" id="devTime">0.0s</div>
+  <ul class="dev-cue-list" id="devCueList"></ul>
+  <div class="dev-btns">
+    <button class="dev-btn" onclick="restartAudio()">↺ Restart</button>
+    <button class="dev-btn" onclick="togglePlayPause()">⏯ Play / Pause</button>
+  </div>
+</div>
+
+<script>
+// ====== TRANSCRIPT PANEL ======
+function toggleTranscript() {
+  document.getElementById('transcriptPanel').classList.toggle('open');
+}
+
+// ====== AUDIO PLAYBACK ======
+const audio = document.getElementById('slideAudio');
+let audioStarted = false;
+
+// Attempt autoplay; if blocked, play on first user gesture of any kind
+function startAudio() {
+  if (audioStarted) return;
+  audio.play().then(() => { audioStarted = true; }).catch(() => {});
+}
+window.addEventListener('load', () => {
+  startAudio();
+  // Fallback: any user gesture unlocks audio. We use { once: true } per
+  // event type so the first click/key/touch anywhere will kick it off.
+  ['click', 'keydown', 'touchstart'].forEach(evt => {
+    document.addEventListener(evt, startAudio, { once: true });
+  });
+});
+
+// ====== AUDIO-CUED ANIMATIONS ======
+// Cue map — matched to audio_2.mp3 (~30s)
+// These timings carry over from the original Storyline-synced build.
+// Adjust 'at' values (in seconds) after listening to re-recorded audio.
+const CUES = [
+  { at: 9.0,  label: 'Scene 01 card', do: () => document.querySelector('.scene-card.s01').classList.add('cued') },
+
+  { at: 10.0, label: 'Bridge card', do: () => document.querySelector('.bridge-card').classList.add('cued') },
+
+  { at: 16.0, label: 'Scene 02 card', do: () => document.querySelector('.scene-card.s02').classList.add('cued') },
+
+  { at: 19.0, label: 'Scene 03 card', do: () => document.querySelector('.scene-card.s03').classList.add('cued') },
+
+  { at: 27.0, label: 'Scene 04 card', do: () => document.querySelector('.scene-card.s04').classList.add('cued') },
+
+  { at: 33.0, label: 'Scene 05 card', do: () => document.querySelector('.scene-card.s05').classList.add('cued') },
+
+  { at: 40.0, label: 'Foundation/Tools split', do: () => document.querySelector('.split-row').classList.add('cued') }
+];
+
+// Track which cues have fired
+const cueFired = CUES.map(() => false);
+
+// Fire cues based on audio currentTime
+function checkCues() {
+  const t = audio.currentTime;
+  CUES.forEach((c, i) => {
+    if (!cueFired[i] && t >= c.at) {
+      c.do();
+      cueFired[i] = true;
+      // Update dev overlay
+      const item = document.querySelectorAll('.dev-cue-item')[i];
+      if (item) item.classList.add('fired');
+    }
+  });
+}
+
+// Poll audio time for cue firing + dev display
+function tick() {
+  checkCues();
+  // Update dev time display
+  const devTime = document.getElementById('devTime');
+  if (devTime) devTime.textContent = audio.currentTime.toFixed(1) + 's';
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+// ====== DEV TIMING OVERLAY ======
+// Build cue list in overlay
+(function buildDevCueList() {
+  const list = document.getElementById('devCueList');
+  CUES.forEach((c, i) => {
+    const li = document.createElement('li');
+    li.className = 'dev-cue-item';
+    li.innerHTML = `<span class="dev-cue-dot"></span><span class="dev-cue-time">${c.at.toFixed(1)}s</span><span class="dev-cue-label">${c.label}</span>`;
+    list.appendChild(li);
+  });
+})();
+
+// Toggle with D key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'd' || e.key === 'D') {
+    // Don't trigger if user is typing in an input
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    document.getElementById('devOverlay').classList.toggle('visible');
+  }
+});
+
+function restartAudio() {
+  audio.currentTime = 0;
+  // Reset all cues
+  cueFired.fill(false);
+  CUES.forEach((c) => {
+    // Remove cued class — need to figure out what element each cue targets
+    // Reset scene cards
+    document.querySelectorAll('.scene-card').forEach(el => el.classList.remove('cued'));
+    document.querySelector('.split-row').classList.remove('cued');
+    document.querySelector('.bridge-card').classList.remove('cued');
+  });
+  // Reset dev overlay dots
+  document.querySelectorAll('.dev-cue-item').forEach(el => el.classList.remove('fired'));
+  audio.play();
+}
+
+function togglePlayPause() {
+  if (audio.paused) { audio.play(); } else { audio.pause(); }
+}
+
+// ====== AUDIO PLAYER UI ======
+const apBtn      = document.getElementById('apBtn');
+const iconPlay   = document.getElementById('iconPlay');
+const iconPause  = document.getElementById('iconPause');
+const apBarFill  = document.getElementById('apBarFill');
+const apBarWrap  = document.getElementById('apBarWrap');
+const apCurrent  = document.getElementById('apCurrent');
+const apDuration = document.getElementById('apDuration');
+
+function fmtTime(s) {
+  if (!isFinite(s)) return '0:00';
+  return Math.floor(s / 60) + ':' + Math.floor(s % 60).toString().padStart(2, '0');
+}
+function updatePlayer() {
+  const dur = audio.duration || 0;
+  const cur = audio.currentTime || 0;
+  apBarFill.style.width  = (dur > 0 ? cur / dur * 100 : 0) + '%';
+  apCurrent.textContent  = fmtTime(cur);
+  apDuration.textContent = fmtTime(dur);
+  iconPlay.style.opacity  = audio.paused ? '1' : '0';
+  iconPause.style.opacity = audio.paused ? '0' : '1';
+}
+apBtn.addEventListener('click', () => {
+  audio.paused ? audio.play().catch(() => {}) : audio.pause();
+  updatePlayer();
+});
+audio.addEventListener('timeupdate',     updatePlayer);
+audio.addEventListener('loadedmetadata', updatePlayer);
+audio.addEventListener('play',           updatePlayer);
+audio.addEventListener('pause',          updatePlayer);
+apBarWrap.addEventListener('click', (e) => {
+  const pct = (e.clientX - apBarWrap.getBoundingClientRect().left) / apBarWrap.offsetWidth;
+  if (audio.duration > 0) audio.currentTime = pct * audio.duration;
+});
+
+// ====== NAVIGATION ======
+// Matches the message format used by the rest of the slides (slide_8, etc.)
+// so the SCORM wrapper shell handles them consistently.
+document.getElementById('btnPrev').addEventListener('click', () => {
+  window.parent.postMessage({ type: 'nav', action: 'prev' }, '*');
+});
+document.getElementById('btnNext').addEventListener('click', () => {
+  window.parent.postMessage({ type: 'nav', action: 'next' }, '*');
+});
+
+// Listen for audio trigger from parent shell (sent after user gesture on slide 1)
+window.addEventListener('message', function(e) {
+  const d = e.data;
+  if (d === 'playAudio' || (d && d.type === 'playAudio')) {
+    startAudio();
+  }
+});
+</script>
+</body>
+</html>
