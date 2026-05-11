@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HM · Slide 3 — Culture Framework</title>
+<style>
+:root {
+  --navy:    #003B71;
+  --navy-d:  #002A52;
+  --blue:    #12497E;
+  --blue-m:  #1A5C9A;
+  --ltblue:  #749ABB;
+  --sky:     #C8DFF0;
+  --teal:    #1A7A8A;
+  --teal-lt: #A8D4DA;
+  --white:   #FFFFFF;
+  --bg:      #F2F6FA;
+  --soft:    #F8FAFC;
+  --line:    #DDE6F0;
+  --text:    #1A2B3C;
+  --muted:   #5A7080;
+
+  /* pyramid layer colors — HM secondary palette */
+  --p-mission: #AB0032;
+  --p-vision:  #69813A;
+  --p-icare:   #007078;
+
+  --head: 'Franklin Gothic Medium', 'Franklin Gothic Demi', 'Arial Narrow Bold', Arial, sans-serif;
+  --sans: 'Franklin Gothic Book', 'Franklin Gothic Medium', Calibri, Arial, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+}
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse at 5% 50%, rgba(116,154,187,.07) 0%, transparent 55%),
+    radial-gradient(ellipse at 95% 15%, rgba(26,122,138,.05) 0%, transparent 50%);
+  pointer-events: none; z-index: 0;
+}
+.slide {
+  width: 100vw; height: 100vh;
+  display: flex; flex-direction: column;
+  position: relative; z-index: 1;
+}
+
+/* ── HEADER ──────────────────────────────────────────── */
+.hdr {
+  height: 68px; flex: 0 0 68px;
+  background: var(--navy);
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  position: relative;
+}
+.hdr::after {
+  content: "";
+  position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--navy-d) 0%, var(--blue-m) 55%, var(--teal) 100%);
+}
+.brand-logo {
+  height: 40px;
+  width: auto;
+  flex-shrink: 0;
+}
+.hdr-right  { display: flex; align-items: center; gap: 20px; }
+.scene-tag  {
+  padding: 5px 14px; border-radius: 99px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+  font-size: 11px; font-weight: 500; letter-spacing: .07em; text-transform: uppercase;
+  color: rgba(255,255,255,.65);
+  font-family: var(--sans);
+}
+.progress-wrap { display: flex; align-items: center; gap: 10px; }
+.progress-lbl  { font-size: 12px; color: rgba(255,255,255,.45); font-family: var(--sans); }
+.progress-bar  { width: 100px; height: 5px; border-radius: 99px; background: rgba(255,255,255,.15); overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--ltblue), var(--teal-lt)); }
+
+/* ── MAIN ────────────────────────────────────────────── */
+.main {
+  flex: 1; min-height: 0;
+  padding: 24px 44px 16px;
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 32px;
+  align-items: center;
+}
+
+/* ── LEFT: PYRAMID ───────────────────────────────────── */
+.pyramid-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  height: 100%;
+  opacity: 0;
+  animation: fadeUp .5s ease .1s forwards;
+}
+
+.pyramid-title {
+  font-size: 13px;
+  font-family: var(--head);
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 20px;
+  align-self: flex-start; padding-left: 8px;
+}
+
+/* SVG pyramid wrapper */
+.pyramid-wrap {
+  width: 100%;
+  max-width: 580px;
+  position: relative;
+}
+.pyramid-wrap svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 12px 32px rgba(0,59,113,.14));
+}
+
+/* Layer polygons */
+.layer {
+  cursor: pointer;
+  opacity: 0;
+  transform-origin: 300px 230px;
+  transition: opacity .65s ease, filter .2s;
+  pointer-events: none;
+}
+.layer.built {
+  opacity: 1;
+  pointer-events: auto;
+}
+.layer.built:hover polygon { filter: brightness(1.12); }
+.layer polygon {
+  transition: opacity .2s, filter .2s;
+}
+.layer.viewed polygon { opacity: 1 !important; }
+
+/* Check indicator */
+.layer-check {
+  opacity: 0;
+  transition: opacity .3s ease .15s;
+}
+.layer.viewed .layer-check { opacity: 1; }
+
+/* Layer text */
+.layer-label {
+  font-family: var(--head);
+  font-size: 16px;
+  fill: rgba(255,255,255,.95);
+  pointer-events: none;
+  letter-spacing: .08em;
+}
+.layer-sub {
+  font-family: var(--sans);
+  font-size: 9.5px;
+  fill: rgba(255,255,255,.6);
+  pointer-events: none;
+  letter-spacing: .03em;
+}
+
+/* Progress dots */
+.progress-dots {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+  align-items: center;
+}
+.dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--line);
+  transition: background .3s, transform .2s;
+}
+.dot.on { transform: scale(1.2); }
+.dot.d1.on { background: var(--p-mission); }
+.dot.d2.on { background: var(--p-vision); }
+.dot.d3.on { background: var(--p-icare); }
+.dots-label {
+  font-size: 13px; color: var(--muted);
+  margin-left: 4px; font-weight: 400;
+  font-family: var(--sans);
+}
+
+/* ── RIGHT: CALLOUT PANEL ───────────────────────────── */
+.callout-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 12px;
+  height: 100%;
+  overflow-y: auto;
+  opacity: 0;
+  animation: fadeUp .5s ease .2s forwards;
+}
+
+.col-eyebrow {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 2px;
+}
+.ey-line { width: 28px; height: 2px; background: var(--teal); flex-shrink: 0; }
+.ey-text {
+  font-size: 13px;
+  font-family: var(--head);
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--teal);
+}
+
+.col-heading {
+  font-family: var(--head);
+  font-size: clamp(24px, 2.6vw, 38px);
+  line-height: 1.06;
+  color: var(--navy);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.col-heading em { font-style: italic; color: var(--teal); }
+
+.col-intro {
+  font-size: clamp(14px, 1.2vw, 17px);
+  font-weight: 400; line-height: 1.65;
+  color: var(--muted);
+  max-width: 440px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--sans);
+}
+
+/* Callout cards — one per layer */
+.callout-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  justify-content: center;
+}
+
+.callout-card {
+  border-radius: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  background: var(--white);
+  box-shadow: 0 2px 10px rgba(0,59,113,.05);
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  transition: border-color .25s, box-shadow .25s, opacity .55s ease, transform .55s ease, padding .3s ease;
+  opacity: 0;
+  transform: translateX(20px);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  pointer-events: none;
+}
+.callout-card.revealed {
+  opacity: .55;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.callout-card::before {
+  content: "";
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 4px;
+  border-radius: 12px 0 0 12px;
+  transition: background .25s;
+}
+.callout-card.c-mission::before { background: var(--p-mission); }
+.callout-card.c-vision::before  { background: var(--p-vision); }
+.callout-card.c-icare::before   { background: var(--p-icare); }
+
+.callout-card.active {
+  opacity: 1;
+  transform: translateX(0);
+  border-color: transparent;
+  box-shadow: 0 6px 24px rgba(0,59,113,.1);
+}
+.callout-card.c-mission.active { border-color: rgba(171,0,50,.2); }
+.callout-card.c-vision.active  { border-color: rgba(105,129,58,.2); }
+.callout-card.c-icare.active   { border-color: rgba(0,112,120,.22); }
+
+/* Viewed but collapsed (accordion closed) */
+.callout-card.viewed-collapsed {
+  opacity: .75;
+  padding: 10px 16px;
+}
+.callout-card.viewed-collapsed .card-text { display: none; }
+.callout-card.viewed-collapsed .card-cta { display: none; }
+.callout-card.viewed-collapsed .card-reveal { max-height: 0; opacity: 0; margin-top: 0; }
+.callout-card.viewed-collapsed .card-icon { width: 32px; height: 32px; font-size: 14px; }
+/* Show a small checkmark on collapsed viewed cards */
+.callout-card.viewed-collapsed::after {
+  content: "✓";
+  position: absolute;
+  top: 10px; right: 14px;
+  font-size: 14px;
+  color: var(--teal);
+  font-weight: 700;
+}
+
+.card-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 16px;
+  transition: width .3s ease, height .3s ease, font-size .3s ease;
+}
+.c-mission .card-icon { background: rgba(171,0,50,.1); }
+.c-vision  .card-icon { background: rgba(105,129,58,.1); }
+.c-icare   .card-icon { background: rgba(0,112,120,.1); }
+
+.card-body { flex: 1; }
+.card-layer-tag {
+  font-size: 12px;
+  font-family: var(--head);
+  letter-spacing: .14em; text-transform: uppercase;
+  margin-bottom: 5px; display: block;
+}
+.c-mission .card-layer-tag { color: var(--p-mission); }
+.c-vision  .card-layer-tag { color: var(--p-vision); }
+.c-icare   .card-layer-tag { color: var(--p-icare); }
+
+.card-title {
+  font-size: clamp(15px, 1.25vw, 19px);
+  font-family: var(--head);
+  font-weight: 500; color: var(--navy);
+  margin-bottom: 6px; line-height: 1.2;
+}
+.card-text {
+  font-size: clamp(13px, 1.05vw, 15px);
+  font-weight: 400; color: var(--muted);
+  line-height: 1.55;
+  font-family: var(--sans);
+}
+.card-cta {
+  font-size: 13px;
+  font-family: var(--head);
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ltblue); margin-top: 6px;
+  display: block; transition: color .2s;
+}
+.callout-card:not(.active) .card-cta { color: var(--ltblue); }
+.callout-card.active .card-cta { display: none; }
+
+/* "In Your Work" reveal section */
+.card-reveal {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height .45s cubic-bezier(.4,0,.2,1), opacity .35s ease .1s, margin-top .35s ease;
+  margin-top: 0;
+}
+.callout-card.active .card-reveal {
+  max-height: 200px;
+  opacity: 1;
+  margin-top: 10px;
+}
+.card-reveal-label {
+  font-size: 11px;
+  font-family: var(--head);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.card-reveal-label::before {
+  content: "";
+  width: 16px; height: 2px;
+  background: var(--teal);
+  flex-shrink: 0;
+}
+.card-reveal-text {
+  font-size: clamp(13px, 1.05vw, 15px);
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.6;
+  font-family: var(--sans);
+  padding: 12px 14px;
+  background: var(--soft);
+  border-radius: 10px;
+  border-left: 3px solid var(--teal);
+}
+.c-mission.active .card-reveal-text { border-left-color: var(--p-mission); }
+.c-vision.active .card-reveal-text  { border-left-color: var(--p-vision); }
+.c-icare.active .card-reveal-text   { border-left-color: var(--p-icare); }
+
+/* instruction hint */
+.hint-row {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 4px;
+}
+.hint-icon {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: rgba(26,122,138,.1);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.hint-icon svg { width: 10px; height: 10px; stroke: var(--teal); fill: none; stroke-width: 2.5; }
+.hint-text {
+  font-size: 13px; color: var(--muted);
+  font-style: italic;
+  font-family: var(--sans);
+}
+
+/* ── FOOTER ──────────────────────────────────────────── */
+.ftr {
+  height: 56px; flex: 0 0 56px;
+  background: var(--white);
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0 32px;
+  position: relative;
+  flex-shrink: 0;
+}
+.ftr::before {
+  content: "";
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--blue) 0%, var(--teal) 60%, transparent 100%);
+  opacity: .4;
+}
+.ftr-icare { font-size: 11px; letter-spacing: .07em; color: var(--muted); font-family: var(--sans); }
+.ftr-icare b { font-weight: 700; color: var(--blue); letter-spacing: .1em; font-family: var(--head); }
+.btn-row { display: flex; gap: 10px; align-items: center; justify-content: flex-end; }
+
+/* ── AUDIO PLAYER — center zone of footer ────────────── */
+.audio-player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 380px;
+}
+.ap-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  background: var(--white);
+  color: var(--navy);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all .18s ease;
+  box-shadow: 0 2px 8px rgba(0,59,113,.10);
+  position: relative;
+}
+.ap-btn:hover {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+  transform: scale(1.08);
+  box-shadow: 0 4px 14px rgba(0,59,113,.22);
+}
+.ap-btn svg {
+  width: 14px; height: 14px;
+  fill: currentColor;
+  position: absolute;
+  transition: opacity .15s ease;
+}
+.ap-track {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.ap-bar-wrap {
+  position: relative;
+  height: 7px;
+  background: var(--line);
+  border-radius: 99px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: height .15s ease;
+}
+.ap-bar-wrap:hover {
+  height: 9px;
+  background: #c8d8e8;
+}
+.ap-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--blue-m), var(--teal));
+  width: 0%;
+  transition: width .25s linear;
+  pointer-events: none;
+}
+.ap-times {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--sans);
+  font-size: 10.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .02em;
+  line-height: 1;
+}
+button {
+  border: none; cursor: pointer; border-radius: 99px;
+  height: 36px; padding: 0 20px;
+  font-size: 13px; font-weight: 500;
+  font-family: var(--sans); transition: .18s ease;
+}
+.btn-ghost {
+  background: var(--white); color: var(--navy);
+  border: 1px solid var(--line);
+}
+.btn-ghost:hover { transform: translateY(-1px); border-color: var(--ltblue); }
+.btn-primary {
+  color: #fff;
+  background: linear-gradient(160deg, var(--blue-m), var(--navy-d));
+  box-shadow: 0 6px 18px rgba(0,59,113,.2);
+  opacity: .4; pointer-events: none;
+  transition: opacity .35s, transform .18s, box-shadow .18s;
+  font-family: var(--head);
+}
+.btn-primary.unlocked {
+  opacity: 1; pointer-events: all;
+}
+.btn-primary.unlocked:hover { transform: translateY(-1px); filter: brightness(1.05); }
+
+.progress-count {
+  font-size: 12px; color: var(--muted);
+  font-weight: 400;
+  font-family: var(--sans);
+}
+.progress-count b { color: var(--blue); font-weight: 600; font-family: var(--head); }
+
+/* ── ANIMATIONS ──────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── TRANSCRIPT TAB ─────────────────────────────────── */
+.transcript-tab {
+  position: fixed;
+  top: 50%; right: 0;
+  transform: translateY(-50%);
+  background: rgba(0,30,60,.85);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,.12); border-right: none;
+  border-radius: 10px 0 0 10px;
+  color: rgba(255,255,255,.9);
+  padding: 14px 8px;
+  font-size: 11px;
+  font-family: var(--head);
+  letter-spacing: .14em; text-transform: uppercase;
+  cursor: pointer; z-index: 80;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  writing-mode: vertical-rl;
+  transition: background .18s ease, padding-right .18s ease, box-shadow .18s ease;
+  height: auto;
+}
+.transcript-tab:hover {
+  background: rgba(26,122,138,.95);
+  padding-right: 12px;
+  box-shadow: -4px 0 16px rgba(0,0,0,.2);
+}
+.transcript-tab svg { width: 14px; height: 14px; writing-mode: horizontal-tb; }
+
+/* ── TRANSCRIPT PANEL ───────────────────────────────── */
+.transcript-panel {
+  position: fixed; top: 0; right: 0;
+  width: 380px; height: 100vh;
+  background: rgba(10,20,35,.97);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  border-left: 1px solid rgba(168,212,218,.2);
+  z-index: 90;
+  transform: translateX(100%);
+  transition: transform .28s cubic-bezier(.4,0,.2,1);
+  display: flex; flex-direction: column;
+  box-shadow: -16px 0 40px rgba(0,0,0,.3);
+}
+.transcript-panel.open { transform: translateX(0); }
+.tp-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  flex-shrink: 0;
+}
+.tp-head h3 {
+  font-family: var(--head);
+  font-size: 17px; color: #fff; font-weight: 500;
+}
+.tp-close {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  color: rgba(255,255,255,.7);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .18s ease, color .18s ease;
+  padding: 0;
+}
+.tp-close:hover { background: rgba(255,255,255,.12); color: #fff; }
+.tp-close svg { width: 14px; height: 14px; }
+.tp-body {
+  padding: 18px 24px 28px;
+  overflow-y: auto; flex: 1;
+}
+.tp-body p {
+  font-size: 13.5px; line-height: 1.7;
+  color: rgba(255,255,255,.78);
+  margin-bottom: 14px; font-weight: 400;
+  font-family: var(--sans);
+}
+.tp-body p:last-child { margin-bottom: 0; }
+
+/* ── DEV TIMING OVERLAY ─────────────────────────────── */
+.dev-overlay {
+  display: none;
+  position: fixed;
+  bottom: 60px; left: 20px;
+  width: 340px;
+  background: rgba(0,10,20,.94);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(168,212,218,.25);
+  border-radius: 14px;
+  padding: 18px 20px 14px;
+  z-index: 100;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 12px;
+  color: rgba(255,255,255,.85);
+  box-shadow: 0 12px 40px rgba(0,0,0,.5);
+}
+.dev-overlay.visible { display: block; }
+.dev-title {
+  font-family: var(--head);
+  font-size: 13px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--teal-lt); margin-bottom: 12px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.dev-title span { font-size: 10px; color: rgba(255,255,255,.35); letter-spacing: .05em; text-transform: none; }
+.dev-time { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 14px; font-variant-numeric: tabular-nums; }
+.dev-cue-list { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; max-height: 180px; overflow-y: auto; }
+.dev-cue-item { display: flex; align-items: center; gap: 10px; padding: 4px 8px; border-radius: 6px; background: rgba(255,255,255,.04); transition: background .2s ease; }
+.dev-cue-item.fired { background: rgba(26,122,138,.2); }
+.dev-cue-item.fired .dev-cue-dot { background: var(--teal-lt); box-shadow: 0 0 6px rgba(168,212,218,.5); }
+.dev-cue-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.2); flex-shrink: 0; transition: background .2s ease; }
+.dev-cue-time { width: 48px; color: rgba(255,255,255,.5); font-variant-numeric: tabular-nums; }
+.dev-cue-label { flex: 1; color: rgba(255,255,255,.7); }
+.dev-btns { display: flex; gap: 8px; }
+.dev-btn {
+  flex: 1; height: 30px; border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.8);
+  font-family: var(--head); font-size: 11px;
+  letter-spacing: .06em; cursor: pointer;
+  transition: background .15s ease; padding: 0;
+}
+.dev-btn:hover { background: rgba(255,255,255,.12); }
+
+/* ── RESPONSIVE BREAKPOINTS ──────────────────────────── */
+/* Short screens: trim header/footer/padding regardless of width */
+@media (max-height: 850px) {
+  .hdr { height: 56px; flex-basis: 56px; padding: 0 28px; }
+  .brand-logo { height: 32px; }
+  .main { padding: 18px 34px 10px; gap: 24px; }
+  .ftr { height: 50px; flex-basis: 50px; padding: 0 22px; }
+  .audio-player { width: 320px; }
+}
+
+/* Tablet landscape: keep 2-col but tighten */
+@media (min-width: 901px) and (max-width: 1199px) {
+  .main { padding: 20px 28px 14px; gap: 22px; }
+  .audio-player { width: 280px; }
+}
+
+/* Tablet portrait & narrow: stack columns, allow scroll */
+@media (max-width: 900px) {
+  html, body { overflow: auto; }
+  .slide { height: auto; min-height: 100vh; }
+  .main {
+    grid-template-columns: 1fr;
+    padding: 22px 22px 110px;
+    align-items: stretch;
+    gap: 24px;
+  }
+  .pyramid-col { height: auto; padding: 12px 0; }
+  .ftr { position: sticky; bottom: 0; }
+  .audio-player { width: 240px; }
+}
+
+/* Phone portrait: compact header, stack footer */
+@media (max-width: 600px) {
+  .hdr { padding: 0 16px; height: 52px; flex-basis: 52px; }
+  .scene-tag { display: none; }
+  .progress-bar { width: 70px; }
+  .main { padding: 16px 14px 110px; gap: 20px; }
+
+  .ftr {
+    grid-template-columns: 1fr;
+    height: auto;
+    flex-basis: auto;
+    padding: 10px 14px 12px;
+    row-gap: 8px;
+  }
+  .ftr-icare { font-size: 10px; order: 3; text-align: center; }
+  .audio-player { width: 100%; order: 1; }
+  .btn-row { width: 100%; justify-content: space-between; order: 2; }
+}
+</style>
+</head>
+<body>
+
+<!-- Audio -->
+<audio id="slideAudio" preload="auto">
+  <source src="audio/audio_3.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Audio for card interactions -->
+<audio id="audioMission" preload="auto"><source src="audio/audio_3-1.mp3" type="audio/mpeg"></audio>
+<audio id="audioVision" preload="auto"><source src="audio/audio_3-2.mp3" type="audio/mpeg"></audio>
+<audio id="audioIcare" preload="auto"><source src="audio/audio_3-3.mp3" type="audio/mpeg"></audio>
+
+<div class="slide">
+
+  <!-- Header -->
+  <header class="hdr">
+    <img src="images/Methodist_Leading_Medicine_White_png.png" alt="Houston Methodist — Leading Medicine" class="brand-logo"/>
+    <div class="hdr-right">
+      <span class="scene-tag">Slide 3 — Culture Framework</span>
+      <div class="progress-wrap">
+        <span class="progress-lbl">3 of 16</span>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:17%"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- LEFT: Pyramid -->
+    <div class="pyramid-col">
+      <p class="pyramid-title">The HM Culture Framework</p>
+
+      <div class="pyramid-wrap">
+        <svg viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="shadow" x="-8%" y="-8%" width="116%" height="124%">
+              <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#001830" flood-opacity=".15"/>
+            </filter>
+            <linearGradient id="gMission" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(255,255,255,.18)"/>
+              <stop offset="100%" stop-color="rgba(0,0,0,.1)"/>
+            </linearGradient>
+            <linearGradient id="gVision" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(255,255,255,.14)"/>
+              <stop offset="100%" stop-color="rgba(0,0,0,.08)"/>
+            </linearGradient>
+            <linearGradient id="gIcare" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(255,255,255,.1)"/>
+              <stop offset="100%" stop-color="rgba(0,0,0,.06)"/>
+            </linearGradient>
+          </defs>
+
+          <!-- LAYER 3 (base): I CARE Values — Turquoise #007078 -->
+          <!-- Trapezoid: wide base, narrower top -->
+          <g class="layer" id="layer-icare" onclick="clickLayer('icare')" filter="url(#shadow)">
+            <polygon points="24,410 576,410 460,272 140,272" fill="#007078" rx="4"/>
+            <polygon points="24,410 576,410 460,272 140,272" fill="url(#gIcare)"/>
+            <line x1="140" y1="272" x2="460" y2="272" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
+            <text class="layer-label" x="300" y="330" text-anchor="middle" dominant-baseline="middle" font-size="19">I CARE VALUES</text>
+            <text class="layer-sub" x="300" y="358" text-anchor="middle" dominant-baseline="middle" font-size="11.5">Integrity · Compassion · Accountability · Respect · Excellence</text>
+            <g class="layer-check" transform="translate(470, 335)">
+              <circle cx="0" cy="0" r="15" fill="rgba(255,255,255,.2)"/>
+              <polyline points="-6,0 -2,5 7,-5" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+          </g>
+
+          <!-- LAYER 2 (middle): Vision — Dark Green #69813A -->
+          <g class="layer" id="layer-vision" onclick="clickLayer('vision')" filter="url(#shadow)">
+            <polygon points="140,266 460,266 380,152 220,152" fill="#69813A"/>
+            <polygon points="140,266 460,266 380,152 220,152" fill="url(#gVision)"/>
+            <line x1="220" y1="152" x2="380" y2="152" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
+            <text class="layer-label" x="300" y="198" text-anchor="middle" dominant-baseline="middle" font-size="18">VISION</text>
+            <text class="layer-sub" x="300" y="224" text-anchor="middle" dominant-baseline="middle" font-size="11">Unparalleled Safety · Quality · Service · Innovation</text>
+            <g class="layer-check" transform="translate(388, 202)">
+              <circle cx="0" cy="0" r="14" fill="rgba(255,255,255,.2)"/>
+              <polyline points="-5.5,0 -1.5,4.5 6.5,-4.5" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+          </g>
+
+          <!-- LAYER 1 (top): Mission — Mulberry Red #AB0032 -->
+          <!-- Flat-topped trapezoid instead of pointed triangle -->
+          <g class="layer" id="layer-mission" onclick="clickLayer('mission')" filter="url(#shadow)">
+            <polygon points="220,146 380,146 330,50 270,50" fill="#AB0032"/>
+            <polygon points="220,146 380,146 330,50 270,50" fill="url(#gMission)"/>
+            <text class="layer-label" x="300" y="100" text-anchor="middle" dominant-baseline="middle" font-size="18">MISSION</text>
+            <g class="layer-check" transform="translate(340, 94)">
+              <circle cx="0" cy="0" r="13" fill="rgba(255,255,255,.2)"/>
+              <polyline points="-5,0 -1.5,4 6,-4" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Progress dots -->
+      <div class="progress-dots">
+        <div class="dot d1" id="dot1"></div>
+        <div class="dot d2" id="dot2"></div>
+        <div class="dot d3" id="dot3"></div>
+        <span class="dots-label" id="dotsLabel">Watch each layer build, then click to explore</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: Callout panel -->
+    <div class="callout-col">
+
+      <div>
+        <div class="col-eyebrow">
+          <div class="ey-line"></div>
+          <span class="ey-text">Slide 3 · Culture Foundation</span>
+        </div>
+        <h1 class="col-heading">
+          Three layers.<br>
+          <em>One operating system.</em>
+        </h1>
+        <p class="col-intro">
+          These aren't values on a poster. They're the framework behind every decision at Houston Methodist — from the bedside to the back office. As we walk through each layer, click any card to explore what it means for your work every day.
+        </p>
+      </div>
+
+      <div class="callout-cards">
+
+        <!-- Mission -->
+        <div class="callout-card c-mission" id="card-mission" onclick="clickLayer('mission')">
+          <div class="card-icon">🎯</div>
+          <div class="card-body">
+            <span class="card-layer-tag">Mission · Why we exist</span>
+            <div class="card-title">To provide high-quality, cost-effective health care in a spiritual environment of caring.</div>
+            <div class="card-text">Every role at HM — clinical and non-clinical — exists to advance this mission. Your work matters because of this why.</div>
+            <span class="card-cta">Click to explore →</span>
+            <div class="card-reveal">
+              <div class="card-reveal-label">In your work</div>
+              <div class="card-reveal-text">This mission is why your role exists — whether you're drawing blood, answering a phone, or restocking a supply cart. Every task you complete is patient care. The mission doesn't live in a boardroom. It lives in the work you do every single shift.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vision -->
+        <div class="callout-card c-vision" id="card-vision" onclick="clickLayer('vision')">
+          <div class="card-icon">🔭</div>
+          <div class="card-body">
+            <span class="card-layer-tag">Vision · Where we're going</span>
+            <div class="card-title">Unparalleled Safety, Quality, Service, and Innovation — simultaneously, always.</div>
+            <div class="card-text">Safety comes first and is the foundation of every decision. And we pursue all four priorities at once — that's what unparalleled means.</div>
+            <span class="card-cta">Click to explore →</span>
+            <div class="card-reveal">
+              <div class="card-reveal-label">In your work</div>
+              <div class="card-reveal-text">Unparalleled isn't a slogan — it's a daily standard. When you catch a safety issue before it escalates, when you go back to close the loop on a request, when you suggest a better way — that's all four pillars working at once. You don't pursue them one at a time. You live them simultaneously.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- I CARE -->
+        <div class="callout-card c-icare" id="card-icare" onclick="clickLayer('icare')">
+          <div class="card-icon">💎</div>
+          <div class="card-body">
+            <span class="card-layer-tag">I CARE Values · How we get there</span>
+            <div class="card-title">Integrity · Compassion · Accountability · Respect · Excellence.</div>
+            <div class="card-text">Introduced in 2001. These aren't aspirational — they're behavioral standards you demonstrate in every interaction, every day.</div>
+            <span class="card-cta">Click to explore →</span>
+            <div class="card-reveal">
+              <div class="card-reveal-label">In your work</div>
+              <div class="card-reveal-text">These five words show up in the smallest moments. Holding a door. Following up on a concern. Owning a mistake. Speaking up when something isn't right. That's I CARE in action — not five values on a wall, but five habits in your hands.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="hint-row">
+        <div class="hint-icon">
+          <svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="4.5"/><line x1="6" y1="4" x2="6" y2="6.5"/><circle cx="6" cy="8.5" r=".6" fill="currentColor"/></svg>
+        </div>
+        <span class="hint-text" id="hintText">Each layer reveals as the narration introduces it. Click any layer or card to explore — all 3 must be viewed before continuing.</span>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="ftr">
+
+    <!-- Zone 1: I CARE -->
+    <span class="ftr-icare">
+      <b>I CARE</b> &nbsp;·&nbsp;
+      Integrity &nbsp;·&nbsp; Compassion &nbsp;·&nbsp;
+      Accountability &nbsp;·&nbsp; Respect &nbsp;·&nbsp; Excellence
+    </span>
+
+    <!-- Zone 2: Audio player (centered) -->
+    <div class="audio-player">
+      <button class="ap-btn" id="apBtn" title="Play / Pause" aria-label="Play / Pause">
+        <svg id="iconPlay" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M3 2.5v11l10-5.5z"/>
+        </svg>
+        <svg id="iconPause" viewBox="0 0 16 16" aria-hidden="true" style="opacity:0">
+          <path d="M4 2h2.5v12H4zm5.5 0H12v12H9.5z"/>
+        </svg>
+      </button>
+      <div class="ap-track">
+        <div class="ap-bar-wrap" id="apBarWrap">
+          <div class="ap-bar-fill" id="apBarFill"></div>
+        </div>
+        <div class="ap-times">
+          <span id="apCurrent">0:00</span>
+          <span id="apDuration">0:00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zone 3: Nav buttons + viewed count -->
+    <div class="btn-row">
+      <span class="progress-count"><b id="viewedCount">0</b> of 3 viewed</span>
+      <button class="btn-ghost" id="btnPrev">← Back</button>
+      <button class="btn-primary unlocked" id="continueBtn">Continue →</button>
+    </div>
+
+  </footer>
+
+</div>
+
+<!-- Transcript tab -->
+<button class="transcript-tab" onclick="toggleTranscript()" aria-label="Show narration transcript">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+    <line x1="8" y1="13" x2="16" y2="13"/>
+    <line x1="8" y1="17" x2="16" y2="17"/>
+    <line x1="8" y1="9" x2="11" y2="9"/>
+  </svg>
+  Transcript
+</button>
+
+<div class="transcript-panel" id="transcriptPanel" role="dialog" aria-label="Narration transcript">
+  <div class="tp-head">
+    <h3>Narration Transcript</h3>
+    <button class="tp-close" onclick="toggleTranscript()" aria-label="Close transcript">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="tp-body">
+    <p>Let's start with what holds everything else up.</p>
+    <p>The culture you live every day at Houston Methodist isn't accidental. It's built on three things — three layers that work together, every shift, in every interaction.</p>
+    <p>Our Mission tells us why we're here.</p>
+    <p>Our Vision tells us where we're going.</p>
+    <p>And our I CARE Values tell us how we get there — together.</p>
+    <p>You already know these. Take a moment with each one. Click through and see how they show up in your work.</p>
+    <p style="color:var(--teal-lt); font-family:var(--head); font-size:11px; letter-spacing:.14em; text-transform:uppercase; margin-top:18px; margin-bottom:8px; opacity:.7;">On click — Mission</p>
+    <p>This mission is why your role exists — whether you're drawing blood, answering a phone, or restocking a supply cart. Every task you complete is patient care. The mission doesn't live in a boardroom. It lives in the work you do every single shift.</p>
+    <p style="color:var(--teal-lt); font-family:var(--head); font-size:11px; letter-spacing:.14em; text-transform:uppercase; margin-top:18px; margin-bottom:8px; opacity:.7;">On click — Vision</p>
+    <p>Unparalleled isn't a slogan — it's a daily standard. When you catch a safety issue before it escalates, when you go back to close the loop on a request, when you suggest a better way — that's all four pillars working at once. You don't pursue them one at a time. You live them simultaneously.</p>
+    <p style="color:var(--teal-lt); font-family:var(--head); font-size:11px; letter-spacing:.14em; text-transform:uppercase; margin-top:18px; margin-bottom:8px; opacity:.7;">On click — I CARE Values</p>
+    <p>These five words show up in the smallest moments. Holding a door. Following up on a concern. Owning a mistake. Speaking up when something isn't right. That's I CARE in action — not five values on a wall, but five habits in your hands.</p>
+  </div>
+</div>
+
+<!-- Dev Timing Overlay -->
+<div class="dev-overlay" id="devOverlay">
+  <div class="dev-title">
+    Timing Dev Panel
+    <span>Press D to close</span>
+  </div>
+  <div class="dev-time" id="devTime">0.0s</div>
+  <ul class="dev-cue-list" id="devCueList"></ul>
+  <div class="dev-btns">
+    <button class="dev-btn" onclick="restartAudio()">↺ Restart</button>
+    <button class="dev-btn" onclick="togglePlayPause()">⏯ Play / Pause</button>
+  </div>
+</div>
+
+<script>
+// ====== TRANSCRIPT PANEL ======
+function toggleTranscript() {
+  document.getElementById('transcriptPanel').classList.toggle('open');
+}
+
+// ====== AUDIO ======
+const audio = document.getElementById('slideAudio');
+let audioStarted = false;
+
+function startAudio() {
+  if (audioStarted) return;
+  audio.play().then(() => { audioStarted = true; }).catch(() => {});
+}
+window.addEventListener('load', () => {
+  startAudio();
+  document.addEventListener('click', startAudio, { once: true });
+});
+
+// ====== AUDIO-CUED ANIMATIONS ======
+// Cue map — matched to audio_3.mp3 (~26.3s)
+// Timings carried from original build. Adjust 'at' after re-recording.
+//
+//   0.0s  — Headline + intro visible at slide open
+//  13.0s  — Mission layer + card   "Our Mission tells us why we're here."
+//  15.1s  — Vision layer + card    "Our Vision tells us where we're going."
+//  17.2s  — I CARE layer + card    "And our I CARE Values tell us how..."
+//  23.5s  — Hint text shift        "Take a moment with each one."
+const CUES = [
+  { at: 13.0, label: 'Mission layer + card',  do: () => {
+      document.getElementById('layer-mission').classList.add('built');
+      document.getElementById('card-mission').classList.add('revealed');
+    }
+  },
+  { at: 15.1, label: 'Vision layer + card',   do: () => {
+      document.getElementById('layer-vision').classList.add('built');
+      document.getElementById('card-vision').classList.add('revealed');
+    }
+  },
+  { at: 17.2, label: 'I CARE layer + card',   do: () => {
+      document.getElementById('layer-icare').classList.add('built');
+      document.getElementById('card-icare').classList.add('revealed');
+    }
+  },
+  { at: 23.5, label: 'Hint → click prompt',   do: () => {
+      const dl = document.getElementById('dotsLabel');
+      if (dl && !dl.dataset.userInteracted) dl.textContent = 'Click each layer to explore';
+    }
+  }
+];
+
+const cueFired = CUES.map(() => false);
+
+function checkCues() {
+  const t = audio.currentTime;
+  CUES.forEach((c, i) => {
+    if (!cueFired[i] && t >= c.at) {
+      c.do();
+      cueFired[i] = true;
+      const item = document.querySelectorAll('.dev-cue-item')[i];
+      if (item) item.classList.add('fired');
+    }
+  });
+}
+
+function tick() {
+  checkCues();
+  const devTime = document.getElementById('devTime');
+  if (devTime) devTime.textContent = audio.currentTime.toFixed(1) + 's';
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+// ====== DEV OVERLAY ======
+(function buildDevCueList() {
+  const list = document.getElementById('devCueList');
+  CUES.forEach((c) => {
+    const li = document.createElement('li');
+    li.className = 'dev-cue-item';
+    li.innerHTML = `<span class="dev-cue-dot"></span><span class="dev-cue-time">${c.at.toFixed(1)}s</span><span class="dev-cue-label">${c.label}</span>`;
+    list.appendChild(li);
+  });
+})();
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'd' || e.key === 'D') {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    document.getElementById('devOverlay').classList.toggle('visible');
+  }
+});
+
+function restartAudio() {
+  audio.currentTime = 0;
+  cueFired.fill(false);
+  stopCardAudio();
+  // Reset all visual states
+  document.querySelectorAll('.layer').forEach(el => { el.classList.remove('built', 'viewed'); });
+  document.querySelectorAll('.callout-card').forEach(el => { el.classList.remove('revealed', 'active', 'viewed-collapsed'); });
+  document.querySelectorAll('.dot').forEach(el => el.classList.remove('on'));
+  document.querySelectorAll('.dev-cue-item').forEach(el => el.classList.remove('fired'));
+  viewed.clear();
+  document.getElementById('viewedCount').textContent = '0';
+  document.getElementById('continueBtn').classList.remove('unlocked');
+  document.getElementById('dotsLabel').textContent = 'Watch each layer build, then click to explore';
+  document.getElementById('dotsLabel').dataset.userInteracted = '';
+  document.getElementById('hintText').textContent = 'Each layer reveals as the narration introduces it. Click any layer or card to explore — all 3 must be viewed before continuing.';
+  audio.play();
+}
+
+function togglePlayPause() {
+  if (audio.paused) { audio.play(); } else { audio.pause(); }
+}
+
+// ====== INTERACTION LOGIC ======
+const viewed = new Set();
+const total = 3;
+
+// Card audio elements
+const cardAudio = {
+  mission: document.getElementById('audioMission'),
+  vision:  document.getElementById('audioVision'),
+  icare:   document.getElementById('audioIcare')
+};
+
+// Stop all card audio clips
+function stopCardAudio() {
+  Object.values(cardAudio).forEach(a => {
+    a.pause();
+    a.currentTime = 0;
+  });
+}
+
+function clickLayer(id) {
+  // If already viewed, re-expand this card (accordion toggle)
+  if (viewed.has(id)) {
+    const cardEl = document.getElementById('card-' + id);
+    // If it's currently collapsed, expand it and collapse others
+    if (cardEl.classList.contains('viewed-collapsed')) {
+      // Collapse any currently active card
+      document.querySelectorAll('.callout-card.active').forEach(c => {
+        c.classList.remove('active');
+        c.classList.add('viewed-collapsed');
+      });
+      // Expand this one
+      cardEl.classList.remove('viewed-collapsed');
+      cardEl.classList.add('active');
+      // Play its audio again
+      stopCardAudio();
+      if (cardAudio[id]) cardAudio[id].play().catch(() => {});
+    }
+    return;
+  }
+
+  const layerEl = document.getElementById('layer-' + id);
+  const cardEl = document.getElementById('card-' + id);
+  if (!layerEl.classList.contains('built')) return;
+  if (!cardEl.classList.contains('revealed')) return;
+
+  viewed.add(id);
+
+  // Pause main narration if still playing
+  audio.pause();
+
+  // Collapse any previously active card
+  document.querySelectorAll('.callout-card.active').forEach(c => {
+    c.classList.remove('active');
+    c.classList.add('viewed-collapsed');
+  });
+
+  // Stop any other card audio, then play this card's audio
+  stopCardAudio();
+  if (cardAudio[id]) {
+    cardAudio[id].play().catch(() => {});
+  }
+
+  layerEl.classList.add('viewed');
+  cardEl.classList.add('active');
+
+  const dotMap = { mission: 1, vision: 2, icare: 3 };
+  document.getElementById('dot' + dotMap[id]).classList.add('on');
+
+  const n = viewed.size;
+  document.getElementById('viewedCount').textContent = n;
+
+  const dl = document.getElementById('dotsLabel');
+  if (dl) dl.dataset.userInteracted = 'true';
+
+  if (n === total) {
+    document.getElementById('continueBtn').classList.add('unlocked');
+    document.getElementById('hintText').textContent = 'All three layers viewed — you\'re ready to continue.';
+    document.getElementById('dotsLabel').textContent = 'All layers explored ✓';
+  }
+}
+
+// ====== AUDIO PLAYER UI ======
+const apBtn      = document.getElementById('apBtn');
+const iconPlay   = document.getElementById('iconPlay');
+const iconPause  = document.getElementById('iconPause');
+const apBarFill  = document.getElementById('apBarFill');
+const apBarWrap  = document.getElementById('apBarWrap');
+const apCurrent  = document.getElementById('apCurrent');
+const apDuration = document.getElementById('apDuration');
+
+function fmtTime(s) {
+  if (!isFinite(s)) return '0:00';
+  return Math.floor(s / 60) + ':' + Math.floor(s % 60).toString().padStart(2, '0');
+}
+
+// Update player bar to reflect whichever audio is currently active
+function activeAudio() {
+  const playing = Object.values(cardAudio).find(a => !a.paused);
+  return playing || audio;
+}
+
+function updatePlayer() {
+  const active = activeAudio();
+  const dur = active.duration || 0;
+  const cur = active.currentTime || 0;
+  apBarFill.style.width  = (dur > 0 ? cur / dur * 100 : 0) + '%';
+  apCurrent.textContent  = fmtTime(cur);
+  apDuration.textContent = fmtTime(dur);
+  const anyPlaying = !audio.paused || Object.values(cardAudio).some(a => !a.paused);
+  iconPlay.style.opacity  = anyPlaying ? '0' : '1';
+  iconPause.style.opacity = anyPlaying ? '1' : '0';
+}
+
+// Play/pause button — pauses card audio when resuming main VO
+apBtn.addEventListener('click', () => {
+  if (audio.paused && Object.values(cardAudio).every(a => a.paused)) {
+    stopCardAudio();          // pause any card clip that's playing
+    audio.play().catch(() => {});
+  } else {
+    audio.pause();
+    stopCardAudio();
+  }
+  updatePlayer();
+});
+
+audio.addEventListener('timeupdate',     updatePlayer);
+audio.addEventListener('loadedmetadata', updatePlayer);
+audio.addEventListener('play',           updatePlayer);
+audio.addEventListener('pause',          updatePlayer);
+
+// Wire card audios to player too
+Object.values(cardAudio).forEach(a => {
+  a.addEventListener('timeupdate',     updatePlayer);
+  a.addEventListener('loadedmetadata', updatePlayer);
+  a.addEventListener('play',           updatePlayer);
+  a.addEventListener('pause',          updatePlayer);
+  a.addEventListener('ended',          updatePlayer);
+});
+
+// Scrub bar
+apBarWrap.addEventListener('click', (e) => {
+  const pct = (e.clientX - apBarWrap.getBoundingClientRect().left) / apBarWrap.offsetWidth;
+  const active = activeAudio();
+  if (active.duration > 0) active.currentTime = pct * active.duration;
+});
+
+// When any card audio plays, pause main VO and update button state
+Object.values(cardAudio).forEach(clip => {
+  clip.addEventListener('play', () => {
+    audio.pause();
+    updatePlayer();
+  });
+});
+
+// ====== NAVIGATION ======
+// Wrapper (index.html) listens for { type: 'prev' } / { type: 'next' }
+document.getElementById('btnPrev').onclick = () => {
+  window.parent.postMessage({ type: 'prev' }, '*');
+};
+document.getElementById('continueBtn').onclick = () => {
+  window.parent.postMessage({ type: 'next' }, '*');
+};
+window.addEventListener('message', function(e) {
+  if (e.data === 'playAudio') { startAudio(); }
+});
+</script>
+</body>
+</html>
