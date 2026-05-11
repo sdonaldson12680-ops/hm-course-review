@@ -550,9 +550,62 @@ html, body {
     width: 240px;
   }
 }
+.start-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 43, 82, 0.88);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.start-card {
+  width: min(420px, 90vw);
+  padding: 34px 36px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.96);
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,.35);
+}
+
+.start-card h2 {
+  font-family: var(--head);
+  color: var(--navy);
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.start-card p {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.5;
+  margin-bottom: 22px;
+}
+
+#startLessonBtn {
+  border: none;
+  border-radius: 999px;
+  padding: 13px 30px;
+  background: var(--teal);
+  color: white;
+  font-family: var(--head);
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(26,122,138,.3);
+}
 </style>
 </head>
 <body>
+
+<div id="startOverlay" class="start-overlay">
+  <div class="start-card">
+    <h2>Ready to begin?</h2>
+    <p>Click below to start the lesson and narration.</p>
+    <button id="startLessonBtn">Start Lesson</button>
+  </div>
+</div>
 
 <div class="slide">
 
@@ -751,25 +804,21 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 document.querySelector('.continue-btn').onclick = goNext;
-// ====== AUTO PLAY WHEN SLIDE BECOMES ACTIVE ======
-window.addEventListener('load', () => {
 
-  // slight delay lets LMS/review shell finish rendering
-  setTimeout(() => {
+document.querySelector('.continue-btn').onclick = goNext;
 
-    // only autoplay if user is actually on this slide
-    const isVisible =
-      document.visibilityState === 'visible' &&
-      document.hasFocus();
+// ====== START OVERLAY ======
+const startOverlay = document.getElementById('startOverlay');
+const startLessonBtn = document.getElementById('startLessonBtn');
 
-    if (isVisible) {
-      audioMain.play().catch(() => {
-        // browser may still require interaction
-        updatePlayer();
-      });
-    }
+startLessonBtn.addEventListener('click', () => {
+  startOverlay.style.display = 'none';
 
-  }, 400);
+  audioMain.currentTime = 0;
+
+  audioMain.play().catch(() => {});
+
+  updatePlayer();
 });
 </script>
 </body>
