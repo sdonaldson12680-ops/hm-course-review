@@ -318,7 +318,7 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
     <span class="scene-tag">Slide 8 — Domain 1: Mission, Values &amp; Culture</span>
     <div class="progress-wrap">
       <span class="progress-lbl">8 of 16</span>
-      <div class="progress-bar"><div class="progress-fill" style="width:44%"></div></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
     </div>
   </div>
 </header>
@@ -628,8 +628,7 @@ function sw(i) {
 }
 
 audioTab.addEventListener('ended', () => {
-  updateDevNow('audio_8 resuming');
-  audioMain.play().catch(() => {});
+  updateDevNow('audio_8-tab ended');
 });
 
 function render(i) {
@@ -637,8 +636,18 @@ function render(i) {
   document.getElementById('cname').innerHTML = d.name;
   const ps = document.getElementById('photoSlot');
   if (d.photo) {
-    ps.innerHTML = '<img src="' + d.photo + '" alt=""/>';
-    ps.classList.add('has-photo');
+    const img = new Image();
+    img.alt = '';
+    img.onload = () => {
+      ps.innerHTML = '';
+      ps.appendChild(img);
+      ps.classList.add('has-photo');
+    };
+    img.onerror = () => {
+      ps.classList.remove('has-photo');
+      ps.innerHTML = '<span class="photo-slot-label">' + d.photoHint + '</span><span class="photo-slot-sub">' + d.photoSub + '</span>';
+    };
+    img.src = d.photo;
   } else {
     ps.classList.remove('has-photo');
     ps.innerHTML = '<span class="photo-slot-label">' + d.photoHint + '</span><span class="photo-slot-sub">' + d.photoSub + '</span>';
