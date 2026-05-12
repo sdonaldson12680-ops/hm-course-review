@@ -174,10 +174,7 @@ button{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 20px;
 .btn-primary.unlocked{opacity:1;pointer-events:all;}
 .btn-primary.unlocked:hover{transform:translateY(-1px);filter:brightness(1.05);}
 
-/* TRANSCRIPT */
-.transcript-tab{position:fixed;top:50%;right:0;transform:translateY(-50%);background:rgba(0,30,60,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);border-right:none;border-radius:10px 0 0 10px;color:rgba(255,255,255,.9);padding:14px 8px;font-size:11px;font-family:var(--head);letter-spacing:.14em;text-transform:uppercase;cursor:pointer;z-index:80;display:flex;flex-direction:column;align-items:center;gap:8px;writing-mode:vertical-rl;transition:background .18s ease,padding-right .18s ease;}
-.transcript-tab:hover{background:rgba(26,122,138,.95);padding-right:12px;}
-.transcript-tab svg{width:14px;height:14px;writing-mode:horizontal-tb;}
+/* TRANSCRIPT — panel + close button (trigger is inline-styled div) */
 .transcript-panel{position:fixed;top:0;right:0;width:400px;height:100vh;background:rgba(10,20,35,.97);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-left:1px solid rgba(168,212,218,.2);z-index:90;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-16px 0 40px rgba(0,0,0,.3);}
 .transcript-panel.open{transform:translateX(0);}
 .tp-head{display:flex;align-items:center;justify-content:space-between;padding:22px 24px 16px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;}
@@ -225,8 +222,8 @@ button{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 20px;
     <div class="hdr-right">
       <span class="scene-tag">Slide 14 — Forces of Change</span>
       <div class="progress-wrap">
-        <span class="progress-lbl">14 of 18</span>
-        <div class="progress-bar"><div class="progress-fill" style="width:78%"></div></div>
+        <span class="progress-lbl">14 of 16</span>
+        <div class="progress-bar"><div class="progress-fill" style="width:88%"></div></div>
       </div>
     </div>
   </header>
@@ -492,7 +489,7 @@ button{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 20px;
     </div>
     <div class="btn-row">
       <button class="btn-ghost" onclick="navPrev()">← Back</button>
-      <button class="btn-primary" id="continueBtn" onclick="navNext()">Continue →</button>
+      <button class="btn-primary unlocked" id="continueBtn" onclick="navNext()">Continue →</button>
     </div>
   </footer>
 
@@ -507,16 +504,14 @@ button{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 20px;
 <audio id="audioCard4" preload="auto"><source src="audio/audio_14-5.mp3" type="audio/mpeg"></audio>
 
 <!-- TRANSCRIPT TAB -->
-<button class="transcript-tab" onclick="toggleTranscript()" aria-label="Show narration transcript">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-    <polyline points="14 2 14 8 20 8"/>
-    <line x1="8" y1="13" x2="16" y2="13"/>
-    <line x1="8" y1="17" x2="16" y2="17"/>
-    <line x1="8" y1="9" x2="11" y2="9"/>
+<div id="transcriptTab" style="position:fixed;right:0;top:50%;transform:translateY(-50%);background:rgba(0,30,60,.85);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);border-right:none;border-radius:10px 0 0 10px;color:rgba(255,255,255,.9);padding:14px 8px;cursor:pointer;z-index:80;display:flex;flex-direction:column;align-items:center;gap:8px;transition:background .2s ease;">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+    <polyline points="14 2 14 8 20 8"></polyline>
+    <line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line>
   </svg>
-  Transcript
-</button>
+  <span style="writing-mode:vertical-rl;transform:rotate(180deg);font-family:'Franklin Gothic Medium',Arial,sans-serif;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#fff;">Transcript</span>
+</div>
 
 <div class="transcript-panel" id="transcriptPanel">
   <div class="tp-head">
@@ -531,19 +526,19 @@ button{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 20px;
     <p>Each card in front of you names one of those forces. Flip it to see what it means, how it connects to the behaviors, values, and development tools you've been exploring — and how HM responds.</p>
     <p>This isn't a threat briefing. It's the context for why your growth, your I CARE behaviors, and your leadership matter at an organizational level.</p>
 
-    <span class="tp-cue-label">On flip — Competition &amp; Consumerism (audio_14-1)</span>
+    <span class="tp-cue-label">On flip — Competition &amp; Consumerism</span>
     <p>Patients have more choices than ever. Loyalty isn't given — it's earned at every touchpoint. The Customer Focus competency you explored in the LBM, your AIDET skills, the 10/5 Rule — these are how HM competes. Every interaction either builds trust or erodes it.</p>
 
-    <span class="tp-cue-label">On flip — Technology &amp; Access (audio_14-2)</span>
+    <span class="tp-cue-label">On flip — Technology &amp; Access</span>
     <p>Care is moving into new places — virtually, at home, on devices. This is exactly what Change and Innovation in the LBM prepares you for. Adapting when things shift. Welcoming new tools. Using feedback to improve. The 70% of your development that happens through on-the-job experience includes navigating change before it feels comfortable.</p>
 
-    <span class="tp-cue-label">On flip — Transparency (audio_14-3)</span>
+    <span class="tp-cue-label">On flip — Transparency</span>
     <p>Quality scores and outcomes are public. Every behavior shows up in the data eventually. This is why Safety and Quality and Integrity aren't just words — they're what shows up in HCAHPS scores and public outcomes. Your daily behaviors contribute directly to HM's reputation and to the trust patients place in us.</p>
 
-    <span class="tp-cue-label">On flip — Patient Expectations (audio_14-4)</span>
+    <span class="tp-cue-label">On flip — Patient Expectations</span>
     <p>Patients remember how they felt. The clinical outcome matters — and so does every moment around it. This is the whole point of AIDET, Manage Up, and the service standards you revisited earlier. Compassion and Respect from I CARE aren't soft skills. They're how HM meets a rising bar — and every role shapes the patient experience, whether or not you touch the patient directly.</p>
 
-    <span class="tp-cue-label">On flip — Workforce Expectations (audio_14-5)</span>
+    <span class="tp-cue-label">On flip — Workforce Expectations</span>
     <p>Today's employees expect purpose, inclusion, and real opportunities to grow. This force is answered by everything in this module — the Leadership Behaviors Model, the Focal Point Review, the 70-20-10 framework, and Culture and Engagement behaviors that make sure every voice is heard. You chose HM. HM has to keep earning that choice.</p>
   </div>
 </div>
@@ -569,10 +564,11 @@ button{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 20px;
 function toggleTranscript() {
   document.getElementById('transcriptPanel').classList.toggle('open');
 }
+document.getElementById('transcriptTab').addEventListener('click', toggleTranscript);
 
 /* ── NAV ────────────────────────────────────────────── */
-function navNext() { window.parent.postMessage({ type:'nav', action:'next' }, '*'); }
-function navPrev() { window.parent.postMessage({ type:'nav', action:'prev' }, '*'); }
+function navNext() { window.parent.postMessage({ type:'next' }, '*'); }
+function navPrev() { window.parent.postMessage({ type:'prev' }, '*'); }
 
 /* ── AUDIO ──────────────────────────────────────────── */
 const audioMain = document.getElementById('audioMain');
