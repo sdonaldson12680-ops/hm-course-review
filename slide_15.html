@@ -102,8 +102,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:var(--sans);backgro
 .closer-mini{display:block;font-family:var(--sans);font-size:clamp(11px,.85vw,13px);color:rgba(255,255,255,.55);margin-top:14px;letter-spacing:.05em;font-style:normal;}
 
 /* Two-actions CTA block */
-.actions{flex-shrink:0;opacity:0;transition:opacity .8s ease;max-width:920px;margin:0 auto;width:100%;}
-.actions.show{opacity:1;}
+.actions{flex-shrink:0;max-width:920px;margin:0 auto;width:100%;}
 .actions-eyebrow{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:14px;}
 .actions-line{flex:0 0 36px;height:1px;background:rgba(255,255,255,.25);}
 .actions-tag{font-family:var(--head);font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--teal-lt);}
@@ -124,6 +123,10 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:var(--sans);backgro
 
 @keyframes rotateRing{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── TIME-GATED REVEAL (audio-cue driven) ─────────────── */
+.cue-hidden{opacity:0;transform:translateY(8px);transition:opacity .6s ease,transform .6s ease;}
+.cue-hidden.cue-visible{opacity:1;transform:translateY(0);}
 
 /* FOOTER — frosted dark */
 .ftr{height:56px;flex:0 0 56px;background:var(--white);border-top:1px solid var(--line);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 32px;position:relative;z-index:5;}
@@ -279,13 +282,13 @@ button.nav{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 2
 
     <!-- Two things you can do this week -->
     <div class="actions" id="actions">
-      <div class="actions-eyebrow">
+      <div class="actions-eyebrow cue-hidden" id="actionsEyebrow">
         <span class="actions-line"></span>
         <span class="actions-tag">Two things you can do this week</span>
         <span class="actions-line"></span>
       </div>
       <div class="actions-grid">
-        <div class="action-card">
+        <div class="action-card cue-hidden" id="actionCard1">
           <div class="action-icon" style="background:linear-gradient(160deg,#1A7A8A,#00565c);">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
@@ -296,7 +299,7 @@ button.nav{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 2
             <p class="action-desc">Ask two or three colleagues — across roles, not just the people you sit next to — to share how they see you showing up. Their perspective is what makes the rest of the cycle land with weight.</p>
           </div>
         </div>
-        <div class="action-card">
+        <div class="action-card cue-hidden" id="actionCard2">
           <div class="action-icon" style="background:linear-gradient(160deg,#AB0032,#7d0024);">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
@@ -465,59 +468,78 @@ button.nav{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 2
 </div>
 
 <script>
-/* ── ANIMATION SEQUENCE ─────────────────────────────── */
+/* ── ANIMATION (audio-cue driven) ───────────────────── */
 const NODE_COUNT = 6;
-const STEP_MS = 950;
-const CONNECTOR_OFFSET = 350;
-const CLOSER_DELAY = 700;
-const ACTIONS_DELAY = 700;
-const REPLAY_DELAY = 600;
 
-let timeoutHandles = [];
+// Cue schedule — synced to audio_15.mp3 currentTime
+// Connector lines fade in roughly halfway between flanking nodes
+const CUES = [
+  { at:  3.0, do: () => light('node', 0) },                                   // Mission
+  { at:  4.0, do: () => light('cnct', 0) },                                   // Mission → Vision
+  { at:  5.0, do: () => light('node', 1) },                                   // Vision
+  { at:  6.5, do: () => light('cnct', 1) },                                   // Vision → I CARE
+  { at:  8.0, do: () => light('node', 2) },                                   // I CARE
+  { at: 10.5, do: () => light('cnct', 2) },                                   // I CARE → Leadership
+  { at: 13.0, do: () => light('node', 3) },                                   // Leadership
+  { at: 15.5, do: () => light('cnct', 3) },                                   // Leadership → FPR
+  { at: 18.0, do: () => light('node', 4) },                                   // FPR
+  { at: 22.5, do: () => light('cnct', 4) },                                   // FPR → Culture Outcomes
+  { at: 27.0, do: () => light('node', 5) },                                   // Culture Outcomes
+  { at: 31.0, do: () => document.getElementById('closer').classList.add('show') },           // "You aren't a passenger" + I CARE poster line
+  { at: 42.0, do: () => document.getElementById('actionsEyebrow').classList.add('cue-visible') },  // "Two things you can do this week"
+  { at: 48.0, do: () => document.getElementById('actionCard1').classList.add('cue-visible') },     // Request feedback card
+  { at: 63.0, do: () => {
+    document.getElementById('actionCard2').classList.add('cue-visible');                          // Update Career Profile card
+    document.getElementById('replayRow').classList.add('show');                                   // Replay button rides along
+  } },
+];
 
-function clearTimers() { timeoutHandles.forEach(t => clearTimeout(t)); timeoutHandles = []; }
+const cueFired = CUES.map(() => false);
+
+function light(type, idx) {
+  const sel = type === 'node' ? '.node' : '.cnct-line';
+  const el = document.querySelectorAll(sel)[idx];
+  if (el) el.classList.add('lit');
+}
 
 function reset() {
   document.querySelectorAll('.node').forEach(n => n.classList.remove('lit'));
   document.querySelectorAll('.cnct-line').forEach(c => c.classList.remove('lit'));
   document.getElementById('closer').classList.remove('show');
-  document.getElementById('actions').classList.remove('show');
+  document.getElementById('actionsEyebrow').classList.remove('cue-visible');
+  document.getElementById('actionCard1').classList.remove('cue-visible');
+  document.getElementById('actionCard2').classList.remove('cue-visible');
   document.getElementById('replayRow').classList.remove('show');
+  cueFired.fill(false);
 }
 
-function play() {
-  clearTimers(); reset();
-  const nodes = document.querySelectorAll('.node');
-  const connectors = document.querySelectorAll('.cnct-line');
-  for (let i = 0; i < NODE_COUNT; i++) {
-    timeoutHandles.push(setTimeout(() => { nodes[i].classList.add('lit'); }, i * STEP_MS + 200));
-    if (i < NODE_COUNT - 1) {
-      timeoutHandles.push(setTimeout(() => { connectors[i].classList.add('lit'); }, i * STEP_MS + 200 + CONNECTOR_OFFSET));
+function checkCues() {
+  const t = audioMain.currentTime;
+  CUES.forEach((c, i) => {
+    if (!cueFired[i] && t >= c.at) {
+      cueFired[i] = true;
+      try { c.do(); } catch (e) { /* swallow */ }
     }
-  }
-  timeoutHandles.push(setTimeout(() => { document.getElementById('closer').classList.add('show'); }, NODE_COUNT * STEP_MS + CLOSER_DELAY));
-  timeoutHandles.push(setTimeout(() => { document.getElementById('actions').classList.add('show'); }, NODE_COUNT * STEP_MS + CLOSER_DELAY + ACTIONS_DELAY));
-  timeoutHandles.push(setTimeout(() => { document.getElementById('replayRow').classList.add('show'); }, NODE_COUNT * STEP_MS + CLOSER_DELAY + ACTIONS_DELAY + REPLAY_DELAY));
+  });
 }
 
+// Click any node to jump-reveal everything up to and including that node
 document.querySelectorAll('.node').forEach(n => {
   n.addEventListener('click', () => {
-    clearTimers();
     const idx = parseInt(n.dataset.i, 10);
     const nodes = document.querySelectorAll('.node');
     const connectors = document.querySelectorAll('.cnct-line');
     nodes.forEach((nn, i) => nn.classList.toggle('lit', i <= idx));
     connectors.forEach((cc, i) => cc.classList.toggle('lit', i < idx));
-    if (idx === NODE_COUNT - 1) {
-      document.getElementById('closer').classList.add('show');
-      timeoutHandles.push(setTimeout(() => { document.getElementById('actions').classList.add('show'); }, ACTIONS_DELAY));
-      timeoutHandles.push(setTimeout(() => { document.getElementById('replayRow').classList.add('show'); }, ACTIONS_DELAY + REPLAY_DELAY));
-    }
   });
 });
 
-document.getElementById('replayBtn').addEventListener('click', play);
-setTimeout(play, 700);
+// Replay button: reset + restart audio from 0
+document.getElementById('replayBtn').addEventListener('click', () => {
+  reset();
+  audioMain.currentTime = 0;
+  audioMain.play().catch(() => {});
+});
 
 /* ── AUDIO ──────────────────────────────────────────── */
 const audioMain = document.getElementById('audioMain');
@@ -529,8 +551,22 @@ function startAudio() {
 }
 window.addEventListener('load', () => {
   startAudio();
-  document.addEventListener('click', startAudio, { once: true });
+  // Fallback: any user gesture unlocks audio if autoplay was blocked
+  ['click', 'keydown', 'touchstart'].forEach(evt => {
+    document.addEventListener(evt, startAudio, { once: true });
+  });
 });
+
+// Listen for audio trigger from parent shell (sent after user gesture on slide 1)
+window.addEventListener('message', function(e) {
+  const d = e.data;
+  if (d === 'playAudio' || (d && d.type === 'playAudio')) {
+    startAudio();
+  }
+});
+
+// Drive the cue checker off of audio playback
+audioMain.addEventListener('timeupdate', checkCues);
 
 /* ── AUDIO PLAYER UI ────────────────────────────────── */
 const apBtn      = document.getElementById('apBtn');
@@ -575,7 +611,7 @@ document.getElementById('btnPrev').addEventListener('click', () => window.parent
 document.getElementById('btnNext').addEventListener('click', () => window.parent.postMessage({ type:'next' }, '*'));
 
 /* ── DEV ────────────────────────────────────────────── */
-function devRestart() { audioMain.currentTime = 0; audioMain.play().catch(() => {}); play(); }
+function devRestart() { reset(); audioMain.currentTime = 0; audioMain.play().catch(() => {}); }
 function devPlayPause() { if (audioMain.paused) audioMain.play().catch(() => {}); else audioMain.pause(); }
 
 function tick() {
