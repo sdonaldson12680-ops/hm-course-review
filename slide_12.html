@@ -116,8 +116,14 @@ body::before{content:"";position:fixed;inset:0;
 .ctrl-btn{width:34px;height:34px;border-radius:10px;background:var(--white);border:1px solid var(--line);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--navy);transition:.18s ease;padding:0;}
 .ctrl-btn:hover{border-color:var(--ltblue);background:var(--soft);transform:translateY(-1px);}
 .ctrl-btn svg{width:14px;height:14px;}
-.play-btn{background:var(--teal);border-color:var(--teal);color:#fff;}
-.play-btn:hover{background:var(--turq);border-color:var(--turq);}
+
+/* Click hint — fades out once user starts interacting */
+.click-hint{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:99px;background:rgba(26,122,138,.08);border:1px solid rgba(26,122,138,.2);transition:opacity .4s ease,transform .4s ease;}
+.click-hint.dismissed{opacity:0;transform:translateY(-3px);pointer-events:none;}
+.click-hint-pulse{width:8px;height:8px;border-radius:50%;background:var(--teal);position:relative;flex-shrink:0;}
+.click-hint-pulse::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--teal);opacity:.6;animation:hintPulse 1.8s ease-in-out infinite;}
+.click-hint-text{font-size:11.5px;color:var(--teal);font-family:var(--head);font-weight:500;letter-spacing:.02em;white-space:nowrap;}
+@keyframes hintPulse{0%{transform:scale(.5);opacity:.7}80%{transform:scale(1.4);opacity:0}100%{transform:scale(1.4);opacity:0}}
 
 /* FOOTER */
 .ftr{height:56px;flex:0 0 56px;background:var(--white);border-top:1px solid var(--line);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 32px;position:relative;flex-shrink:0;}
@@ -182,6 +188,58 @@ body::before{content:"";position:fixed;inset:0;
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes contentFade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 .detail-fade{animation:contentFade .4s ease;}
+
+/* ── RESPONSIVE BREAKPOINTS ──────────────────────────── */
+@media (max-height: 850px) {
+  .hdr { height: 56px; flex-basis: 56px; padding: 0 28px; }
+  .brand-logo { height: 32px; }
+  .main { padding: 14px 28px 8px; gap: 22px; }
+  .ftr { height: 50px; flex-basis: 50px; padding: 0 22px; }
+  .audio-player { width: 320px; }
+}
+
+@media (min-width: 901px) and (max-width: 1199px) {
+  .main { padding: 14px 24px 10px; gap: 18px; grid-template-columns: 1fr 1fr; }
+  .audio-player { width: 280px; }
+}
+
+@media (max-width: 900px) {
+  html, body { overflow: auto; }
+  .slide { height: auto; min-height: 100vh; }
+  .main {
+    grid-template-columns: 1fr;
+    padding: 20px 22px 110px;
+    gap: 22px;
+  }
+  .wheel-col, .detail-col { min-height: 0; }
+  .wheel-wrap { max-width: 420px; margin: 0 auto; }
+  .controls { flex-direction: row; flex-wrap: wrap; }
+  .ftr { position: sticky; bottom: 0; }
+  .audio-player { width: 240px; }
+}
+
+@media (max-width: 600px) {
+  .hdr { padding: 0 14px; height: 50px; flex-basis: 50px; }
+  .scene-tag { display: none; }
+  .progress-bar { width: 70px; }
+  .brand-logo { height: 28px; }
+  .main { padding: 16px 14px 110px; gap: 18px; }
+  .top-h, .detail-title { font-size: clamp(20px, 5.5vw, 28px); }
+
+  .wheel-wrap { max-width: 100%; }
+  .click-hint-text { font-size: 11px; white-space: normal; }
+
+  .ftr {
+    grid-template-columns: 1fr;
+    height: auto;
+    flex-basis: auto;
+    padding: 10px 14px 12px;
+    row-gap: 8px;
+  }
+  .ftr-icare { font-size: 10px; order: 3; text-align: center; }
+  .audio-player { width: 100%; order: 1; }
+  .btn-row { width: 100%; justify-content: space-between; order: 2; }
+}
 </style>
 </head>
 <body>
@@ -265,13 +323,14 @@ body::before{content:"";position:fixed;inset:0;
 
     <!-- Controls -->
     <div class="controls">
+      <div class="click-hint" id="clickHint">
+        <span class="click-hint-pulse"></span>
+        <span class="click-hint-text">Click any step to explore, or use the arrows</span>
+      </div>
       <div class="step-dots" id="stepDots"></div>
       <div class="ctrl-buttons">
         <button class="ctrl-btn" id="prevBtn" aria-label="Previous step">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
-        <button class="ctrl-btn play-btn" id="playBtn" aria-label="Pause auto-advance">
-          <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
         </button>
         <button class="ctrl-btn" id="nextBtn" aria-label="Next step">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
@@ -325,37 +384,36 @@ body::before{content:"";position:fixed;inset:0;
     </button>
   </div>
   <div class="tp-body">
-    <p><strong>Main narration (audio_12)</strong></p>
     <p>Performance management at Houston Methodist isn't a once-a-year event. It's a continuous rhythm — eight touchpoints spread across the year, each one building on the last.</p>
     <p>The FPR is part of this cycle, but it's not the whole cycle. Everything around it — the feedback you gather, the goals you set, the check-ins you have throughout the year — that's what makes the FPR conversation meaningful when it arrives.</p>
-    <p>Walk through each step. Think about where you are in the cycle right now — and what's coming next for you.</p>
+    <p>Walk through each step at your own pace. Think about where you are in the cycle right now — and what's coming next for you.</p>
 
-    <span class="tp-section">Introduction (audio_12-0)</span>
-    <p>Performance management at Houston Methodist isn't a once-a-year event — it's a continuous rhythm of eight touchpoints that runs all year long. The FPR is where the conversation happens — but everything around it is what makes the conversation meaningful.</p>
+    <span class="tp-section">Introduction</span>
+    <p>Performance management at Houston Methodist isn't a once-a-year event. It's a continuous rhythm of eight touchpoints that runs all year long — and you're in it whether you realize it or not. The FPR conversation is the moment everyone notices, but the work that makes that conversation meaningful happens in the steps before and after it. Take a few minutes to walk through each one. You'll come away with a clearer sense of where you are right now and what to expect next.</p>
 
-    <span class="tp-section">Step 1 — Request Feedback (audio_12-1)</span>
-    <p>The cycle begins with feedback. Peer feedback is required for all nursing staff and strongly encouraged for everyone else — colleagues see things about your work that you can't always see yourself. Request feedback from people who work with you closely and can speak to your I CARE behaviors.</p>
+    <span class="tp-section">Step 1 — Request Feedback</span>
+    <p>The cycle begins with feedback. Peer feedback is required for all nursing staff and strongly encouraged for everyone else, because colleagues see things about your work that you can't always see yourself. The best feedback comes from a mix of people — not just your closest collaborators, but also colleagues across roles who interact with you in different contexts. Their perspective is what makes the rest of the cycle land with weight.</p>
 
-    <span class="tp-section">Step 2 — Self-Evaluation (audio_12-2)</span>
-    <p>You'll receive a notification in your Workday inbox to begin your self-evaluation. Reflect honestly on the past year — your contributions, your I CARE behaviors, the goals you've pursued, and where you've grown. The more specific you are, the more useful the conversation will be.</p>
+    <span class="tp-section">Step 2 — Self-Evaluation</span>
+    <p>You'll receive a Workday notification when it's time to begin your self-evaluation. This is where you reflect honestly on the past year — your contributions, your I CARE behaviors, the goals you pursued, and the places you stretched. Specificity is what makes this step useful. "I demonstrated Accountability by leading the EHR transition for my team" tells a story; "I was accountable" doesn't. The more concrete you are here, the richer the conversation becomes.</p>
 
-    <span class="tp-section">Step 3 — In-Service Modules (audio_12-3)</span>
-    <p>Required in-service modules are assigned through the LMS and must be completed to close out the self-evaluation step. This module you're in right now is part of that. Completing it is part of the cycle — not separate from it.</p>
+    <span class="tp-section">Step 3 — In-Service Modules</span>
+    <p>Required in-service modules are assigned through the LMS and must be completed to close out the self-evaluation step. This module you're in right now is part of that. Think of these modules not as a checkbox but as a chance to refresh how you're showing up against HM's standards — and as something concrete to bring into the FPR conversation. Completing them on time keeps the cycle moving for you and your team.</p>
 
-    <span class="tp-section">Step 4 — Manager Evaluation (audio_12-4)</span>
-    <p>Your supervisor completes the manager evaluation in Workday — assessing the same dimensions you reflected on, so both perspectives are ready before the conversation. This is an FPR moment — both inputs come together here.</p>
+    <span class="tp-section">Step 4 — Manager Evaluation</span>
+    <p>Your supervisor completes the manager evaluation in Workday, assessing the same dimensions you reflected on. Both perspectives are ready before either of you sits down for the FPR conversation, which means the meeting itself isn't about data entry — it's about dialogue. You'll see your manager's input, and they'll see yours. That transparency is what allows the conversation to start at a much higher altitude than a typical performance review.</p>
 
-    <span class="tp-section">Step 5 — Performance Conversation (audio_12-5)</span>
-    <p>The FPR conversation is a two-way dialogue — not a verdict. Together, you and your leader discuss accomplishments, growth areas, feedback received, development opportunities, and possible stretch assignments. Come prepared. This conversation shapes the year ahead.</p>
+    <span class="tp-section">Step 5 — Performance Conversation</span>
+    <p>The FPR conversation is a two-way dialogue, not a verdict. Together, you and your leader walk through accomplishments, growth areas, the feedback you received earlier in the cycle, and development opportunities for the year ahead. Come with two to three development goals in mind — not perfectly formed, just real. Leaders can only support what they know you want, and naming the direction is what unlocks their support. This is also when stretch assignments and cross-functional opportunities get surfaced.</p>
 
-    <span class="tp-section">Step 6 — Merit Awards (audio_12-6)</span>
-    <p>Managers communicate merit awards to individual team members — tying recognition directly to the performance and growth you've demonstrated over the cycle. This step closes the formal evaluation and connects your work to tangible outcomes.</p>
+    <span class="tp-section">Step 6 — Sharing of Merit Awards</span>
+    <p>After the FPR conversation, managers communicate merit awards to individual team members. Recognition is tied directly to the performance and growth you've demonstrated across the whole cycle — not just to one conversation. That's an important distinction: the consistent behaviors you bring all year long are what create recognition. Merit isn't decided in a 60-minute meeting. It's earned in the daily work that made the meeting possible.</p>
 
-    <span class="tp-section">Step 7 — Goals &amp; Development (audio_12-7)</span>
-    <p>Partner with your manager on one performance goal and one development item for the year ahead. Use Workday's development tools to keep progress visible and actionable — not just at the next FPR, but throughout the year.</p>
+    <span class="tp-section">Step 7 — Work on Goals &amp; Development</span>
+    <p>After the FPR, you and your manager partner on one performance goal and one development item for the year ahead. Workday's development tools let you track progress, document growth, and keep the goals visible — not buried in a folder you reopen once a year. Remember the 70-20-10 framework here: most of your development won't come from a course. It comes from stretch assignments, new responsibilities, and the relationships that challenge you. Frame your development item accordingly.</p>
 
-    <span class="tp-section">Step 8 — Regular Check-Ins (audio_12-8)</span>
-    <p>Performance management doesn't end when the FPR closes. Workday enables ongoing check-ins to be captured and documented throughout the year — keeping you connected to goals, feedback, and development without waiting for the next cycle to begin.</p>
+    <span class="tp-section">Step 8 — Regular Check-Ins</span>
+    <p>Performance management doesn't end when the FPR closes. Workday allows ongoing check-ins to be captured and documented throughout the year, so the cycle stays alive between formal moments. A 15-minute conversation with your manager every few weeks is worth far more than a perfect FPR. Small, frequent touchpoints are what turn your development plan into actual development. When the next cycle begins, you'll already have a year's worth of evidence to draw from.</p>
   </div>
 </aside>
 
@@ -392,7 +450,7 @@ const STEPS = [
     title: "How the cycle works",
     color: "#003B71",
     short: null,
-    desc: "Performance management at Houston Methodist isn't a once-a-year event — it's a continuous rhythm of eight touchpoints that runs all year long. Click each step on the wheel, or use the arrows below to walk through each one. The FPR is where the conversation happens — but everything around it is what makes the conversation meaningful.",
+    desc: "Performance management at Houston Methodist isn't a once-a-year event. It's a continuous rhythm of eight touchpoints that runs all year long — and you're in it whether you realize it or not. The FPR conversation is the moment everyone notices, but the work that makes it meaningful happens in the steps before and after. Click each step on the wheel, or use the arrows below to walk through each one.",
     tip: "Before you begin",
     tipText: "As you explore each step, think about where you are in the cycle right now — and what's coming next for you.",
     tool: null, when: null, fpr: false,
@@ -404,7 +462,7 @@ const STEPS = [
     title: "Request Feedback",
     color: "#003B71",
     short: "Feedback",
-    desc: "The cycle begins with feedback. Peer feedback is required for all nursing staff and strongly encouraged for everyone else — colleagues see things about your work that you can't always see yourself. Request feedback from people who work closely with you and can speak to your I CARE behaviors.",
+    desc: "The cycle begins with feedback. Peer feedback is required for all nursing staff and strongly encouraged for everyone else, because colleagues see things about your work that you can't always see yourself. The best feedback comes from a mix of people — not just your closest collaborators, but also colleagues across roles who interact with you in different contexts. Their perspective is what makes the rest of the cycle land with weight.",
     tip: "Pro tip",
     tipText: "Request feedback from people across roles — not just your closest colleagues. Different perspectives reveal different strengths.",
     tool: "Workday", when: "Happens early in the cycle", fpr: false,
@@ -416,7 +474,7 @@ const STEPS = [
     title: "Self-Evaluation",
     color: "#1A5C9A",
     short: "Self-Eval",
-    desc: "You'll receive a notification in your Workday inbox to begin your self-evaluation. Reflect honestly on the past year — your contributions, your I CARE behaviors, the goals you've pursued, and where you've grown. The more specific you are, the more useful the conversation will be.",
+    desc: "You'll receive a Workday notification when it's time to begin your self-evaluation. This is where you reflect honestly on the past year — your contributions, your I CARE behaviors, the goals you pursued, and the places you stretched. Specificity is what makes this step useful: 'I demonstrated Accountability by leading the EHR transition for my team' tells a story; 'I was accountable' doesn't. The more concrete you are, the richer the FPR conversation becomes.",
     tip: "What to bring",
     tipText: "Use specific I CARE examples — 'I demonstrated Accountability by...' is far more powerful than a general statement.",
     tool: "Workday", when: "Notification arrives in your inbox", fpr: false,
@@ -428,7 +486,7 @@ const STEPS = [
     title: "In-Service Modules",
     color: "#69813A",
     short: "In-Service",
-    desc: "Required in-service modules are assigned through the LMS and must be completed to close out the self-evaluation step. This module you're in right now is part of that. Completing it is part of the cycle — not separate from it.",
+    desc: "Required in-service modules are assigned through the LMS and must be completed to close out the self-evaluation step. This module you're in right now is part of that. Think of these modules not as a checkbox but as a chance to refresh how you're showing up against HM's standards — and as something concrete to bring into the FPR conversation. Completing them on time keeps the cycle moving for you and your team.",
     tip: "You're here",
     tipText: "This module is your Step 3. Completing it moves you forward in the cycle — and gives you something concrete to bring to the FPR conversation.",
     tool: "HMALL · LMS", when: "Assigned with self-evaluation", fpr: false,
@@ -440,7 +498,7 @@ const STEPS = [
     title: "Manager Evaluation",
     color: "#E24301",
     short: "Mgr Eval",
-    desc: "Your supervisor completes the manager evaluation in Workday — assessing the same dimensions you reflected on, so both perspectives are ready before the conversation that follows. You and your manager will see each other's inputs before the conversation begins.",
+    desc: "Your supervisor completes the manager evaluation in Workday, assessing the same dimensions you reflected on. Both perspectives are ready before either of you sits down for the FPR conversation, which means the meeting itself isn't about data entry — it's about dialogue. You'll see your manager's input, and they'll see yours. That transparency is what lets the conversation start at a higher altitude than a typical performance review.",
     tip: "FPR moment",
     tipText: "This is the first of two FPR-specific steps. Both evaluations are complete before anyone sits down — so the conversation can be about dialogue, not data entry.",
     tool: "Workday", when: "Completed after your self-evaluation", fpr: true,
@@ -452,7 +510,7 @@ const STEPS = [
     title: "Performance Conversation",
     color: "#1A7A8A",
     short: "Conversation",
-    desc: "The FPR conversation is a two-way dialogue — not a verdict. Together, you and your leader discuss accomplishments, growth areas, feedback received, development opportunities, and possible stretch assignments. Come prepared with 2–3 development goals.",
+    desc: "The FPR conversation is a two-way dialogue, not a verdict. Together, you and your leader walk through accomplishments, growth areas, the feedback you received earlier in the cycle, and development opportunities for the year ahead. Come with two to three development goals in mind — not perfectly formed, just real. Leaders can only support what they know you want, and naming the direction is what unlocks their support. This is also when stretch assignments and cross-functional opportunities get surfaced.",
     tip: "FPR moment",
     tipText: "Come with 2–3 development goals in mind — leaders can only support what they know you want. This conversation shapes the year ahead.",
     tool: "In-person / Virtual", when: "The heart of the FPR", fpr: true,
@@ -464,7 +522,7 @@ const STEPS = [
     title: "Sharing of Merit Awards",
     color: "#AB0032",
     short: "Merit",
-    desc: "Managers communicate merit awards to individual team members — tying recognition directly to the performance and growth you've demonstrated over the cycle. This step closes the formal evaluation and connects your contributions to tangible outcomes.",
+    desc: "After the FPR conversation, managers communicate merit awards to individual team members. Recognition is tied directly to the performance and growth you've demonstrated across the whole cycle — not just to one conversation. That's an important distinction: the consistent behaviors you bring all year long are what create recognition. Merit isn't decided in a 60-minute meeting; it's earned in the daily work that made the meeting possible.",
     tip: "Worth knowing",
     tipText: "Merit decisions are made based on performance across the whole cycle — not just the FPR conversation. Consistent behaviors all year long are what create recognition.",
     tool: "Workday", when: "Follows the FPR conversation", fpr: false,
@@ -476,7 +534,7 @@ const STEPS = [
     title: "Work on Goals & Development",
     color: "#007078",
     short: "Growth",
-    desc: "Partner with your manager on one performance goal and one development item for the year ahead. Use Workday's development tools to keep progress visible and actionable — not just at the next FPR, but throughout the year.",
+    desc: "After the FPR, you and your manager partner on one performance goal and one development item for the year ahead. Workday's development tools let you track progress, document growth, and keep the goals visible — not buried in a folder you reopen once a year. Remember the 70-20-10 framework here: most of your development won't come from a course. It comes from stretch assignments, new responsibilities, and the relationships that challenge you.",
     tip: "70-20-10",
     tipText: "Remember: 70% of development happens through on-the-job experience. Your development goal doesn't have to be a class — it can be a stretch assignment or a new responsibility.",
     tool: "Workday", when: "Throughout the year", fpr: false,
@@ -488,7 +546,7 @@ const STEPS = [
     title: "Regular Check-Ins",
     color: "#749ABB",
     short: "Check-Ins",
-    desc: "Performance management doesn't end when the FPR closes. Workday enables ongoing check-ins to be captured and documented throughout the year — keeping you connected to goals, feedback, and development without waiting for the next cycle.",
+    desc: "Performance management doesn't end when the FPR closes. Workday allows ongoing check-ins to be captured and documented throughout the year, so the cycle stays alive between formal moments. A 15-minute conversation with your manager every few weeks is worth far more than a perfect FPR. Small, frequent touchpoints are what turn your development plan into actual development — and when the next cycle begins, you'll already have a year's worth of evidence to draw from.",
     tip: "Keep the momentum",
     tipText: "Regular check-ins turn your development plan into something alive. Don't wait for the next FPR to have the conversation — small, frequent touchpoints make a big difference.",
     tool: "Workday", when: "Ongoing — all year long", fpr: false,
@@ -628,9 +686,6 @@ STEPS.forEach((step, i) => {
 
 // ====== STATE ======
 let currentStep = 0;
-let playing = false;
-let autoTimer = null;
-const AUTO_MS = 6500;
 const seen = new Set();
 
 const audioMain = document.getElementById('audioMain');
@@ -697,14 +752,18 @@ function renderStep(i) {
 
 function goToStep(i, userAction = false) {
   renderStep(i);
-  // Play step audio
+  // Play step audio (stops main intro VO if still playing)
   const step = STEPS[i];
   audioMain.pause();
   audioStep.src = step.audio;
   audioStep.load();
   audioStep.play().catch(() => {});
   updateDevNow(step.audio.split('/').pop() + ' playing');
-  if (userAction) restartAutoIfPlaying();
+  // Dismiss the click hint once the user has interacted
+  if (userAction) {
+    const hint = document.getElementById('clickHint');
+    if (hint) hint.classList.add('dismissed');
+  }
 }
 
 audioStep.addEventListener('ended', () => {
@@ -712,29 +771,12 @@ audioStep.addEventListener('ended', () => {
   audioMain.play().catch(() => {});
 });
 
-function advanceStep() { goToStep((currentStep + 1) % STEPS.length, false); }
-function retreatStep()  { goToStep((currentStep - 1 + STEPS.length) % STEPS.length, false); }
-
-function startAuto()  { stopAuto(); autoTimer = setInterval(advanceStep, AUTO_MS); }
-function stopAuto()   { if (autoTimer) clearInterval(autoTimer); autoTimer = null; }
-function restartAutoIfPlaying() { if (playing) startAuto(); }
-
-function setPlaying(p) {
-  playing = p;
-  const icon = document.getElementById('playIcon');
-  if (playing) {
-    icon.innerHTML = '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>';
-    startAuto();
-  } else {
-    icon.innerHTML = '<polygon points="7 4 19 12 7 20"/>';
-    stopAuto();
-  }
-}
+function advanceStep() { goToStep((currentStep + 1) % STEPS.length, true); }
+function retreatStep()  { goToStep((currentStep - 1 + STEPS.length) % STEPS.length, true); }
 
 // Controls
-document.getElementById('prevBtn').addEventListener('click', () => { retreatStep(); restartAutoIfPlaying(); });
-document.getElementById('nextBtn').addEventListener('click', () => { advanceStep(); restartAutoIfPlaying(); });
-document.getElementById('playBtn').addEventListener('click', () => setPlaying(!playing));
+document.getElementById('prevBtn').addEventListener('click', () => retreatStep());
+document.getElementById('nextBtn').addEventListener('click', () => advanceStep());
 
 // ====== AUDIO PLAYER (tracks whichever is active) ======
 const apBtn      = document.getElementById('apBtn');
@@ -817,9 +859,8 @@ document.addEventListener('keydown', e => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
     document.getElementById('devOverlay').classList.toggle('visible');
   }
-  if (e.key === 'ArrowRight') { advanceStep(); restartAutoIfPlaying(); }
-  if (e.key === 'ArrowLeft')  { retreatStep(); restartAutoIfPlaying(); }
-  if (e.key === ' ') { e.preventDefault(); setPlaying(!playing); }
+  if (e.key === 'ArrowRight') advanceStep();
+  if (e.key === 'ArrowLeft')  retreatStep();
 });
 
 function updateDevNow(label) {
@@ -844,12 +885,11 @@ document.getElementById('tpTab').addEventListener('click',  () => document.getEl
 document.getElementById('tpClose').addEventListener('click', () => document.getElementById('tpPanel').classList.remove('open'));
 
 // Nav
-document.getElementById('btnPrev').addEventListener('click', () => window.parent.postMessage({ type:'nav', action:'prev' }, '*'));
-document.getElementById('btnNext').addEventListener('click', () => window.parent.postMessage({ type:'nav', action:'next' }, '*'));
+document.getElementById('btnPrev').addEventListener('click', () => window.parent.postMessage({ type:'prev' }, '*'));
+document.getElementById('btnNext').addEventListener('click', () => window.parent.postMessage({ type:'next' }, '*'));
 
 // Init
 renderStep(0);
-setTimeout(() => setPlaying(true), 1500);
 updateDevNow('audio_12');
 </script>
 </body>
