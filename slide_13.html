@@ -135,8 +135,8 @@ button.nav{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 2
   <div class="hdr-right">
     <span class="scene-tag">Slide 13 — How Development Actually Happens</span>
     <div class="progress-wrap">
-      <span class="progress-lbl">13 of 18</span>
-      <div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div>
+      <span class="progress-lbl">13 of 16</span>
+      <div class="progress-bar"><div class="progress-fill" style="width:81%"></div></div>
     </div>
   </div>
 </header>
@@ -266,7 +266,6 @@ button.nav{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 2
     </button>
   </div>
   <div style="padding:20px 26px 28px;overflow-y:auto;flex:1;font-family:'Franklin Gothic Book',Calibri,Arial,sans-serif;font-size:13.5px;line-height:1.7;color:rgba(255,255,255,.85);">
-    <p><strong style="color:#A8D4DA;font-family:'Franklin Gothic Medium',Arial,sans-serif;">Main narration (audio_13)</strong></p>
     <p>Here's something that surprises a lot of people: most of your growth at Houston Methodist doesn't happen in a classroom or a training program. It happens on the job.</p>
     <p>The 70-20-10 framework reflects how people actually develop. Seventy percent of learning comes from challenging on-the-job experiences — stretch assignments, new responsibilities, problems you haven't faced before. Twenty percent comes from the people around you — mentors, leaders, peers who coach, challenge, and reflect with you. And ten percent comes from structured learning — coursework, programs, and on-demand resources like what's available through HMALL.</p>
     <p>The insight here is important: most development plans focus almost entirely on the 10%. But the most meaningful growth happens in the 70%. When you sit down for your Focal Point Review conversation, bring a 70-20-10 mindset — most of your development goal should live in what you do, not just what you take.</p>
@@ -299,6 +298,60 @@ button.nav{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 2
 .ap-times{display:flex;justify-content:space-between;font-family:var(--sans);font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;line-height:1;}
 .nav{font-family:var(--sans);}
 .btn-primary{font-family:var(--head)!important;}
+
+/* Transcript paragraph spacing */
+#tpPanel p { margin: 0 0 14px 0; }
+#tpPanel p:last-child { margin-bottom: 0; }
+
+/* ── RESPONSIVE BREAKPOINTS ──────────────────────────── */
+@media (max-height: 850px) {
+  .hdr { height: 56px; flex-basis: 56px; padding: 0 28px; }
+  .main { padding: 14px 30px 10px; gap: 10px; }
+  .ftr { height: 50px; flex-basis: 50px; padding: 0 22px; }
+  .audio-player { width: 320px; }
+  .col { padding: 18px 20px; }
+}
+
+@media (min-width: 901px) and (max-width: 1199px) {
+  .main { padding: 16px 28px 12px; }
+  .cols { gap: 12px; grid-template-columns: 2fr 1.3fr 1fr; }
+  .col { padding: 18px 20px; }
+  .audio-player { width: 280px; }
+}
+
+@media (max-width: 900px) {
+  html, body { overflow: auto; }
+  .slide { height: auto; min-height: 100vh; }
+  .main {
+    padding: 20px 22px 110px;
+    gap: 16px;
+  }
+  .cols { grid-template-columns: 1fr; gap: 14px; }
+  .col { padding: 20px 22px; }
+  .ftr { position: sticky; bottom: 0; }
+  .audio-player { width: 240px; }
+}
+
+@media (max-width: 600px) {
+  .hdr { padding: 0 14px; height: 50px; flex-basis: 50px; }
+  .scene-tag { display: none; }
+  .progress-bar { width: 70px; }
+  .main { padding: 16px 14px 110px; gap: 14px; }
+  .col { padding: 18px 18px; }
+  .pct { font-size: clamp(48px, 14vw, 76px); }
+  .pct-sym { font-size: clamp(22px, 6vw, 36px); }
+
+  .ftr {
+    grid-template-columns: 1fr;
+    height: auto;
+    flex-basis: auto;
+    padding: 10px 14px 12px;
+    row-gap: 8px;
+  }
+  .ftr-icare { font-size: 10px; order: 3; text-align: center; }
+  .audio-player { width: 100%; order: 1; }
+  .btn-row { width: 100%; justify-content: space-between; order: 2; }
+}
 </style>
 
 <audio id="audio" preload="auto" autoplay>
@@ -344,8 +397,8 @@ apBarWrap.addEventListener('click', e => {
 document.getElementById('tpTab').addEventListener('click', () => document.getElementById('tpPanel').style.transform = 'translateX(0)');
 document.getElementById('tpClose').addEventListener('click', () => document.getElementById('tpPanel').style.transform = 'translateX(100%)');
 
-document.getElementById('btnPrev').addEventListener('click', () => window.parent.postMessage({ type:'nav', action:'prev' }, '*'));
-document.getElementById('btnNext').addEventListener('click', () => window.parent.postMessage({ type:'nav', action:'next' }, '*'));
+document.getElementById('btnPrev').addEventListener('click', () => window.parent.postMessage({ type:'prev' }, '*'));
+document.getElementById('btnNext').addEventListener('click', () => window.parent.postMessage({ type:'next' }, '*'));
 
 function devRestart() { audioMain.currentTime = 0; audioMain.play().catch(()=>{}); }
 function devPlayPause() { if (audioMain.paused) audioMain.play().catch(()=>{}); else audioMain.pause(); }
