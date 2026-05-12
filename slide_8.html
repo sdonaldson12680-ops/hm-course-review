@@ -168,144 +168,23 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
 
 /* INTRO PANEL — covers vcontent until a tab is chosen */
 .vcontent{position:relative;}
-.intro-panel{position:absolute;inset:0;z-index:5;background:var(--white);display:grid;grid-template-columns:1.1fr 1fr;gap:36px;padding:38px 44px;transition:opacity .35s ease,transform .35s ease;align-items:center;}
+.intro-panel{position:absolute;inset:0;z-index:5;background:var(--white);display:flex;flex-direction:column;justify-content:center;padding:38px 56px;gap:18px;transition:opacity .35s ease,transform .35s ease;}
 .intro-panel.hidden{opacity:0;transform:translateX(-8px);pointer-events:none;}
-.intro-panel-left{display:flex;flex-direction:column;justify-content:center;gap:16px;min-width:0;}
-.intro-panel-right{display:flex;align-items:stretch;justify-content:center;min-width:0;height:100%;}
 .intro-eyebrow{display:flex;align-items:center;gap:10px;}
 .intro-line{width:28px;height:2px;background:var(--teal);flex-shrink:0;}
 .intro-tag{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);font-family:var(--head);}
-.intro-h{font-family:var(--head);font-size:clamp(22px,2.2vw,30px);line-height:1.15;color:var(--navy);letter-spacing:-.005em;}
+.intro-h{font-family:var(--head);font-size:clamp(22px,2.2vw,30px);line-height:1.15;color:var(--navy);letter-spacing:-.005em;max-width:560px;}
 .intro-h em{font-style:italic;color:var(--teal);}
-.intro-lede{font-size:clamp(13px,1.05vw,15px);line-height:1.65;color:var(--text);font-family:var(--sans);}
+.intro-lede{font-size:clamp(13px,1.05vw,15px);line-height:1.65;color:var(--text);font-family:var(--sans);max-width:560px;}
 .intro-lede strong{font-family:var(--head);font-weight:500;color:var(--navy);}
-.intro-prompt{margin-top:8px;display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:10px;background:var(--soft);border:1px solid var(--line);border-left:3px solid var(--teal);max-width:520px;opacity:0;transform:translateX(8px);transition:opacity .4s ease,transform .4s ease;pointer-events:none;}
-.intro-prompt.revealed{opacity:1;transform:translateX(0);pointer-events:auto;}
-.intro-prompt-arrow{width:28px;height:28px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;font-weight:700;animation:nudge-left 1.4s ease-in-out infinite;}
-.intro-prompt-arrow svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;transform:scaleX(-1);}
+.intro-prompt{margin-top:6px;display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:10px;background:var(--soft);border:1px solid var(--line);border-left:3px solid var(--teal);max-width:520px;}
+.intro-prompt-arrow{width:28px;height:28px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;font-weight:700;animation:nudge 1.4s ease-in-out infinite;}
+.intro-prompt-arrow svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
 .intro-prompt-text{font-size:13px;line-height:1.45;color:var(--text);font-family:var(--sans);}
 .intro-prompt-text b{font-family:var(--head);font-weight:600;color:var(--navy);}
-@keyframes nudge-left{0%,100%{transform:translateX(0)}50%{transform:translateX(-5px)}}
-
-/* Large image placeholder on the right side of the intro */
-.intro-image-slot{width:100%;height:100%;min-height:300px;max-height:480px;border-radius:14px;overflow:hidden;border:2px dashed var(--line);background:var(--soft);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative;}
-.intro-image-slot img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;border-radius:12px;}
-.intro-image-slot-label{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);opacity:.6;font-family:var(--head);}
-.intro-image-slot-sub{font-size:11px;font-weight:300;color:var(--muted);opacity:.5;text-align:center;padding:0 18px;font-family:var(--sans);}
-.intro-image-slot.has-photo .intro-image-slot-label,.intro-image-slot.has-photo .intro-image-slot-sub{display:none;}
+@keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(-5px)}}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── RESPONSIVE BREAKPOINTS ──────────────────────────── */
-/* Short screens: trim header/footer */
-@media (max-height: 850px) {
-  .hdr { height: 56px; flex-basis: 56px; padding: 0 28px; }
-  .brand-logo { height: 32px; }
-  .main { padding: 16px 28px 10px; gap: 12px; }
-  .ftr { height: 50px; flex-basis: 50px; padding: 0 22px; }
-  .audio-player { width: 320px; }
-  .vnav { padding: 12px 10px; gap: 6px; }
-  .vtab { min-height: 60px; padding: 12px 12px; }
-  .vc-left, .vc-right { padding: 18px 22px; }
-  .photo-slot { height: 90px; }
-}
-
-/* Tablet landscape: keep horizontal layout, narrow nav */
-@media (min-width: 901px) and (max-width: 1199px) {
-  .main { padding: 18px 28px 12px; }
-  .vnav { width: 200px; }
-  .vc-left, .vc-right { padding: 20px 22px; }
-  .audio-player { width: 280px; }
-}
-
-/* Tablet portrait & narrow: stack big-card vertically, tabs become chips */
-@media (max-width: 900px) {
-  html, body { overflow: auto; }
-  .slide { height: auto; min-height: 100vh; }
-  .main { padding: 18px 18px 110px; }
-
-  /* Title row stacks */
-  .title-row { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .domain-pill { flex-wrap: wrap; }
-
-  /* Big card flips to column layout */
-  .big-card { flex-direction: column; min-height: 600px; }
-
-  /* Vertical nav becomes horizontal scrolling chip row */
-  .vnav {
-    width: 100%;
-    flex-direction: row;
-    border-right: none;
-    border-bottom: 1px solid var(--line);
-    padding: 12px;
-    gap: 8px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    flex-shrink: 0;
-  }
-  .vnav-lbl { display: none; }
-  .vtab {
-    width: auto;
-    flex: 0 0 auto;
-    min-height: 56px;
-    padding: 12px 14px;
-    border-left: 1px solid var(--line);
-    border-bottom: 4px solid transparent;
-    white-space: nowrap;
-  }
-  .vtab.active { border-bottom-color: var(--teal); }
-
-  /* Content panel goes single column */
-  .vcontent { grid-template-columns: 1fr; overflow: visible; }
-  .vc-left { border-right: none; border-bottom: 1px solid var(--line); padding: 20px 22px; }
-  .vc-right { padding: 20px 22px; }
-
-  /* Intro panel reflows: stack columns, image goes below text */
-  .intro-panel {
-    grid-template-columns: 1fr;
-    padding: 24px 22px;
-    gap: 18px;
-    align-items: start;
-  }
-  .intro-panel-right { height: auto; }
-  .intro-image-slot { min-height: 200px; max-height: 260px; }
-
-  .ftr { position: sticky; bottom: 0; }
-  .audio-player { width: 220px; }
-  .tp-panel { width: 100%; }
-}
-
-/* Phone portrait: compact header, stack footer */
-@media (max-width: 600px) {
-  .hdr { padding: 0 14px; height: 50px; flex-basis: 50px; }
-  .scene-tag { display: none; }
-  .progress-bar { width: 70px; }
-  .brand-logo { height: 28px; }
-  .main { padding: 16px 14px 110px; }
-  .tl-h { font-size: clamp(22px, 6vw, 30px); }
-  .domain-pill { font-size: 11px; }
-  .dp-n, .dp-name, .dp-ct { padding: 8px 12px; font-size: 12px; }
-
-  .vtab { min-height: 52px; padding: 10px 12px; }
-  .vname { font-size: 13px; }
-
-  .vc-left, .vc-right { padding: 16px 18px; }
-  .comp-name { font-size: 24px; }
-  .intro-h { font-size: 22px; }
-  .intro-image-slot { min-height: 160px; max-height: 200px; }
-  .ex-box { padding: 16px 18px; }
-
-  .ftr {
-    grid-template-columns: 1fr;
-    height: auto;
-    flex-basis: auto;
-    padding: 10px 14px 12px;
-    row-gap: 8px;
-  }
-  .ftr-icare { font-size: 10px; order: 3; text-align: center; }
-  .audio-player { width: 100%; order: 1; }
-  .btn-row { width: 100%; justify-content: space-between; order: 2; }
-}
 </style>
 </head>
 <body>
@@ -361,32 +240,24 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
 
     <div class="vcontent">
       <div class="intro-panel" id="introPanel">
-        <div class="intro-panel-left">
-          <div class="intro-eyebrow">
-            <div class="intro-line"></div>
-            <span class="intro-tag">Domain 1 · 4 Behaviors</span>
-          </div>
-          <h2 class="intro-h">Where I CARE values meet <em>the way we lead ourselves.</em></h2>
-          <p class="intro-lede">
-            This domain holds the behaviors that connect HM's mission and culture to how you show up every day —
-            regardless of your role. <strong>Vision &amp; Values</strong>, <strong>Change &amp; Innovation</strong>,
-            <strong>Customer Focus</strong>, and <strong>Culture &amp; Engagement</strong>.
-            Each one has specific Leading Self behaviors and a real workplace example.
-          </p>
-          <div class="intro-prompt" id="introPrompt">
-            <div class="intro-prompt-arrow" aria-hidden="true">
-              <svg viewBox="0 0 16 16"><polyline points="3,8 9,8 9,4 14,8 9,12 9,8"/></svg>
-            </div>
-            <span class="intro-prompt-text">
-              <b>Choose a behavior</b> to see what it looks like in practice.
-            </span>
-          </div>
+        <div class="intro-eyebrow">
+          <div class="intro-line"></div>
+          <span class="intro-tag">Domain 1 · 4 Behaviors</span>
         </div>
-        <div class="intro-panel-right">
-          <div class="intro-image-slot" id="introImageSlot">
-            <span class="intro-image-slot-label">image_8</span>
-            <span class="intro-image-slot-sub">Drop image_8 here</span>
+        <h2 class="intro-h">Where I CARE values meet <em>the way we lead ourselves.</em></h2>
+        <p class="intro-lede">
+          This domain holds the behaviors that connect Houston Methodist's mission and culture to how you show up every day —
+          regardless of your role. <strong>Vision &amp; Values</strong>, <strong>Change &amp; Innovation</strong>,
+          <strong>Customer Focus</strong>, and <strong>Culture &amp; Engagement</strong>.
+          Each one has specific Leading Self behaviors and a real workplace example.
+        </p>
+        <div class="intro-prompt">
+          <div class="intro-prompt-arrow" aria-hidden="true">
+            <svg viewBox="0 0 16 16"><polyline points="3,8 9,8 9,4 14,8 9,12 9,8"/></svg>
           </div>
+          <span class="intro-prompt-text">
+            <b>Choose a behavior</b> to see what it looks like in practice.
+          </span>
         </div>
       </div>
       <div class="vc-left">
@@ -551,7 +422,7 @@ const D = [
    ex1:"You stop. You acknowledge them, give your full attention, and make sure they're safely where they need to be. <b>That's Vision & Values</b> — not because someone asked, but because it's who you are here.",
    sc2:"A colleague in billing notices an error that could delay a patient's insurance approval and isn't sure it's 'their job' to flag it.",
    ex2:"They flag it anyway and follow through until it's resolved. <b>That's Vision & Values</b> — every role shapes the patient experience, even the ones that never touch a patient directly.",
-   ic:"🎯",photo:"images/image_8-1.jpg",photoHint:"image_8-1",photoSub:"Drop image_8-1 here",
+   ic:"🎯",photo:null,photoHint:"image_8",photoSub:"Drop image_8 here",
    cn:"Vision & Values connects directly to I CARE Values from the previous slide. The LBM gives these behaviors a consistent name across all of Houston Methodist."},
   {name:"Change &amp; Innovation",color:'#69813A',bg:'rgba(105,129,58,.08)',
    b:["Adapt your approach when processes shift — staying flexible within established guidelines.",
@@ -561,7 +432,7 @@ const D = [
    ex1:"You learn it early, help struggling colleagues, and flag a specific improvement idea to your supervisor. <b>That's Change & Innovation</b> — embracing discomfort because better care depends on it.",
    sc2:"The IT help desk adopts a new ticketing system that changes how requests are routed and prioritized.",
    ex2:"Instead of workarounds, you invest time learning the new process, share tips with the team, and submit feedback that improves the rollout. <b>That's Change & Innovation</b> — in every department, not just clinical ones.",
-   ic:"💡",photo:"images/image_8-2.jpg",photoHint:"image_8-2",photoSub:"Drop image_8-2 here",
+   ic:"💡",photo:null,photoHint:"image_8",photoSub:"Drop image_8 here",
    cn:"Change & Innovation connects directly to the Forces of Change coming up — technology and patient expectations mean HM must continuously evolve."},
   {name:"Customer Focus",color:'#007078',bg:'rgba(0,112,120,.08)',
    b:["Maintain clear communication with patients, families, and colleagues about what to expect and when.",
@@ -571,7 +442,7 @@ const D = [
    ex1:"You don't just point. You walk them to the elevator, tell them the floor, and ask if they need anything else. <b>That's Customer Focus</b> — treating every interaction like the most important one of the day.",
    sc2:"An employee calls HR with a question about their benefits and is told someone will call back.",
    ex2:"The HR team member follows up before end of day — even though it wasn't urgent. <b>That's Customer Focus</b> — your colleagues are your customers too.",
-   ic:"🌟",photo:"images/image_8-3.jpg",photoHint:"image_8-3",photoSub:"Drop image_8-3 here",
+   ic:"🌟",photo:null,photoHint:"image_8",photoSub:"Drop image_8 here",
    cn:"Customer Focus maps directly to AIDET and the 10/5 Rule from the previous scene. The LBM gives this behavior a competency name — the tools are the same ones you already use."},
   {name:"Culture &amp; Engagement",color:'#AB0032',bg:'rgba(171,0,50,.08)',
    b:["Actively ensure all perspectives are heard in team discussions — not just the loudest voices.",
@@ -581,7 +452,7 @@ const D = [
    ex1:"You pause the group: <b>'I'd love to hear what Maria thinks before we close out.'</b> That's Culture & Engagement — the best ideas surface from every voice, not just the loudest.",
    sc2:"A new employee on the finance team seems hesitant to share ideas in group settings.",
    ex2:"You check in with them one-on-one after the meeting and encourage them to bring their perspective next time. <b>That's Culture & Engagement</b> — inclusion is built in small, everyday moments.",
-   ic:"🤝",photo:"images/image_8-4.jpg",photoHint:"image_8-4",photoSub:"Drop image_8-4 here",
+   ic:"🤝",photo:null,photoHint:"image_8",photoSub:"Drop image_8 here",
    cn:"This exact scenario appears as a Knowledge Check question later in the course. Learners who engage carefully here will recognize it — and know the right answer."}
 ];
 
@@ -590,13 +461,6 @@ let cur = -1;  // No tab selected on load
 const audioMain = document.getElementById('audioMain');
 const audioTab  = document.getElementById('audioTab');
 const introPanel = document.getElementById('introPanel');
-const introPrompt = document.getElementById('introPrompt');
-
-// Reveal the "Choose a behavior" prompt when the main VO finishes.
-// Fallback: if user clicks a tab before VO ends, prompt is irrelevant anyway.
-audioMain.addEventListener('ended', () => {
-  if (introPrompt) introPrompt.classList.add('revealed');
-});
 
 function sw(i) {
   if (i === cur) return;
@@ -766,7 +630,6 @@ function devRestart() {
     t.style.borderLeftColor = 'transparent';
   });
   if (introPanel) introPanel.classList.remove('hidden');
-  if (introPrompt) introPrompt.classList.remove('revealed');
   audioMain.play().catch(() => {});
   updateDevNow('audio_8 playing');
 }
@@ -782,8 +645,8 @@ document.getElementById('tpTab').addEventListener('click',  () => document.getEl
 document.getElementById('tpClose').addEventListener('click', () => document.getElementById('tpPanel').classList.remove('open'));
 
 /* ── Nav ──────────────────────────────────────────── */
-document.getElementById('btnPrev').addEventListener('click', () => window.parent.postMessage({ type:'prev' }, '*'));
-document.getElementById('btnNext').addEventListener('click', () => window.parent.postMessage({ type:'next' }, '*'));
+document.getElementById('btnPrev').addEventListener('click', () => window.parent.postMessage({ type:'nav', action:'prev' }, '*'));
+document.getElementById('btnNext').addEventListener('click', () => window.parent.postMessage({ type:'nav', action:'next' }, '*'));
 
 /* ── Init ─────────────────────────────────────────── */
 // No tab is selected on load — intro panel covers the content area.
