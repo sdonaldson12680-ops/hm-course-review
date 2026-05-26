@@ -450,11 +450,11 @@ button {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── TRANSCRIPT TAB (right edge) ────────────────────── */
-.transcript-tab {
+/* ── TRANSCRIPT TAB + PANEL (matches slide 5 standard) ── */
+.tp-tab {
   position: fixed;
-  top: 50%;
   right: 0;
+  top: 50%;
   transform: translateY(-50%);
   background: rgba(0,30,60,.85);
   backdrop-filter: blur(14px);
@@ -464,91 +464,93 @@ button {
   border-radius: 10px 0 0 10px;
   color: rgba(255,255,255,.9);
   padding: 14px 8px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  font-family: var(--head);
   cursor: pointer;
   z-index: 80;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  transition: background .2s ease;
+}
+.tp-tab:hover { background: var(--teal); }
+.tp-tab svg { width: 16px; height: 16px; stroke: #fff; }
+.tp-tab span {
   writing-mode: vertical-rl;
-  transition: background .18s ease, padding-right .18s ease, box-shadow .18s ease;
-  height: auto;
-}
-.transcript-tab:hover {
-  background: rgba(26,122,138,.95);
-  padding-right: 12px;
-  box-shadow: -4px 0 16px rgba(0,0,0,.2);
-}
-.transcript-tab svg {
-  width: 14px; height: 14px;
-  writing-mode: horizontal-tb;
+  transform: rotate(180deg);
+  font-family: var(--head);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
 }
 
-/* ── TRANSCRIPT PANEL ───────────────────────────────── */
-.transcript-panel {
+.tp-panel {
   position: fixed;
-  top: 0; right: 0;
+  top: 0;
+  right: 0;
   width: 380px;
   height: 100vh;
   background: rgba(10,20,35,.97);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border-left: 1px solid rgba(168,212,218,.2);
-  z-index: 90;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fff;
   transform: translateX(100%);
-  transition: transform .28s cubic-bezier(.4,0,.2,1);
+  transition: transform .35s ease;
+  z-index: 90;
   display: flex;
   flex-direction: column;
-  box-shadow: -16px 0 40px rgba(0,0,0,.3);
+  border-left: 1px solid rgba(255,255,255,.08);
 }
-.transcript-panel.open { transform: translateX(0); }
+.tp-panel.open { transform: translateX(0); }
 .tp-head {
+  padding: 22px 26px 16px 26px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 22px 24px 16px;
   border-bottom: 1px solid rgba(255,255,255,.08);
-  flex-shrink: 0;
 }
 .tp-head h3 {
   font-family: var(--head);
-  font-size: 17px;
-  color: #fff;
+  font-size: 14px;
   font-weight: 500;
-  letter-spacing: -.005em;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0;
 }
 .tp-close {
   width: 32px; height: 32px;
+  padding: 0;                                 /* override global button padding */
   border-radius: 50%;
   background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.12);
-  color: rgba(255,255,255,.7);
+  border: 1px solid rgba(255,255,255,.12);    /* override global button border:none */
+  color: #fff;
   cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: background .18s ease, color .18s ease;
-  height: 32px; padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background .2s ease;
 }
-.tp-close:hover { background: rgba(255,255,255,.12); color: #fff; }
-.tp-close svg { width: 14px; height: 14px; }
+.tp-close:hover { background: rgba(255,255,255,.12); }
+.tp-close svg { width: 14px; height: 14px; stroke: #fff; }
 .tp-body {
-  padding: 18px 24px 28px;
+  padding: 20px 26px 28px 26px;
   overflow-y: auto;
   flex: 1;
 }
 .tp-body p {
+  font-family: var(--sans);
   font-size: 13.5px;
   line-height: 1.7;
-  color: rgba(255,255,255,.78);
-  margin-bottom: 14px;
-  font-weight: 400;
-  font-family: var(--sans);
+  color: rgba(255,255,255,.85);
+  margin: 0 0 14px 0;
 }
-.tp-body p:last-child { margin-bottom: 0; }
+.tp-body p strong {
+  color: var(--teal-lt);
+  font-family: var(--head);
+  font-weight: 500;
+}
 
 /* ── DEV TIMING OVERLAY (press D to toggle) ─────────── */
 .dev-overlay {
@@ -909,7 +911,7 @@ button {
           <div class="split-items">
             <div class="split-item">Leadership Behaviors Model</div>
             <div class="split-item">Leading Self behaviors</div>
-            <div class="split-item">FPR cycle &amp; development plan</div>
+            <div class="split-item">Focal Point Review cycle &amp; Development plan</div>
             <div class="split-item">70-20-10 &amp; HMALL programs</div>
           </div>
         </div>
@@ -949,7 +951,7 @@ button {
         <div class="scene-num">03</div>
         <div class="scene-body">
           <div class="scene-title">Leadership Behaviors Model</div>
-          <div class="scene-desc">LBM overview · 3 domains · Leading Self behaviors</div>
+          <div class="scene-desc">Leadership Behaviors Model overview · 3 domains · Leading Self behaviors</div>
         </div>
         <div class="scene-meta">
           <span class="scene-time">~5 min</span>
@@ -961,7 +963,7 @@ button {
         <div class="scene-num">04</div>
         <div class="scene-body">
           <div class="scene-title">Talent Management &amp; The FPR</div>
-          <div class="scene-desc">Dev philosophy · FPR cycle · 70-20-10</div>
+          <div class="scene-desc">Development philosophy · Focal Point Review cycle · 70-20-10</div>
         </div>
         <div class="scene-meta">
           <span class="scene-time">~4 min</span>
@@ -973,7 +975,7 @@ button {
         <div class="scene-num">05</div>
         <div class="scene-body">
           <div class="scene-title">The Vision &amp; Wrap-Up</div>
-          <div class="scene-desc">Forces of Change · it all connects · your next step</div>
+          <div class="scene-desc">Forces of Change · It all connects · Your next step</div>
         </div>
         <div class="scene-meta">
           <span class="scene-time">~3 min</span>
@@ -1025,41 +1027,39 @@ button {
 
 </div>
 
-<!-- Transcript tab (right edge) -->
-<button class="transcript-tab" onclick="toggleTranscript()" aria-label="Show narration transcript">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-    <polyline points="14 2 14 8 20 8"/>
-    <line x1="8" y1="13" x2="16" y2="13"/>
-    <line x1="8" y1="17" x2="16" y2="17"/>
-    <line x1="8" y1="9" x2="11" y2="9"/>
+<!-- TRANSCRIPT TAB -->
+<div class="tp-tab" id="tpTab" title="Open transcript">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+    <polyline points="14 2 14 8 20 8"></polyline>
+    <line x1="16" y1="13" x2="8" y2="13"></line>
+    <line x1="16" y1="17" x2="8" y2="17"></line>
+    <line x1="10" y1="9" x2="8" y2="9"></line>
   </svg>
-  Transcript
-</button>
+  <span>Transcript</span>
+</div>
 
-<div class="transcript-panel" id="transcriptPanel" role="dialog" aria-label="Narration transcript">
+<!-- TRANSCRIPT PANEL -->
+<aside class="tp-panel" id="tpPanel">
   <div class="tp-head">
     <h3>Narration Transcript</h3>
-    <button class="tp-close" onclick="toggleTranscript()" aria-label="Close transcript">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    <button class="tp-close" id="tpClose" aria-label="Close transcript">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
     </button>
   </div>
   <div class="tp-body">
-  <p>In the next 20 minutes, you'll reconnect with the culture you already live and explore the tools Houston Methodist has built to support your growth, development, and impact.</p>
-
-<p>We’ll begin with the culture that shapes how we show up every day — with patients, families, and each other — and the mission, values, and service standards that guide our work.</p>
-
-<p>From there, we’ll explore the leadership behaviors that show up in your day-to-day experience, no matter your role or title.</p>
-
-<p>Then we’ll look at how growth happens here — through development, feedback, the Focal Point Review process, and the support systems around you.</p>
-
-<p>We’ll close with the forces shaping healthcare, why your growth matters beyond your own career, and one clear next step you can take moving forward.</p>
-
-<p>Same foundation you already know. More tools than ever.</p>
-
-<p>Let’s go.</p>
+    <p>In the next 20 minutes, you'll reconnect with the culture you already live and explore the tools Houston Methodist has built to support your growth, development, and impact.</p>
+    <p>We'll begin with the culture that shapes how we show up every day — with patients, families, and each other — and the mission, values, and service standards that guide our work.</p>
+    <p>From there, we'll explore the leadership behaviors that show up in your day-to-day experience, no matter your role or title.</p>
+    <p>Then we'll look at how growth happens here — through development, feedback, the Focal Point Review process, and the support systems around you.</p>
+    <p>We'll close with the forces shaping healthcare, why your growth matters beyond your own career, and one clear next step you can take moving forward.</p>
+    <p>Same foundation you already know. More tools than ever.</p>
+    <p>Let's go.</p>
   </div>
-</div>
+</aside>
 
 <!-- Dev Timing Overlay (press D to toggle) -->
 <div class="dev-overlay" id="devOverlay">
@@ -1077,9 +1077,11 @@ button {
 
 <script>
 // ====== TRANSCRIPT PANEL ======
-function toggleTranscript() {
-  document.getElementById('transcriptPanel').classList.toggle('open');
-}
+const tpTab   = document.getElementById('tpTab');
+const tpPanel = document.getElementById('tpPanel');
+const tpClose = document.getElementById('tpClose');
+tpTab.addEventListener('click',   () => tpPanel.classList.add('open'));
+tpClose.addEventListener('click', () => tpPanel.classList.remove('open'));
 
 // ====== AUDIO PLAYBACK ======
 const audio = document.getElementById('slideAudio');
