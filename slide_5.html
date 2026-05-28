@@ -749,14 +749,16 @@ body::before {
 }
 .tp-close {
   width: 32px; height: 32px;
+  padding: 0;                                 /* override global button padding */
   border-radius: 50%;
   background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.12);    /* override global button border:none */
   color: #fff;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   transition: background .2s ease;
 }
 .tp-close:hover { background: rgba(255,255,255,.12); }
@@ -1333,9 +1335,9 @@ body::before {
   <div class="tp-body">
     <p>You've used AIDET hundreds of times. Maybe thousands. You Acknowledge. You Introduce yourself. You set Duration. You Explain. You Thank.</p>
     <p>It's not a script, it's a rhythm. And when it's working, the person in front of you feels seen, safe, and informed.</p>
-    <p>On this screen you'll see two sections. On the left, each step of AIDET. Click to open any of them and remind yourself what that step sounds like at its best. On the right, Key Words at Key Times; the specific phrases that signal care in the moments that matter most: safe, comfortable, private, always, my pleasure.</p>
-    <p>And don’t overlook Manage Up, the habit of speaking positively about your colleagues, teams, and departments before someone even interacts with them. It builds trust before a handshake ever happens.</p>
-    <p>Explore at your own pace. Nothing is locked here, just revisit what resonates.</p>
+    <p>Two sections on this screen. On the left, click through each step of the AIDET framework — Acknowledge, Introduce, Duration, Explain, Thank — and remind yourself what each step sounds like at its best.</p>
+    <p>On the right, review the Key Words at Key Times — the specific phrases that signal care in the moments that matter most: safe, comfortable, private, always, my pleasure. Click each one to see a real-world example.</p>
+    <p>And don't overlook Manage Up — the habit of speaking positively about your colleagues, teams, and departments before someone even interacts with them. It builds trust before a handshake ever happens.</p>
 
     <p style="margin-top:22px;"><strong>On click — A · Acknowledge</strong></p>
     <p>Acknowledge sounds simple, but it sets the tone for everything that follows. Look up. Make eye contact. Use someone’s name if you know it. When people feel seen the moment an interaction begins, trust builds faster, conversations feel easier, and connection comes naturally. Don’t underestimate the first few seconds — they shape more than you think.</p>
