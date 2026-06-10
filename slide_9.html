@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HM · Slide 9 — Domain 2: People</title>
+<style>
+:root {
+  --navy:#003B71;--navy-d:#002A52;--blue:#12497E;--blue-m:#1A5C9A;
+  --ltblue:#749ABB;--teal:#1A7A8A;--teal-lt:#A8D4DA;
+  --white:#FFFFFF;--bg:#F2F6FA;--soft:#F8FAFC;--line:#DDE6F0;
+  --text:#1A2B3C;--muted:#5A7080;
+  --head:'Franklin Gothic Medium','Franklin Gothic Demi','Arial Narrow Bold',Arial,sans-serif;
+  --sans:'Franklin Gothic Book','Franklin Gothic Medium',Calibri,Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:var(--sans);background:var(--bg);}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse at 5% 50%,rgba(116,154,187,.06) 0%,transparent 50%),radial-gradient(ellipse at 95% 10%,rgba(26,122,138,.05) 0%,transparent 45%);pointer-events:none;z-index:0;}
+.slide{width:100vw;height:100vh;display:flex;flex-direction:column;position:relative;z-index:1;}
+
+/* HEADER */
+.hdr{height:68px;flex:0 0 68px;background:var(--navy);display:flex;align-items:center;justify-content:space-between;padding:0 40px;position:relative;}
+.hdr::after{content:"";position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--navy-d) 0%,var(--blue-m) 55%,var(--teal) 100%);}
+.brand-logo{height:36px;width:auto;object-fit:contain;}
+.hdr-right{display:flex;align-items:center;gap:20px;}
+.scene-tag{padding:5px 14px;border-radius:99px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.65);font-family:var(--sans);}
+.progress-wrap{display:flex;align-items:center;gap:10px;}
+.progress-lbl{font-size:12px;color:rgba(255,255,255,.45);font-family:var(--sans);}
+.progress-bar{width:100px;height:5px;border-radius:99px;background:rgba(255,255,255,.15);overflow:hidden;}
+.progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--ltblue),var(--teal-lt));}
+
+/* MAIN */
+.main{flex:1;min-height:0;padding:20px 36px 14px;display:flex;flex-direction:column;gap:14px;}
+
+/* Title row */
+.title-row{display:flex;align-items:center;justify-content:space-between;flex-shrink:0;opacity:0;animation:fadeUp .45s ease .1s forwards;}
+.tl{display:flex;flex-direction:column;gap:5px;}
+.tl-eyebrow{display:flex;align-items:center;gap:10px;}
+.tl-line{width:28px;height:2px;background:var(--navy);flex-shrink:0;}
+.tl-tag{font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--navy);font-family:var(--head);}
+.tl-h{font-family:var(--head);font-size:clamp(26px,2.8vw,42px);line-height:1.04;color:var(--navy);letter-spacing:-.01em;}
+.tl-h em{font-style:italic;color:var(--teal);}
+.domain-pill{display:flex;align-items:center;border-radius:12px;overflow:hidden;border:1px solid var(--line);box-shadow:0 2px 8px rgba(0,59,113,.07);flex-shrink:0;}
+.dp-n{background:var(--navy);color:rgba(255,255,255,.6);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:10px 16px;white-space:nowrap;font-family:var(--head);}
+.dp-sep{width:1px;background:var(--line);align-self:stretch;}
+.dp-name{background:var(--white);color:var(--navy);font-size:14px;font-weight:600;padding:10px 18px;white-space:nowrap;font-family:var(--head);}
+.dp-ct{background:var(--white);color:var(--muted);font-size:13px;font-weight:300;padding:10px 16px;white-space:nowrap;font-family:var(--sans);}
+
+/* Big card */
+.big-card{flex:1;min-height:0;background:var(--white);border:1px solid var(--line);border-radius:18px;box-shadow:0 4px 20px rgba(0,59,113,.07);display:flex;overflow:hidden;opacity:0;animation:fadeUp .5s ease .2s forwards;position:relative;}
+
+/* Vertical nav */
+.vnav{width:230px;flex-shrink:0;background:var(--soft);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 12px;gap:8px;overflow:hidden;}
+.vnav-lbl{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);padding:0 6px 10px;border-bottom:1px solid var(--line);margin-bottom:4px;font-family:var(--head);}
+.vtab{display:flex;align-items:center;gap:12px;padding:18px 14px;cursor:pointer;border:1px solid var(--line);border-left:4px solid transparent;border-radius:10px;background:var(--white);font-family:var(--sans);text-align:left;transition:all .18s;width:100%;min-height:72px;}
+.vtab:hover:not(.active){background:var(--bg);border-color:var(--ltblue);}
+.vtab.active{background:var(--white);box-shadow:0 2px 10px rgba(0,59,113,.1);}
+.vtab:focus{outline:none;}
+.vbadge{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden;font-family:var(--head);}
+.vbody{flex:1;min-width:0;}
+.vname{font-size:15px;font-weight:600;color:var(--navy);line-height:1.3;display:block;font-family:var(--head);}
+.vtab:not(.active) .vname{color:var(--muted);font-weight:500;}
+
+/* Content */
+.vcontent{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;min-width:0;}
+.vc-left{padding:24px 28px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:16px;overflow-y:auto;min-width:0;}
+.comp-tag{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-family:var(--head);}
+.comp-name{font-family:var(--head);font-size:clamp(24px,2.4vw,36px);font-style:italic;line-height:1.15;color:var(--navy);margin-top:6px;}
+.vc-div{height:1px;background:var(--line);flex-shrink:0;}
+.beh-list{display:flex;flex-direction:column;gap:20px;}
+.beh-item{display:flex;gap:12px;align-items:flex-start;}
+.beh-dot{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.beh-dot svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.beh-text{font-size:clamp(13px,1.02vw,15px);font-weight:400;color:var(--text);line-height:1.6;flex:1;font-family:var(--sans);}
+
+/* Image slot */
+.photo-slot{margin-top:4px;border-radius:10px;overflow:hidden;border:2px dashed var(--line);background:var(--soft);height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;flex-shrink:0;position:relative;transition:border-color .2s ease,background .2s ease;}
+.photo-slot img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;border-radius:8px;}
+.photo-slot-label{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);opacity:.6;font-family:var(--head);}
+.photo-slot-sub{font-size:10px;font-weight:300;color:var(--muted);opacity:.5;text-align:center;padding:0 12px;font-family:var(--sans);}
+.photo-slot.has-photo{border:none;background:transparent;}
+.photo-slot.has-photo .photo-slot-label,.photo-slot.has-photo .photo-slot-sub{display:none;}
+.photo-slot.has-photo img{border-radius:10px;}
+
+/* Right panel */
+.vc-right{padding:28px;display:flex;flex-direction:column;gap:18px;background:var(--soft);overflow:hidden;min-width:0;}
+.ex-box{background:var(--navy);border-radius:14px;padding:22px 24px;flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;border-left:4px solid var(--teal);position:relative;overflow:hidden;}
+.ex-box::after{content:"";position:absolute;right:-24px;top:-24px;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle,rgba(26,122,138,.18) 0%,transparent 70%);}
+.ex-tag{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-lt);display:block;font-family:var(--head);}
+.ex-scenario{font-size:clamp(12px,.95vw,14px);font-weight:300;font-style:italic;color:rgba(200,220,238,.55);line-height:1.55;font-family:var(--sans);}
+.ex-text{font-family:var(--head);font-size:clamp(14px,1.2vw,18px);font-style:italic;line-height:1.6;color:rgba(200,223,240,.92);flex:1;}
+.ex-text b{font-style:normal;color:var(--teal-lt);}
+.ex-pair{display:flex;flex-direction:column;gap:10px;flex:1;min-height:0;overflow-y:auto;}
+.ex-entry{display:flex;flex-direction:column;gap:4px;}
+.ex-role-lbl{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-lt);opacity:.75;font-family:var(--head);}
+.ex-divider{height:1px;background:rgba(255,255,255,.1);flex-shrink:0;margin:4px 0;}
+.ex-pair::-webkit-scrollbar{width:3px;}
+.ex-pair::-webkit-scrollbar-track{background:transparent;}
+.ex-pair::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px;}
+.conn-box{border-radius:12px;padding:16px 18px;border:1px solid var(--line);background:var(--white);display:flex;gap:12px;align-items:flex-start;flex-shrink:0;}
+.conn-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;}
+.conn-lbl{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:4px;font-family:var(--head);}
+.conn-txt{font-size:clamp(11px,.9vw,13px);font-weight:300;color:var(--muted);line-height:1.55;font-family:var(--sans);}
+
+/* Custom scrollbar */
+.vc-left::-webkit-scrollbar{width:4px;}
+.vc-left::-webkit-scrollbar-track{background:transparent;}
+.vc-left::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px;}
+.vc-left::-webkit-scrollbar-thumb:hover{background:var(--ltblue);}
+
+/* FOOTER */
+.ftr{height:56px;flex:0 0 56px;background:var(--white);border-top:1px solid var(--line);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 32px;position:relative;flex-shrink:0;}
+.ftr::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue) 0%,var(--teal) 60%,transparent 100%);opacity:.4;}
+.ftr-icare{font-size:11px;letter-spacing:.07em;color:var(--muted);font-family:var(--sans);}
+.ftr-icare b{font-weight:700;color:var(--blue);letter-spacing:.1em;font-family:var(--head);}
+.btn-row{display:flex;gap:10px;justify-content:flex-end;}
+.btn-row button{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 20px;font-size:13px;font-weight:500;font-family:var(--sans);transition:.18s ease;}
+.btn-ghost{background:var(--white);color:var(--navy);border:1px solid var(--line);}
+.btn-ghost:hover{transform:translateY(-1px);border-color:var(--ltblue);}
+.btn-primary{color:#fff;background:linear-gradient(160deg,var(--blue-m),var(--navy-d));box-shadow:0 6px 18px rgba(0,59,113,.2);font-family:var(--head);}
+.btn-primary:hover{transform:translateY(-1px);filter:brightness(1.05);}
+
+/* AUDIO PLAYER */
+.audio-player{display:flex;align-items:center;gap:12px;width:380px;}
+.ap-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--line);background:var(--white);color:var(--navy);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s ease;box-shadow:0 2px 8px rgba(0,59,113,.10);position:relative;}
+.ap-btn:hover{background:var(--navy);border-color:var(--navy);color:#fff;transform:scale(1.08);}
+.ap-btn svg{width:14px;height:14px;fill:currentColor;position:absolute;transition:opacity .15s ease;}
+.ap-track{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0;}
+.ap-bar-wrap{position:relative;height:7px;background:var(--line);border-radius:99px;cursor:pointer;overflow:hidden;transition:height .15s ease;}
+.ap-bar-wrap:hover{height:9px;}
+.ap-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--blue-m),var(--teal));width:0%;transition:width .25s linear;pointer-events:none;}
+.ap-times{display:flex;justify-content:space-between;font-family:var(--sans);font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;line-height:1;}
+
+/* TRANSCRIPT */
+.tp-tab{position:fixed;right:0;top:50%;transform:translateY(-50%);background:rgba(0,30,60,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);border-right:none;border-radius:10px 0 0 10px;color:rgba(255,255,255,.9);padding:14px 8px;cursor:pointer;z-index:80;display:flex;flex-direction:column;align-items:center;gap:8px;transition:background .2s ease;}
+.tp-tab:hover{background:var(--teal);}
+.tp-tab svg{width:16px;height:16px;stroke:#fff;}
+.tp-tab span{writing-mode:vertical-rl;transform:rotate(180deg);font-family:var(--head);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;}
+.tp-panel{position:fixed;top:0;right:0;width:400px;height:100vh;background:rgba(10,20,35,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;transform:translateX(100%);transition:transform .35s ease;z-index:90;display:flex;flex-direction:column;border-left:1px solid rgba(255,255,255,.08);}
+.tp-panel.open{transform:translateX(0);}
+.tp-head{padding:22px 26px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.08);}
+.tp-head h3{font-family:var(--head);font-size:14px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#fff;margin:0;}
+.tp-close{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s ease;}
+.tp-close:hover{background:rgba(255,255,255,.12);}
+.tp-close svg{width:14px;height:14px;stroke:#fff;}
+.tp-body{padding:20px 26px 28px;overflow-y:auto;flex:1;}
+.tp-body p{font-family:var(--sans);font-size:13.5px;line-height:1.7;color:rgba(255,255,255,.85);margin:0 0 14px 0;}
+.tp-body p strong{color:var(--teal-lt);font-family:var(--head);font-weight:500;}
+.tp-body .tp-section{font-family:var(--head);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-lt);margin:18px 0 8px;display:block;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);}
+
+/* DEV OVERLAY */
+.dev-overlay{display:none;position:fixed;bottom:60px;left:20px;width:340px;background:rgba(0,10,20,.94);backdrop-filter:blur(14px);border:1px solid rgba(168,212,218,.25);border-radius:14px;padding:18px 20px 14px;z-index:100;font-family:'Consolas','Monaco','Courier New',monospace;font-size:12px;color:rgba(255,255,255,.85);box-shadow:0 12px 40px rgba(0,0,0,.5);}
+.dev-overlay.visible{display:block;}
+.dev-title{font-family:var(--head);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-lt);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+.dev-title span{font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.05em;text-transform:none;}
+.dev-time{font-size:28px;font-weight:700;color:#fff;margin-bottom:14px;font-variant-numeric:tabular-nums;}
+.dev-now-playing{font-size:11px;color:var(--teal-lt);margin-bottom:10px;padding:4px 8px;background:rgba(26,122,138,.12);border-radius:4px;display:flex;align-items:center;gap:6px;}
+.dev-now-dot{width:6px;height:6px;border-radius:50%;background:var(--teal-lt);animation:pulse-dot 1.2s ease infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.3}}
+.dev-cue-list{list-style:none;display:flex;flex-direction:column;gap:5px;margin-bottom:14px;max-height:200px;overflow-y:auto;padding:0;}
+.dev-cue-item{display:flex;align-items:center;gap:10px;padding:4px 8px;border-radius:6px;background:rgba(255,255,255,.04);transition:background .2s ease;}
+.dev-cue-item.fired{background:rgba(26,122,138,.2);}
+.dev-cue-item.fired .dev-cue-dot{background:var(--teal-lt);box-shadow:0 0 6px rgba(168,212,218,.5);}
+.dev-cue-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;}
+.dev-cue-time{width:48px;color:rgba(255,255,255,.5);font-variant-numeric:tabular-nums;}
+.dev-cue-label{flex:1;color:rgba(255,255,255,.7);}
+.dev-btns{display:flex;gap:8px;}
+.dev-btn-s{flex:1;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:rgba(255,255,255,.8);font-family:var(--head);font-size:11px;letter-spacing:.06em;cursor:pointer;transition:background .15s ease;padding:0;}
+.dev-btn-s:hover{background:rgba(255,255,255,.12);}
+
+/* INTRO PANEL — covers vcontent until a tab is chosen */
+.vcontent{position:relative;}
+.intro-panel{position:absolute;inset:0;z-index:5;background:var(--white);display:grid;grid-template-columns:1.1fr 1fr;gap:36px;padding:38px 44px;transition:opacity .35s ease,transform .35s ease;align-items:center;}
+.intro-panel.hidden{opacity:0;transform:translateX(-8px);pointer-events:none;}
+.intro-panel-left{display:flex;flex-direction:column;justify-content:center;gap:16px;min-width:0;}
+.intro-panel-right{display:flex;align-items:stretch;justify-content:center;min-width:0;height:100%;}
+.intro-eyebrow{display:flex;align-items:center;gap:10px;}
+.intro-line{width:28px;height:2px;background:var(--teal);flex-shrink:0;}
+.intro-tag{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);font-family:var(--head);}
+.intro-h{font-family:var(--head);font-size:clamp(22px,2.2vw,30px);line-height:1.15;color:var(--navy);letter-spacing:-.005em;}
+.intro-h em{font-style:italic;color:var(--teal);}
+.intro-lede{font-size:clamp(13px,1.05vw,15px);line-height:1.65;color:var(--text);font-family:var(--sans);}
+.intro-lede strong{font-family:var(--head);font-weight:500;color:var(--navy);}
+.intro-prompt{margin-top:8px;display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:10px;background:var(--soft);border:1px solid var(--line);border-left:3px solid var(--teal);max-width:520px;opacity:0;transform:translateX(8px);transition:opacity .4s ease,transform .4s ease;pointer-events:none;}
+.intro-prompt.revealed{opacity:1;transform:translateX(0);pointer-events:auto;}
+.intro-prompt-arrow{width:28px;height:28px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;font-weight:700;animation:nudge-left 1.4s ease-in-out infinite;}
+.intro-prompt-arrow svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;transform:scaleX(-1);}
+.intro-prompt-text{font-size:13px;line-height:1.45;color:var(--text);font-family:var(--sans);}
+.intro-prompt-text b{font-family:var(--head);font-weight:600;color:var(--navy);}
+@keyframes nudge-left{0%,100%{transform:translateX(0)}50%{transform:translateX(-5px)}}
+
+/* Large image placeholder on the right side of the intro */
+.intro-image-slot{width:100%;height:100%;min-height:300px;max-height:480px;border-radius:14px;overflow:hidden;border:2px dashed var(--line);background:var(--soft);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative;transition:border-color .2s ease,background .2s ease;}
+.intro-image-slot img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;border-radius:12px;}
+.intro-image-slot-label{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);opacity:.6;font-family:var(--head);}
+.intro-image-slot-sub{font-size:11px;font-weight:300;color:var(--muted);opacity:.5;text-align:center;padding:0 18px;font-family:var(--sans);}
+.intro-image-slot.has-photo{border:none;background:transparent;}
+.intro-image-slot.has-photo .intro-image-slot-label,.intro-image-slot.has-photo .intro-image-slot-sub{display:none;}
+.intro-image-slot.has-photo img{border-radius:14px;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── RESPONSIVE BREAKPOINTS ──────────────────────────── */
+/* Short screens: trim header/footer */
+@media (max-height: 850px) {
+  .hdr { height: 56px; flex-basis: 56px; padding: 0 28px; }
+  .brand-logo { height: 32px; }
+  .main { padding: 16px 28px 10px; gap: 12px; }
+  .ftr { height: 50px; flex-basis: 50px; padding: 0 22px; }
+  .audio-player { width: 320px; }
+  .vnav { padding: 12px 10px; gap: 6px; }
+  .vtab { min-height: 60px; padding: 12px 12px; }
+  .vc-left, .vc-right { padding: 18px 22px; }
+  .photo-slot { height: 230px; }
+}
+
+/* Tablet landscape: keep horizontal layout, narrow nav */
+@media (min-width: 901px) and (max-width: 1199px) {
+  .main { padding: 18px 28px 12px; }
+  .vnav { width: 200px; }
+  .vc-left, .vc-right { padding: 20px 22px; }
+  .audio-player { width: 280px; }
+}
+
+/* Tablet portrait & narrow: stack big-card vertically, tabs become chips */
+@media (max-width: 900px) {
+  html, body { overflow: auto; }
+  .slide { height: auto; min-height: 100vh; }
+  .main { padding: 18px 18px 110px; }
+
+  .title-row { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .domain-pill { flex-wrap: wrap; }
+
+  .big-card { flex-direction: column; min-height: 600px; }
+
+  .vnav {
+    width: 100%;
+    flex-direction: row;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+    padding: 12px;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-shrink: 0;
+  }
+  .vnav-lbl { display: none; }
+  .vtab {
+    width: auto;
+    flex: 0 0 auto;
+    min-height: 56px;
+    padding: 12px 14px;
+    border-left: 1px solid var(--line);
+    border-bottom: 4px solid transparent;
+    white-space: nowrap;
+  }
+  .vtab.active { border-bottom-color: var(--teal); }
+
+  .vcontent { grid-template-columns: 1fr; overflow: visible; }
+  .vc-left { border-right: none; border-bottom: 1px solid var(--line); padding: 20px 22px; }
+  .vc-right { padding: 20px 22px; }
+
+  /* Intro panel reflows: stack columns, image goes below text */
+  .intro-panel {
+    grid-template-columns: 1fr;
+    padding: 24px 22px;
+    gap: 18px;
+    align-items: start;
+  }
+  .intro-panel-right { height: auto; }
+  .intro-image-slot { min-height: 200px; max-height: 260px; }
+
+  .ftr { position: sticky; bottom: 0; }
+  .audio-player { width: 220px; }
+  .tp-panel { width: 100%; }
+}
+
+/* Phone portrait: compact header, stack footer */
+@media (max-width: 600px) {
+  .hdr { padding: 0 14px; height: 50px; flex-basis: 50px; }
+  .scene-tag { display: none; }
+  .progress-bar { width: 70px; }
+  .brand-logo { height: 28px; }
+  .main { padding: 16px 14px 110px; }
+  .tl-h { font-size: clamp(22px, 6vw, 30px); }
+  .domain-pill { font-size: 11px; }
+  .dp-n, .dp-name, .dp-ct { padding: 8px 12px; font-size: 12px; }
+
+  .vtab { min-height: 52px; padding: 10px 12px; }
+  .vname { font-size: 13px; }
+
+  .vc-left, .vc-right { padding: 16px 18px; }
+  .comp-name { font-size: 24px; }
+  .intro-h { font-size: 22px; }
+  .intro-image-slot { min-height: 160px; max-height: 200px; }
+  .ex-box { padding: 16px 18px; }
+
+  .ftr {
+    grid-template-columns: 1fr;
+    height: auto;
+    flex-basis: auto;
+    padding: 10px 14px 12px;
+    row-gap: 8px;
+  }
+  .ftr-icare { font-size: 10px; order: 3; text-align: center; }
+  .audio-player { width: 100%; order: 1; }
+  .btn-row { width: 100%; justify-content: space-between; order: 2; }
+}
+</style>
+</head>
+<body>
+<div class="slide">
+
+<!-- HEADER -->
+<header class="hdr">
+  <img src="images/Methodist_Leading_Medicine_White_png.png" alt="Houston Methodist — Leading Medicine" class="brand-logo"/>
+  <div class="hdr-right">
+    <span class="scene-tag">Slide 9 — Domain 2: People</span>
+    <div class="progress-wrap">
+      <span class="progress-lbl">9 of 16</span>
+      <div class="progress-bar"><div class="progress-fill" style="width:56%"></div></div>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <div class="title-row">
+    <div class="tl">
+      <div class="tl-eyebrow"><div class="tl-line"></div><span class="tl-tag">Domain 2 · Leading Self</span></div>
+      <h1 class="tl-h"><em>People</em></h1>
+    </div>
+    <div class="domain-pill">
+      <span class="dp-n">Domain 2</span>
+      <div class="dp-sep"></div>
+      <span class="dp-name">People</span>
+      <div class="dp-sep"></div>
+      <span class="dp-ct">3 behaviors</span>
+    </div>
+  </div>
+
+  <div class="big-card">
+    <nav class="vnav">
+      <span class="vnav-lbl">Behaviors</span>
+      <button class="vtab" id="vt0" onclick="sw(0)">
+        <div class="vbadge" style="background:#1A5C9A">1</div>
+        <div class="vbody"><span class="vname">Communication</span></div>
+      </button>
+      <button class="vtab" id="vt1" onclick="sw(1)">
+        <div class="vbadge" style="background:#E24301">2</div>
+        <div class="vbody"><span class="vname">Collaboration &amp; Teamwork</span></div>
+      </button>
+      <button class="vtab" id="vt2" onclick="sw(2)">
+        <div class="vbadge" style="background:#007078">3</div>
+        <div class="vbody"><span class="vname">Developing Self &amp; Others</span></div>
+      </button>
+    </nav>
+
+    <div class="vcontent">
+      <div class="intro-panel" id="introPanel">
+        <div class="intro-panel-left">
+          <div class="intro-eyebrow">
+            <div class="intro-line"></div>
+            <span class="intro-tag">Domain 2 · 3 Behaviors</span>
+          </div>
+          <h2 class="intro-h">How you show up for <em>the people around you.</em></h2>
+          <p class="intro-lede">
+            This domain is about the everyday human work — listening, building trust, and growing alongside your team.
+            <strong>Communication</strong>, <strong>Collaboration &amp; Teamwork</strong>, and
+            <strong>Developing Self &amp; Others</strong>. Each one has specific Leading Self behaviors and a real
+            workplace example.
+          </p>
+          <div class="intro-prompt" id="introPrompt">
+            <div class="intro-prompt-arrow" aria-hidden="true">
+              <svg viewBox="0 0 16 16"><polyline points="3,8 9,8 9,4 14,8 9,12 9,8"/></svg>
+            </div>
+            <span class="intro-prompt-text">
+              <b>Choose a behavior</b> to see what it looks like in practice.
+            </span>
+          </div>
+        </div>
+        <div class="intro-panel-right">
+          <div class="intro-image-slot" id="introImageSlot">
+            <img src="images/image_9.jpg" alt="" onload="this.parentNode.classList.add('has-photo')" onerror="this.style.display='none'"/>
+            <span class="intro-image-slot-label">image_9</span>
+            <span class="intro-image-slot-sub">Drop image_9 here</span>
+          </div>
+        </div>
+      </div>
+      <div class="vc-left">
+        <div><span class="comp-tag">Leading Self — What this looks like in your work</span>
+          <div class="comp-name" id="cname" style="margin-top:5px">Vision &amp; Values</div>
+        </div>
+        <div class="vc-div"></div>
+        <div class="beh-list" id="blist"></div>
+        <div class="photo-slot" id="photoSlot">
+          <span class="photo-slot-label" id="photoLabel">image_9</span>
+          <span class="photo-slot-sub" id="photoSub">Drop image_9 here</span>
+        </div>
+      </div>
+      <div class="vc-right">
+        <div class="ex-box" id="exBox">
+          <span class="ex-tag">In practice</span>
+          <div class="ex-pair">
+            <div class="ex-entry">
+              <span class="ex-role-lbl" id="roleLabel1">Clinical</span>
+              <p class="ex-scenario" id="escen1"></p>
+              <p class="ex-text" id="etxt1"></p>
+            </div>
+            <div class="ex-divider"></div>
+            <div class="ex-entry">
+              <span class="ex-role-lbl" id="roleLabel2">Non-Clinical</span>
+              <p class="ex-scenario" id="escen2"></p>
+              <p class="ex-text" id="etxt2"></p>
+            </div>
+          </div>
+        </div>
+        <div class="conn-box" id="connBox">
+          <div class="conn-icon" id="cicon"></div>
+          <div><span class="conn-lbl">Connection</span><p class="conn-txt" id="ctxt"></p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="ftr">
+  <span class="ftr-icare"><b>I CARE</b> &nbsp;·&nbsp; Integrity &nbsp;·&nbsp; Compassion &nbsp;·&nbsp; Accountability &nbsp;·&nbsp; Respect &nbsp;·&nbsp; Excellence</span>
+  <div class="audio-player">
+    <button class="ap-btn" id="apBtn" title="Play / Pause" aria-label="Play / Pause">
+      <svg id="iconPlay" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5v11l10-5.5z"/></svg>
+      <svg id="iconPause" viewBox="0 0 16 16" aria-hidden="true" style="opacity:0"><path d="M4 2h2.5v12H4zm5.5 0H12v12H9.5z"/></svg>
+    </button>
+    <div class="ap-track">
+      <div class="ap-bar-wrap" id="apBarWrap"><div class="ap-bar-fill" id="apBarFill"></div></div>
+      <div class="ap-times"><span id="apCurrent">0:00</span><span id="apDuration">0:00</span></div>
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-ghost" id="btnPrev">← Back</button>
+    <button class="btn-primary" id="btnNext">Continue →</button>
+  </div>
+</footer>
+</div>
+
+<!-- TRANSCRIPT TAB -->
+<div class="tp-tab" id="tpTab">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+    <polyline points="14 2 14 8 20 8"></polyline>
+    <line x1="16" y1="13" x2="8" y2="13"></line>
+    <line x1="16" y1="17" x2="8" y2="17"></line>
+    <line x1="10" y1="9" x2="8" y2="9"></line>
+  </svg>
+  <span>Transcript</span>
+</div>
+
+<!-- TRANSCRIPT PANEL -->
+<aside class="tp-panel" id="tpPanel">
+  <div class="tp-head">
+    <h3>Narration Transcript</h3>
+    <button class="tp-close" id="tpClose" aria-label="Close transcript">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+  <div class="tp-body">
+    <p><strong>Main narration (audio_9)</strong></p>
+    <p>Domain 2 is People — and this one is about how you show up for the people around you every single day.</p>
+    <p>This domain is about the everyday human work — listening, building trust, and growing alongside your team. Communication, Collaboration & Teamwork, and Developing Self & Others. Each one has specific Leading Self behaviors and a real workplace example.</p>
+    <p>Click each tab to explore specific Leading Self behaviors and see what these look like in practice — across clinical and non-clinical roles.</p>
+
+    <span class="tp-section">Tab 1 — Communication</span>
+    <p>Communication is one of the most visible Leading Self behaviors. It means listening attentively and minimizing distractions — putting the phone down and giving your full presence when someone is speaking. It means adjusting your style depending on whether you're talking to a patient, a colleague, or a leader. And it means practicing Heads Up, Phones Down in every interaction, because how you show up physically communicates before you say a word.</p>
+
+    <span class="tp-section">Tab 2 — Collaboration &amp; Teamwork</span>
+    <p>Collaboration and Teamwork is about building bridges, not silos. It means seeking out perspectives different from your own and building inclusive relationships across roles and departments. It means following through on commitments reliably — because your teammates are counting on you. And it means bringing kindness and empathy to every team interaction, especially when things are difficult or the pressure is on.</p>
+
+    <span class="tp-section">Tab 3 — Developing Self &amp; Others</span>
+    <p>Developing Self and Others starts with honest self-awareness — knowing your strengths and being clear-eyed about your growth areas. It means creating a personal development plan and pursuing it actively, not just during FPR season. And it means saying yes to stretch opportunities — new responsibilities, new challenges — before you feel completely ready. In the next section, you'll see exactly how Houston Methodist supports this through the FPR process and the 70-20-10 development framework.</p>
+  </div>
+</aside>
+
+<!-- DEV TIMING OVERLAY -->
+<div class="dev-overlay" id="devOverlay">
+  <div class="dev-title">Timing Dev Panel <span>Press D to close</span></div>
+  <div class="dev-now-playing" id="devNowPlaying">
+    <span class="dev-now-dot"></span>
+    <span id="devNowLabel">Waiting...</span>
+  </div>
+  <div class="dev-time" id="devTime">0.0s</div>
+  <ul class="dev-cue-list" id="devCueList"></ul>
+  <div class="dev-btns">
+    <button class="dev-btn-s" onclick="devRestart()">↺ Restart</button>
+    <button class="dev-btn-s" onclick="devPlayPause()">⏯ Play / Pause</button>
+  </div>
+</div>
+
+<!-- AUDIO -->
+<audio id="audioMain" preload="auto" autoplay>
+  <source src="audio/audio_9.mp3" type="audio/mpeg">
+</audio>
+<audio id="audioTab" preload="none">
+  <source src="" type="audio/mpeg">
+</audio>
+
+<script>
+/* =====================================================
+ *  SLIDE 9 — AUDIO ORCHESTRATION
+ * =====================================================
+ *
+ * audio_9.mp3     = Main intro VO (plays on load)
+ * audio_9-1.mp3   = Communication tab VO
+ * audio_9-2.mp3   = Collaboration & Teamwork tab VO
+ * audio_9-3.mp3   = Developing Self & Others tab VO
+ *
+ * Tab audio plays when a tab is clicked.
+ * Main audio pauses while tab audio plays, resumes after.
+ *
+ * CUES — UPDATE timestamps once audio_9.mp3 is analyzed:
+ * ===================================================== */
+
+const TAB_AUDIO = [
+  'audio/audio_9-1.mp3',
+  'audio/audio_9-2.mp3',
+  'audio/audio_9-3.mp3'
+];
+
+const TC = ['#1A5C9A','#E24301','#007078'];
+
+const CUES = [
+  { at: 0.0,  label: 'VO begins',                       do: () => updateDevNow('audio_9 playing') },
+  { at: 3.0,  label: '[UPDATE] "Domain 2 is People"',   do: () => {} },
+  { at: 8.0,  label: '[UPDATE] "Three behaviors"',   do: () => {} },
+];
+
+const D = [
+  {name:"Communication",color:'#003B71',bg:'rgba(0,59,113,.08)',
+   b:["Listen attentively and minimize distractions — put the phone down and give your full attention when someone is speaking.",
+      "Adjust your communication style to meet the needs of your audience, whether a patient, colleague, or leader.",
+      "Practice Heads Up, Phones Down in all interactions — your presence communicates as loudly as your words."],
+   sc1:"You're at the nurses' station catching up on documentation when a colleague approaches with a question.",
+   ex1:"You stop typing, turn to face them, and give your full attention before responding. <b>That's Communication</b> — being present isn't just polite, it's a leadership behavior.",
+   sc2:"A finance analyst is on a call with a vendor when a teammate walks in with an urgent question.",
+   ex2:"They signal just a moment to the teammate, finish the call professionally, then give them their undivided attention. <b>That's Communication</b> — full presence applies in every role, not just clinical ones.",
+   ic:"💬",photo:"images/image_9-1.jpg",photoHint:"image_9-1",photoSub:"Drop image_9-1 here",
+   cn:"Communication ties directly to AIDET and the Heads Up, Phones Down service standard from earlier. The Leadership Behaviors Model frames this as a behavior, not just a courtesy."},
+  {name:"Collaboration &amp; Teamwork",color:'#E24301',bg:'rgba(226,67,1,.08)',
+   b:["Build inclusive relationships across teams and roles — seek out perspectives different from your own.",
+      "Follow through on commitments to colleagues consistently — your reliability is part of the team's performance.",
+      "Demonstrate kindness and empathy in all team interactions, especially under pressure."],
+   sc1:"You notice a colleague on your unit is overwhelmed with non-clinical tasks during a busy shift — restocking, phones, escorting visitors.",
+   ex1:"You step in where you can, take what's appropriate for your role, and check in with them after. <b>That's Collaboration & Teamwork</b> — building bridges, not silos.",
+   sc2:"The IT help desk is overwhelmed with end-of-quarter requests. A colleague from a neighboring team volunteers to help triage tickets.",
+   ex2:"The team welcomes them in, shares context generously, and follows up with a thank-you after. <b>That's Collaboration & Teamwork</b> — the same behavior, in a completely different setting.",
+   ic:"🤝",photo:"images/image_9-2.jpg",photoHint:"image_9-2",photoSub:"Drop image_9-2 here",
+   cn:"Collaboration & Teamwork connects to Culture & Engagement from Domain 1 — both emphasize inclusive relationships and making sure all voices contribute to the team's work."},
+  {name:"Developing Self &amp; Others",color:'#007078',bg:'rgba(0,112,120,.08)',
+   b:["Understand your own strengths and growth areas — and be honest with yourself about both.",
+      "Create a personal development plan and actively pursue it, not just during FPR season.",
+      "Seek stretch opportunities and new responsibilities that build capabilities beyond your current role."],
+   sc1:"You see a posting for a cross-functional improvement project — outside your usual scope, but a topic you've wanted to learn more about.",
+   ex1:"You raise your hand and volunteer, even though no one asked. You prepare thoroughly and lean into the discomfort of not yet knowing everything. <b>That's Developing Self & Others</b> — growth doesn't wait for an invitation.",
+   sc2:"An HR generalist is asked to co-facilitate a new employee orientation session they've never led before.",
+   ex2:"They prepare thoroughly, lean on a more experienced colleague for tips, and ask for feedback afterward. <b>That's Developing Self & Others</b> — intentional growth looks the same in every department.",
+   ic:"📈",photo:"images/image_9-3.jpg",photoHint:"image_9-3",photoSub:"Drop image_9-3 here",
+   cn:"In the next section, you'll see exactly how Houston Methodist supports this behavior through the FPR process, the 70-20-10 development framework, and HMALL programs."}
+];
+
+/* ── Tab switching ────────────────────────────────── */
+let cur = -1;  // No tab selected on load — intro panel covers content
+const audioMain = document.getElementById('audioMain');
+const audioTab  = document.getElementById('audioTab');
+const introPanel = document.getElementById('introPanel');
+const introPrompt = document.getElementById('introPrompt');
+
+// Reveal the "Choose a behavior" prompt when the main VO finishes
+audioMain.addEventListener('ended', () => {
+  if (introPrompt) introPrompt.classList.add('revealed');
+});
+
+function sw(i) {
+  if (i === cur) return;
+  const firstClick = (cur === -1);
+  cur = i;
+
+  // Hide the intro panel on the first tab click
+  if (firstClick && introPanel) {
+    introPanel.classList.add('hidden');
+  }
+
+  document.querySelectorAll('.vtab').forEach((t, j) => {
+    t.classList.toggle('active', j === i);
+    t.style.borderLeftColor = j === i ? TC[i] : 'transparent';
+  });
+  audioMain.pause();
+  audioTab.src = TAB_AUDIO[i];
+  audioTab.load();
+  audioTab.play().catch(() => {});
+  updateDevNow('audio_9-' + (i+1) + ' playing');
+
+  const l = document.querySelector('.vc-left'), r = document.querySelector('.vc-right');
+  [l, r].forEach(e => { e.style.transition = 'none'; e.style.opacity = '0'; e.style.transform = 'translateX(8px)'; });
+  setTimeout(() => {
+    render(i);
+    [l, r].forEach(e => { e.style.transition = 'opacity .22s ease,transform .22s ease'; e.style.opacity = '1'; e.style.transform = 'translateX(0)'; });
+  }, 60);
+}
+
+audioTab.addEventListener('ended', () => {
+  updateDevNow('audio_9-tab ended');
+});
+
+function render(i) {
+  const d = D[i];
+  document.getElementById('cname').innerHTML = d.name;
+  const ps = document.getElementById('photoSlot');
+  if (d.photo) {
+    const img = new Image();
+    img.alt = '';
+    img.onload = () => {
+      ps.innerHTML = '';
+      ps.appendChild(img);
+      ps.classList.add('has-photo');
+    };
+    img.onerror = () => {
+      ps.classList.remove('has-photo');
+      ps.innerHTML = '<span class="photo-slot-label">' + d.photoHint + '</span><span class="photo-slot-sub">' + d.photoSub + '</span>';
+    };
+    img.src = d.photo;
+  } else {
+    ps.classList.remove('has-photo');
+    ps.innerHTML = '<span class="photo-slot-label">' + d.photoHint + '</span><span class="photo-slot-sub">' + d.photoSub + '</span>';
+  }
+  document.getElementById('escen1').textContent = d.sc1;
+  document.getElementById('etxt1').innerHTML    = d.ex1;
+  document.getElementById('escen2').textContent = d.sc2;
+  document.getElementById('etxt2').innerHTML    = d.ex2;
+  const connBox = document.getElementById('connBox');
+  connBox.style.borderColor = d.color;
+  connBox.style.borderWidth = '1px 1px 1px 4px';
+  const ci = document.getElementById('cicon');
+  ci.textContent = d.ic;
+  ci.style.background = d.bg;
+  document.getElementById('ctxt').textContent = d.cn;
+  const bl = document.getElementById('blist');
+  bl.innerHTML = d.b.map(b => `<div class="beh-item"><div class="beh-dot" style="background:${d.color}"><svg viewBox="0 0 16 16"><polyline points="3,8 6.5,11.5 13,4.5"/></svg></div><span class="beh-text">${b}</span></div>`).join('');
+}
+
+/* ── Audio player ─────────────────────────────────── */
+const apBtn      = document.getElementById('apBtn');
+const iconPlay   = document.getElementById('iconPlay');
+const iconPause  = document.getElementById('iconPause');
+const apBarFill  = document.getElementById('apBarFill');
+const apBarWrap  = document.getElementById('apBarWrap');
+const apCurrent  = document.getElementById('apCurrent');
+const apDuration = document.getElementById('apDuration');
+
+function fmtTime(s) {
+  if (!isFinite(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  return `${m}:${Math.floor(s % 60).toString().padStart(2,'0')}`;
+}
+
+function updatePlayer() {
+  const active = audioTab.paused ? audioMain : audioTab;
+  const dur = active.duration || 0;
+  const cur2 = active.currentTime || 0;
+  apBarFill.style.width = (dur > 0 ? cur2 / dur * 100 : 0) + '%';
+  apCurrent.textContent  = fmtTime(cur2);
+  apDuration.textContent = fmtTime(dur);
+  const paused = audioMain.paused && audioTab.paused;
+  iconPlay.style.opacity  = paused ? '1' : '0';
+  iconPause.style.opacity = paused ? '0' : '1';
+}
+
+apBtn.addEventListener('click', () => {
+  const active = !audioTab.paused ? audioTab : audioMain;
+  if (active.paused) { active.play().catch(() => {}); }
+  else { active.pause(); }
+  updatePlayer();
+});
+
+[audioMain, audioTab].forEach(a => {
+  a.addEventListener('timeupdate',     updatePlayer);
+  a.addEventListener('loadedmetadata', updatePlayer);
+  a.addEventListener('play',           updatePlayer);
+  a.addEventListener('pause',          updatePlayer);
+});
+
+apBarWrap.addEventListener('click', (e) => {
+  const active = !audioTab.paused ? audioTab : audioMain;
+  const rect = apBarWrap.getBoundingClientRect();
+  const pct  = (e.clientX - rect.left) / rect.width;
+  if (active.duration) active.currentTime = pct * active.duration;
+});
+
+/* ── Dev panel ────────────────────────────────────── */
+const cueFired = CUES.map(() => false);
+
+function tick() {
+  checkCues();
+  const el = document.getElementById('devTime');
+  if (el) el.textContent = audioMain.currentTime.toFixed(1) + 's';
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+function checkCues() {
+  const t = audioMain.currentTime;
+  CUES.forEach((c, i) => {
+    if (!cueFired[i] && t >= c.at) {
+      cueFired[i] = true;
+      if (c.do) c.do();
+      const item = document.querySelectorAll('.dev-cue-item')[i];
+      if (item) item.classList.add('fired');
+    }
+  });
+}
+
+(function buildDevCueList() {
+  const list = document.getElementById('devCueList');
+  CUES.forEach(c => {
+    const li = document.createElement('li');
+    li.className = 'dev-cue-item';
+    li.innerHTML = '<span class="dev-cue-dot"></span><span class="dev-cue-time">' + c.at.toFixed(1) + 's</span><span class="dev-cue-label">' + c.label + '</span>';
+    list.appendChild(li);
+  });
+})();
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'd' || e.key === 'D') {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    document.getElementById('devOverlay').classList.toggle('visible');
+  }
+});
+
+function updateDevNow(label) {
+  const el = document.getElementById('devNowLabel');
+  if (el) el.textContent = label;
+}
+
+function devRestart() {
+  audioMain.currentTime = 0;
+  audioTab.pause(); audioTab.src = '';
+  cueFired.fill(false);
+  document.querySelectorAll('.dev-cue-item').forEach(el => el.classList.remove('fired'));
+  // Reset tab state and bring back the intro panel
+  cur = -1;
+  document.querySelectorAll('.vtab').forEach(t => {
+    t.classList.remove('active');
+    t.style.borderLeftColor = 'transparent';
+  });
+  if (introPanel) introPanel.classList.remove('hidden');
+  if (introPrompt) introPrompt.classList.remove('revealed');
+  audioMain.play().catch(() => {});
+  updateDevNow('audio_9 playing');
+}
+
+function devPlayPause() {
+  const active = !audioTab.paused ? audioTab : audioMain;
+  if (active.paused) { active.play().catch(() => {}); }
+  else { active.pause(); }
+}
+
+/* ── Transcript toggle ────────────────────────────── */
+document.getElementById('tpTab').addEventListener('click',  () => document.getElementById('tpPanel').classList.add('open'));
+document.getElementById('tpClose').addEventListener('click', () => document.getElementById('tpPanel').classList.remove('open'));
+
+/* ── Nav ──────────────────────────────────────────── */
+document.getElementById('btnPrev').addEventListener('click', () => window.parent.postMessage({ type:'prev' }, '*'));
+document.getElementById('btnNext').addEventListener('click', () => window.parent.postMessage({ type:'next' }, '*'));
+
+/* ── Init ─────────────────────────────────────────── */
+// No tab is selected on load — intro panel covers the content area.
+// First sw() click will hide the intro and render that tab's content.
+updateDevNow('audio_9');
+</script>
+</body>
+</html>
