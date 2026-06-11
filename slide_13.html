@@ -60,10 +60,8 @@ body::before{content:"";position:fixed;inset:0;
 /* COLUMNS ROW */
 .cols{flex:1;min-height:0;display:grid;grid-template-columns:2.4fr 1.4fr 1fr;gap:16px;}
 
-.col{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 6px 22px rgba(0,40,80,.05);opacity:0;animation:fadeUp .55s ease forwards;}
-.col-70{animation-delay:.18s;}
-.col-20{animation-delay:.28s;}
-.col-10{animation-delay:.38s;}
+.col{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 6px 22px rgba(0,40,80,.05);opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;}
+.col.cue-visible{opacity:1;transform:translateY(0);}
 
 /* Decorative top bar — only as wide as 5px line */
 .col::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--col-color);}
@@ -95,7 +93,8 @@ body::before{content:"";position:fixed;inset:0;
 .ex-item b{font-weight:600;color:var(--navy);font-family:var(--head);}
 
 /* Reinforcement message under columns */
-.bottom-msg{flex-shrink:0;display:flex;align-items:center;gap:14px;padding:12px 18px;background:var(--navy);border:1px solid var(--navy-d);border-radius:12px;opacity:0;animation:fadeUp .5s ease .55s forwards;box-shadow:0 8px 24px rgba(0,40,80,.15);}
+.bottom-msg{flex-shrink:0;display:flex;align-items:center;gap:14px;padding:12px 18px;background:var(--navy);border:1px solid var(--navy-d);border-radius:12px;opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;box-shadow:0 8px 24px rgba(0,40,80,.15);}
+.bottom-msg.cue-visible{opacity:1;transform:translateY(0);}
 .bottom-msg-icon{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--teal-lt);}
 .bottom-msg-icon svg{width:16px;height:16px;}
 .bottom-msg-text{font-size:clamp(12px,.95vw,13.5px);line-height:1.5;color:rgba(255,255,255,.88);font-family:var(--sans);}
@@ -162,7 +161,7 @@ button.nav{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 2
   <div class="cols">
 
     <!-- 70% -->
-    <article class="col col-70">
+    <article class="col col-70" id="col70">
       <div class="pct-row">
         <span class="pct">70</span>
         <span class="pct-sym">%</span>
@@ -181,7 +180,7 @@ button.nav{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 2
     </article>
 
     <!-- 20% -->
-    <article class="col col-20">
+    <article class="col col-20" id="col20">
       <div class="pct-row">
         <span class="pct">20</span>
         <span class="pct-sym">%</span>
@@ -199,7 +198,7 @@ button.nav{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 2
     </article>
 
     <!-- 10% -->
-    <article class="col col-10">
+    <article class="col col-10" id="col10">
       <div class="pct-row">
         <span class="pct">10</span>
         <span class="pct-sym">%</span>
@@ -219,7 +218,7 @@ button.nav{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 2
   </div>
 
   <!-- BOTTOM REINFORCEMENT MESSAGE -->
-  <div class="bottom-msg">
+  <div class="bottom-msg" id="bottomMsg">
     <div class="bottom-msg-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><circle cx="12" cy="16" r=".5" fill="currentColor"/></svg>
     </div>
@@ -396,18 +395,60 @@ apBarWrap.addEventListener('click', e => {
 document.getElementById('tpTab').addEventListener('click', () => document.getElementById('tpPanel').style.transform = 'translateX(0)');
 document.getElementById('tpClose').addEventListener('click', () => document.getElementById('tpPanel').style.transform = 'translateX(100%)');
 
-document.getElementById('btnPrev').addEventListener('click', () => window.parent.postMessage({ type:'prev' }, '*'));
-document.getElementById('btnNext').addEventListener('click', () => window.parent.postMessage({ type:'next' }, '*'));
+document.getElementById('btnPrev').addEventListener('click', () => window.parent.postMessage('prev', '*'));
+document.getElementById('btnNext').addEventListener('click', () => window.parent.postMessage('next', '*'));
 
-function devRestart() { audioMain.currentTime = 0; audioMain.play().catch(()=>{}); }
+// ====== TIMED CUES ======
+// Blocks reveal based on audio_13 timestamps. Adjust `at:` values to re-sync if audio is re-recorded.
+const CUES = [
+  { at: 14.0, label: 'Reveal 70% column',  do: () => reveal('col70') },
+  { at: 22.0, label: 'Reveal 20% column',  do: () => reveal('col20') },
+  { at: 29.0, label: 'Reveal 10% column',  do: () => reveal('col10') },
+  { at: 40.0, label: 'Reveal bottom blue box', do: () => reveal('bottomMsg') },
+];
+const cueFired = CUES.map(() => false);
+
+function reveal(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.add('cue-visible');
+}
+
+function checkCues() {
+  const t = audioMain.currentTime;
+  CUES.forEach((c, i) => {
+    if (!cueFired[i] && t >= c.at) {
+      cueFired[i] = true;
+      if (c.do) c.do();
+    }
+  });
+}
+
+function devRestart() {
+  audioMain.currentTime = 0;
+  cueFired.fill(false);
+  document.querySelectorAll('.cue-visible').forEach(el => el.classList.remove('cue-visible'));
+  audioMain.play().catch(()=>{});
+}
 function devPlayPause() { if (audioMain.paused) audioMain.play().catch(()=>{}); else audioMain.pause(); }
 
 function tick() {
+  checkCues();
   const el = document.getElementById('devTime');
   if (el) el.textContent = audioMain.currentTime.toFixed(1) + 's';
   requestAnimationFrame(tick);
 }
 requestAnimationFrame(tick);
+
+// Shell sends 'playAudio' when this slide becomes active — start the cue chain
+window.addEventListener('message', function(e) {
+  const d = e.data;
+  if (d === 'playAudio' || (d && d.type === 'playAudio')) {
+    audioMain.currentTime = 0;
+    cueFired.fill(false);
+    document.querySelectorAll('.cue-visible').forEach(el => el.classList.remove('cue-visible'));
+    audioMain.play().catch(() => {});
+  }
+});
 
 document.addEventListener('keydown', e => {
   if ((e.key === 'd' || e.key === 'D') && e.target.tagName !== 'INPUT') {
