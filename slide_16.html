@@ -68,11 +68,12 @@ body::before{content:"";position:fixed;inset:0;
 
 .takeaways{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
 
-.tk-card{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:20px 22px 22px;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(0,40,80,.05);transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;opacity:0;animation:fadeUp .55s ease forwards;}
+.tk-card{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:20px 22px 22px;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(0,40,80,.05);transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease,opacity .6s ease;opacity:0;transform:translateY(14px);}
+.tk-card.cue-visible{opacity:1;transform:translateY(0);}
 .tk-card:hover{transform:translateY(-3px);border-color:var(--ltblue);box-shadow:0 14px 32px rgba(0,40,80,.1);}
-.tk-card:nth-child(1){animation-delay:.32s;--tk-color:var(--orange);}
-.tk-card:nth-child(2){animation-delay:.4s;--tk-color:var(--green);}
-.tk-card:nth-child(3){animation-delay:.48s;--tk-color:var(--red);}
+.tk-card:nth-child(1){--tk-color:var(--orange);}
+.tk-card:nth-child(2){--tk-color:var(--green);}
+.tk-card:nth-child(3){--tk-color:var(--red);}
 
 .tk-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--tk-color);}
 .tk-card::after{content:"";position:absolute;top:4px;right:-30px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,var(--tk-color) 0%,transparent 65%);opacity:.04;pointer-events:none;}
@@ -80,10 +81,11 @@ body::before{content:"";position:fixed;inset:0;
 .tk-num{font-family:var(--head);font-size:14px;color:var(--tk-color);letter-spacing:.16em;margin-bottom:8px;flex-shrink:0;font-weight:400;display:flex;align-items:center;gap:8px;}
 .tk-num::after{content:"";flex:1;height:1px;background:var(--line);}
 
-.tk-icon{width:38px;height:38px;border-radius:10px;background:color-mix(in srgb,var(--tk-color) 12%,transparent);display:flex;align-items:center;justify-content:center;color:var(--tk-color);margin-bottom:12px;flex-shrink:0;}
+.tk-icon{width:38px;height:38px;border-radius:10px;background:color-mix(in srgb,var(--tk-color) 12%,transparent);display:flex;align-items:center;justify-content:center;color:var(--tk-color);flex-shrink:0;}
 .tk-icon svg{width:20px;height:20px;}
-
-.tk-h{font-family:var(--head);font-size:clamp(16px,1.4vw,22px);line-height:1.15;color:var(--navy);margin-bottom:8px;flex-shrink:0;letter-spacing:-.005em;}
+.tk-head-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-shrink:0;}
+.tk-head-row .tk-h{margin-bottom:0;}
+.tk-h{font-family:var(--head);font-size:clamp(15px,1.25vw,19px);line-height:1.2;color:var(--navy);margin-bottom:8px;flex:1;letter-spacing:-.005em;}
 .tk-h em{font-style:italic;color:var(--tk-color);}
 
 .tk-body{font-size:clamp(12px,.95vw,14px);line-height:1.55;color:var(--text);font-family:var(--sans);}
@@ -92,7 +94,8 @@ body::before{content:"";position:fixed;inset:0;
 /* BOTTOM — CTA row */
 .cta-row{flex-shrink:0;display:grid;grid-template-columns:1.2fr 1fr;gap:14px;opacity:0;animation:fadeUp .5s ease .58s forwards;}
 
-.cta-primary{background:var(--navy);border-radius:16px;padding:18px 22px;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden;box-shadow:0 10px 28px rgba(0,40,80,.18);}
+.cta-primary{background:var(--navy);border-radius:16px;padding:18px 22px;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden;box-shadow:0 10px 28px rgba(0,40,80,.18);opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;}
+.cta-primary.cue-visible{opacity:1;transform:translateY(0);}
 .cta-primary::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--teal-lt),var(--teal));}
 .cta-primary::after{content:"";position:absolute;right:-50px;top:-40px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(168,212,218,.15) 0%,transparent 65%);pointer-events:none;}
 
@@ -106,7 +109,8 @@ body::before{content:"";position:fixed;inset:0;
 .cta-sub{font-size:11.5px;color:rgba(255,255,255,.6);line-height:1.4;margin-top:5px;font-family:var(--sans);}
 
 /* Resources card — Workday + Career Central + the HUB */
-.cta-resources{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:14px 18px 16px;display:flex;flex-direction:column;gap:8px;box-shadow:0 4px 16px rgba(0,40,80,.05);position:relative;overflow:hidden;}
+.cta-resources{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:14px 18px 16px;display:flex;flex-direction:column;gap:8px;box-shadow:0 4px 16px rgba(0,40,80,.05);position:relative;overflow:hidden;opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;}
+.cta-resources.cue-visible{opacity:1;transform:translateY(0);}
 .cta-resources::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--teal);}
 .cta-resources-eyebrow{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);font-family:var(--head);margin-bottom:2px;}
 .cta-resources-list{display:flex;flex-direction:column;gap:4px;}
@@ -138,8 +142,10 @@ button.nav{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 2
 .btn-finish svg{width:14px;height:14px;}
 
 /* Image placeholder inside takeaway cards */
-.tk-img-slot{border-radius:10px;overflow:hidden;border:2px dashed var(--line);background:var(--soft);height:90px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-bottom:10px;position:relative;transition:border-color .25s ease;}
-.tk-img-slot img{width:100%;height:100%;object-fit:cover;border-radius:8px;display:block;}
+.tk-img-slot{border-radius:10px;overflow:hidden;border:2px dashed var(--line);background:var(--soft);height:200px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-bottom:14px;position:relative;transition:border-color .25s ease,background .2s ease;}
+.tk-img-slot img{width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:8px;display:block;}
+.tk-img-slot.has-photo{border:none;background:transparent;}
+.tk-img-slot.has-photo .tk-img-label{display:none;}
 .tk-img-label{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);opacity:.55;font-family:var(--head);}
 .tk-card:hover .tk-img-slot{border-color:var(--ltblue);}
 
@@ -184,7 +190,7 @@ button.nav{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 2
   <div class="hdr-right">
     <span class="scene-tag">Slide 16 — Completion</span>
     <div class="progress-wrap">
-      <span class="progress-lbl">5.4 of 18</span>
+      <span class="progress-lbl">16 of 16</span>
       <div class="progress-bar"><div class="progress-fill"></div></div>
     </div>
   </div>
@@ -217,45 +223,51 @@ button.nav{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 2
 
     <div class="takeaways">
 
-      <article class="tk-card">
+      <article class="tk-card" id="tkCard1">
         <div class="tk-num">01 · What you practice</div>
-        <div class="tk-img-slot"><span class="tk-img-label">image_16-1</span></div>
-        <div class="tk-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-          </svg>
+        <div class="tk-img-slot"><img src="images/image_16-1.jpg" alt="" onload="this.parentNode.classList.add('has-photo')" onerror="this.style.display='none'"/><span class="tk-img-label">image_16-1</span></div>
+        <div class="tk-head-row">
+          <div class="tk-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </div>
+          <h2 class="tk-h">The <em>I CARE</em> values aren't a poster.</h2>
         </div>
-        <h2 class="tk-h">The <em>I CARE</em> values aren't a poster.</h2>
         <p class="tk-body">They're behaviors — and you live them every shift, every email, every interaction. <b>Compassion. Accountability. Integrity.</b> Those words show up in the choices you already make.</p>
       </article>
 
-      <article class="tk-card">
+      <article class="tk-card" id="tkCard2">
         <div class="tk-num">02 · What you model</div>
-        <div class="tk-img-slot"><span class="tk-img-label">image_16-2</span></div>
-        <div class="tk-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
+        <div class="tk-img-slot"><img src="images/image_16-2.jpg" alt="" onload="this.parentNode.classList.add('has-photo')" onerror="this.style.display='none'"/><span class="tk-img-label">image_16-2</span></div>
+        <div class="tk-head-row">
+          <div class="tk-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h2 class="tk-h">Leadership starts <em>before</em> the title.</h2>
         </div>
-        <h2 class="tk-h">Leadership starts <em>before</em> the title.</h2>
         <p class="tk-body">Leading Self is the foundation. <b>How you show up</b> — listening, following through, owning mistakes, supporting others — is how leadership is built at Houston Methodist, no matter where you sit.</p>
       </article>
 
-      <article class="tk-card">
+      <article class="tk-card" id="tkCard3">
         <div class="tk-num">03 · What you build</div>
-        <div class="tk-img-slot"><span class="tk-img-label">image_16-3</span></div>
-        <div class="tk-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
-            <path d="M21 3v5h-5"/>
-            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
-            <path d="M3 21v-5h5"/>
-          </svg>
+        <div class="tk-img-slot"><img src="images/image_16-3.jpg" alt="" onload="this.parentNode.classList.add('has-photo')" onerror="this.style.display='none'"/><span class="tk-img-label">image_16-3</span></div>
+        <div class="tk-head-row">
+          <div class="tk-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+              <path d="M21 3v5h-5"/>
+              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+              <path d="M3 21v-5h5"/>
+            </svg>
+          </div>
+          <h2 class="tk-h">Your growth <em>is supported.</em></h2>
         </div>
-        <h2 class="tk-h">Your growth <em>is supported.</em></h2>
         <p class="tk-body">The FPR is a development conversation, not a verdict. The full <b>performance management cycle</b>, 70-20-10, and HMALL are all here to make sure your growth is never left to chance.</p>
       </article>
 
@@ -266,7 +278,7 @@ button.nav{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 2
   <div class="cta-row">
 
     <!-- Primary CTA: development goal -->
-    <div class="cta-primary">
+    <div class="cta-primary" id="ctaPrimary">
       <div class="cta-icon-wrap">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 20h9"/>
@@ -281,7 +293,7 @@ button.nav{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 2
     </div>
 
     <!-- Secondary CTA: resource card — Workday, Career Central, the HUB -->
-    <div class="cta-resources">
+    <div class="cta-resources" id="ctaResources">
       <span class="cta-resources-eyebrow">Where to start</span>
       <div class="cta-resources-list">
         <a class="cta-res-link" href="https://identity.wd12.myworkday.com/wday/authgwy/houstonmethodist/upc/login" target="_blank" rel="noopener">
@@ -354,7 +366,6 @@ button.nav{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 2
     </button>
   </div>
   <div class="tp-body">
-    <p><strong>Main narration (audio_16)</strong></p>
     <p>You made it. And that matters.</p>
     <p>Before you close out, take a moment with three things to carry forward from today.</p>
     <p>The I CARE Values aren't a poster. They're behaviors — and you live them every shift, every email, every interaction. Compassion. Accountability. Integrity. Those words show up in the choices you already make.</p>
@@ -422,17 +433,60 @@ document.getElementById('tpTab').addEventListener('click', () => document.getEle
 document.getElementById('tpClose').addEventListener('click', () => document.getElementById('transcriptPanel').classList.remove('open'));
 
 /* ── NAV ─────────────────────────────────────────────── */
-document.getElementById('btnPrev').addEventListener('click', () => window.parent.postMessage({ type:'nav', action:'prev' }, '*'));
+document.getElementById('btnPrev').addEventListener('click', () => window.parent.postMessage('prev', '*'));
 document.getElementById('btnFinish').addEventListener('click', () => {
   window.parent.postMessage('complete', '*');
-  window.parent.postMessage({ type:'nav', action:'next' }, '*');
+  window.parent.postMessage('next', '*');
+});
+
+/* ── TIMED CUES ───────────────────────────────────────── */
+// Blocks reveal based on audio_16 timestamps. Adjust `at:` if audio is re-recorded.
+const CUES = [
+  { at:  7.0, label: 'Reveal Card 01 — What you practice', do: () => reveal('tkCard1') },
+  { at: 22.0, label: 'Reveal Card 02 — What you model',    do: () => reveal('tkCard2') },
+  { at: 36.0, label: 'Reveal Card 03 — What you build',    do: () => reveal('tkCard3') },
+  { at: 50.0, label: 'Reveal "Your next step" CTA',        do: () => reveal('ctaPrimary') },
+  { at: 60.0, label: 'Reveal "Where to start" resources',  do: () => reveal('ctaResources') },
+];
+const cueFired = CUES.map(() => false);
+
+function reveal(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.add('cue-visible');
+}
+
+function checkCues() {
+  const t = audioMain.currentTime;
+  CUES.forEach((c, i) => {
+    if (!cueFired[i] && t >= c.at) {
+      cueFired[i] = true;
+      if (c.do) c.do();
+    }
+  });
+}
+
+/* ── PLAY AUDIO handler (shell signals slide is active) ─ */
+window.addEventListener('message', function(e) {
+  const d = e.data;
+  if (d === 'playAudio' || (d && d.type === 'playAudio')) {
+    audioMain.currentTime = 0;
+    cueFired.fill(false);
+    document.querySelectorAll('.cue-visible').forEach(el => el.classList.remove('cue-visible'));
+    audioMain.play().catch(() => {});
+  }
 });
 
 /* ── DEV ─────────────────────────────────────────────── */
-function devRestart() { audioMain.currentTime = 0; audioMain.play().catch(() => {}); }
+function devRestart() {
+  audioMain.currentTime = 0;
+  cueFired.fill(false);
+  document.querySelectorAll('.cue-visible').forEach(el => el.classList.remove('cue-visible'));
+  audioMain.play().catch(() => {});
+}
 function devPlayPause() { if (audioMain.paused) audioMain.play().catch(() => {}); else audioMain.pause(); }
 
 function tick() {
+  checkCues();
   const el = document.getElementById('devTime');
   if (el) el.textContent = audioMain.currentTime.toFixed(1) + 's';
   requestAnimationFrame(tick);
