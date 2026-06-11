@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HM · Slide 12 — The Performance Management Cycle</title>
+<style>
+:root {
+  --navy:#003B71;--navy-d:#002A52;--blue:#12497E;--blue-m:#1A5C9A;
+  --ltblue:#749ABB;--teal:#1A7A8A;--teal-lt:#A8D4DA;--sky:#C8DFF0;
+  --green:#69813A;--turq:#007078;--red:#AB0032;--orange:#E24301;
+  --mulberry:#AB0032;
+  --white:#FFFFFF;--bg:#F2F6FA;--soft:#F8FAFC;--line:#DDE6F0;
+  --text:#1A2B3C;--muted:#5A7080;
+  --head:'Franklin Gothic Medium','Franklin Gothic Demi','Arial Narrow Bold',Arial,sans-serif;
+  --sans:'Franklin Gothic Book','Franklin Gothic Medium',Calibri,Arial,sans-serif;
+  --step-color: var(--navy);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:var(--sans);background:var(--bg);color:var(--text);}
+body::before{content:"";position:fixed;inset:0;
+  background:radial-gradient(ellipse at 10% 60%,rgba(116,154,187,.08) 0%,transparent 50%),
+             radial-gradient(ellipse at 92% 20%,rgba(26,122,138,.05) 0%,transparent 48%);
+  pointer-events:none;z-index:0;}
+.slide{width:100vw;height:100vh;display:flex;flex-direction:column;position:relative;z-index:1;}
+
+/* HEADER */
+.hdr{height:68px;flex:0 0 68px;background:var(--navy);display:flex;align-items:center;justify-content:space-between;padding:0 40px;position:relative;}
+.hdr::after{content:"";position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--navy-d) 0%,var(--blue-m) 55%,var(--teal) 100%);}
+.brand-logo{height:36px;width:auto;object-fit:contain;}
+.hdr-right{display:flex;align-items:center;gap:20px;}
+.scene-tag{padding:5px 14px;border-radius:99px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.65);font-family:var(--sans);}
+.progress-wrap{display:flex;align-items:center;gap:10px;}
+.progress-lbl{font-size:12px;color:rgba(255,255,255,.45);font-family:var(--sans);}
+.progress-bar{width:100px;height:5px;border-radius:99px;background:rgba(255,255,255,.15);overflow:hidden;}
+.progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--ltblue),var(--teal-lt));}
+
+/* MAIN */
+.main{flex:1;min-height:0;padding:16px 36px 10px;display:grid;grid-template-columns:1.05fr 1fr;gap:28px;align-items:stretch;}
+
+/* LEFT — Wheel */
+.wheel-col{display:flex;flex-direction:column;opacity:0;animation:fadeUp .5s ease .1s forwards;min-height:0;}
+.wheel-head{margin-bottom:6px;flex-shrink:0;}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.ey-line{width:28px;height:2px;background:var(--teal);flex-shrink:0;}
+.ey-text{font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);font-family:var(--head);}
+.wheel-h{font-family:var(--head);font-size:clamp(20px,2vw,28px);line-height:1.08;color:var(--navy);}
+.wheel-h em{font-style:italic;color:var(--teal);}
+.wheel-sub{font-size:clamp(12px,.9vw,13px);line-height:1.55;color:var(--muted);margin-top:5px;max-width:460px;font-family:var(--sans);}
+
+.wheel-wrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:2px 0;}
+.wheel-svg{width:100%;height:100%;max-width:500px;max-height:100%;overflow:visible;}
+
+/* Wedge styling */
+.wedge{cursor:pointer;transition:filter .35s ease,opacity .35s ease,transform .35s ease;filter:none;opacity:.32;transform-origin:center;}
+.wedge.active{filter:brightness(1.12) drop-shadow(0 10px 28px rgba(0,30,60,.45));opacity:1;}
+.wedge:hover:not(.active){opacity:.55;filter:brightness(1.06);}
+/* Intro state — no group selected, show all wedges fully */
+.wheel-svg.intro-state .wedge{opacity:.92;}
+.wheel-svg.intro-state .wedge:hover{opacity:1;filter:brightness(1.06);}
+.wedge-num{font-family:var(--head);font-size:24px;font-weight:700;fill:#fff;pointer-events:none;user-select:none;opacity:.55;transition:opacity .35s ease,font-size .35s ease;}
+.wedge.active .wedge-num{opacity:1;}
+.wheel-svg.intro-state .wedge-num{opacity:1;}
+.wedge-label{font-family:var(--head);font-size:16px;font-weight:600;pointer-events:none;transition:font-size .3s ease,fill .3s ease,opacity .3s ease;letter-spacing:.2px;opacity:.45;}
+.wedge-label.active-lbl{font-size:19px;font-weight:700;opacity:1;}
+.wheel-svg.intro-state .wedge-label{opacity:.92;}
+.fpr-badge{font-family:var(--head);font-size:8px;font-weight:700;fill:#fff;letter-spacing:1px;pointer-events:none;}
+
+/* Center hub */
+.hub-bg{fill:#fff;stroke:var(--line);stroke-width:1.5;}
+.hub-ring{fill:none;stroke:var(--teal);stroke-width:1.5;stroke-dasharray:3 4;opacity:.7;animation:rotate 40s linear infinite;transform-origin:center;}
+.hub-label{font-family:var(--head);font-size:12px;font-weight:700;fill:var(--muted);letter-spacing:2px;text-anchor:middle;}
+.hub-title{font-family:var(--head);font-size:18px;font-style:italic;fill:var(--navy);text-anchor:middle;}
+.hub-arrow{fill:var(--teal);opacity:.85;}
+@keyframes rotate{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+/* RIGHT — Detail panel */
+.detail-col{display:flex;flex-direction:column;gap:10px;opacity:0;animation:fadeUp .5s ease .2s forwards;min-height:0;}
+
+.detail-card{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:0;position:relative;overflow:hidden;flex:1;min-height:0;display:flex;flex-direction:column;box-shadow:0 8px 28px rgba(0,40,80,.07);}
+
+/* Top color bar */
+.detail-bar{height:6px;background:var(--step-color);transition:background .4s ease;flex-shrink:0;}
+
+.detail-inner{padding:16px 20px 14px;display:flex;flex-direction:column;gap:10px;flex:1;min-height:0;overflow:hidden;}
+
+.detail-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-shrink:0;}
+.detail-num-block{display:flex;align-items:center;gap:12px;}
+.detail-num{font-family:var(--head);font-size:clamp(38px,3.8vw,52px);line-height:.9;color:var(--step-color);transition:color .4s ease;letter-spacing:-.02em;}
+.detail-num-sep{width:1px;height:42px;background:var(--line);}
+.detail-step-label{display:flex;flex-direction:column;gap:3px;}
+.detail-step-eyebrow{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-family:var(--head);}
+.detail-step-count{font-size:12px;font-weight:500;color:var(--step-color);transition:color .4s ease;font-family:var(--head);}
+.detail-fpr-pill{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px;background:rgba(226,67,1,.1);color:var(--orange);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border:1px solid rgba(226,67,1,.25);opacity:0;transition:opacity .4s ease;font-family:var(--head);}
+.detail-fpr-pill.show{opacity:1;}
+.detail-fpr-pill::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--orange);}
+
+.detail-title{font-family:var(--head);font-size:clamp(18px,1.7vw,24px);line-height:1.1;color:var(--navy);flex-shrink:0;}
+
+/* Image slot */
+.detail-img-slot{display:none;}
+
+.detail-desc{font-size:clamp(12px,.95vw,13.5px);line-height:1.62;color:var(--text);font-family:var(--sans);}
+
+/* Group step list — used when a card shows multiple steps */
+.detail-steps{display:flex;flex-direction:column;gap:9px;margin-top:4px;}
+.detail-step-row{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-radius:9px;background:var(--soft);border-left:3px solid var(--step-color,#1A7A8A);transition:background .25s ease;}
+.detail-step-row .ds-num{font-family:var(--head);font-size:13px;font-weight:700;color:var(--step-color,#1A7A8A);min-width:14px;line-height:1.4;flex-shrink:0;}
+.detail-step-row .ds-body{display:flex;flex-direction:column;gap:2px;}
+.detail-step-row .ds-name{font-family:var(--head);font-size:13px;font-weight:600;color:var(--navy);line-height:1.2;}
+.detail-step-row .ds-desc{font-size:11.5px;line-height:1.5;color:var(--muted);font-family:var(--sans);}
+
+/* Scrollable content region */
+.detail-content{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-right:4px;min-height:0;}
+.detail-content::-webkit-scrollbar{width:4px;}
+.detail-content::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px;}
+
+/* "Want to go deeper" resources callout */
+.detail-resources{margin-top:auto;padding:10px 14px;border-radius:10px;background:rgba(0,59,113,.04);border:1px solid rgba(0,59,113,.10);flex-shrink:0;display:flex;flex-direction:column;gap:4px;}
+.detail-resources-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);font-family:var(--head);}
+.detail-resources-links{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:11.5px;line-height:1.4;font-family:var(--sans);}
+.detail-resources-links a{color:var(--blue-m);text-decoration:none;border-bottom:1px solid rgba(26,92,154,.35);transition:color .2s,border-color .2s;}
+.detail-resources-links a:hover{color:var(--navy);border-bottom-color:var(--navy);}
+
+/* Color-matched tip callout */
+.detail-tip{border-radius:10px;padding:10px 14px;flex-shrink:0;border-left:4px solid var(--step-color);background:rgba(0,0,0,.03);transition:border-color .4s ease,background .4s ease;}
+.detail-tip-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--step-color);display:block;margin-bottom:3px;transition:color .4s ease;font-family:var(--head);}
+.detail-tip-text{font-size:clamp(11px,.88vw,12.5px);color:var(--muted);line-height:1.5;font-family:var(--sans);}
+
+/* Controls row */
+.controls{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-shrink:0;}
+.step-dots{display:flex;gap:5px;align-items:center;flex-wrap:wrap;}
+.step-dot{width:22px;height:4px;border-radius:99px;background:var(--line);border:none;cursor:pointer;padding:0;transition:background .3s,transform .2s,width .2s;}
+.step-dot:hover{transform:scaleY(1.6);background:var(--ltblue);}
+.step-dot.active{background:var(--step-color);width:32px;}
+.step-dot.seen{background:var(--ltblue);opacity:.55;}
+.ctrl-buttons{display:flex;gap:8px;align-items:center;}
+.ctrl-btn{width:34px;height:34px;border-radius:10px;background:var(--white);border:1px solid var(--line);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--navy);transition:.18s ease;padding:0;}
+.ctrl-btn:hover{border-color:var(--ltblue);background:var(--soft);transform:translateY(-1px);}
+.ctrl-btn svg{width:14px;height:14px;}
+
+/* Click hint — fades out once user starts interacting */
+.click-hint{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:99px;background:rgba(26,122,138,.08);border:1px solid rgba(26,122,138,.2);transition:opacity .4s ease,transform .4s ease;}
+.click-hint.dismissed{opacity:0;transform:translateY(-3px);pointer-events:none;}
+.click-hint-pulse{width:8px;height:8px;border-radius:50%;background:var(--teal);position:relative;flex-shrink:0;}
+.click-hint-pulse::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--teal);opacity:.6;animation:hintPulse 1.8s ease-in-out infinite;}
+.click-hint-text{font-size:11.5px;color:var(--teal);font-family:var(--head);font-weight:500;letter-spacing:.02em;white-space:nowrap;}
+@keyframes hintPulse{0%{transform:scale(.5);opacity:.7}80%{transform:scale(1.4);opacity:0}100%{transform:scale(1.4);opacity:0}}
+
+/* FOOTER */
+.ftr{height:56px;flex:0 0 56px;background:var(--white);border-top:1px solid var(--line);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 32px;position:relative;flex-shrink:0;}
+.ftr::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue) 0%,var(--teal) 60%,transparent 100%);opacity:.4;}
+.ftr-icare{font-size:11px;letter-spacing:.07em;color:var(--muted);font-family:var(--sans);}
+.ftr-icare b{font-weight:700;color:var(--blue);letter-spacing:.1em;font-family:var(--head);}
+.btn-row{display:flex;gap:10px;justify-content:flex-end;}
+.btn-row button{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 20px;font-size:13px;font-weight:500;font-family:var(--sans);transition:.18s ease;}
+.btn-ghost{background:var(--white);color:var(--navy);border:1px solid var(--line);}
+.btn-ghost:hover{transform:translateY(-1px);border-color:var(--ltblue);}
+.btn-primary{color:#fff;background:linear-gradient(160deg,var(--blue-m),var(--navy-d));box-shadow:0 6px 18px rgba(0,59,113,.2);font-family:var(--head);}
+.btn-primary:hover{transform:translateY(-1px);filter:brightness(1.05);}
+
+/* AUDIO PLAYER */
+.audio-player{display:flex;align-items:center;gap:12px;width:380px;}
+.ap-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--line);background:var(--white);color:var(--navy);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s ease;box-shadow:0 2px 8px rgba(0,59,113,.10);position:relative;}
+.ap-btn:hover{background:var(--navy);border-color:var(--navy);color:#fff;transform:scale(1.08);}
+.ap-btn svg{width:14px;height:14px;fill:currentColor;position:absolute;transition:opacity .15s ease;}
+.ap-track{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0;}
+.ap-bar-wrap{position:relative;height:7px;background:var(--line);border-radius:99px;cursor:pointer;overflow:hidden;transition:height .15s ease;}
+.ap-bar-wrap:hover{height:9px;}
+.ap-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--blue-m),var(--teal));width:0%;transition:width .25s linear;pointer-events:none;}
+.ap-times{display:flex;justify-content:space-between;font-family:var(--sans);font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;line-height:1;}
+
+/* TRANSCRIPT */
+.tp-tab{position:fixed;right:0;top:50%;transform:translateY(-50%);background:rgba(0,30,60,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);border-right:none;border-radius:10px 0 0 10px;color:rgba(255,255,255,.9);padding:14px 8px;cursor:pointer;z-index:80;display:flex;flex-direction:column;align-items:center;gap:8px;transition:background .2s ease;}
+.tp-tab:hover{background:var(--teal);}
+.tp-tab svg{width:16px;height:16px;stroke:#fff;}
+.tp-tab span{writing-mode:vertical-rl;transform:rotate(180deg);font-family:var(--head);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;}
+.tp-panel{position:fixed;top:0;right:0;width:400px;height:100vh;background:rgba(10,20,35,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;transform:translateX(100%);transition:transform .35s ease;z-index:90;display:flex;flex-direction:column;border-left:1px solid rgba(255,255,255,.08);}
+.tp-panel.open{transform:translateX(0);}
+.tp-head{padding:22px 26px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.08);}
+.tp-head h3{font-family:var(--head);font-size:14px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#fff;margin:0;}
+.tp-close{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s ease;}
+.tp-close:hover{background:rgba(255,255,255,.12);}
+.tp-close svg{width:14px;height:14px;stroke:#fff;}
+.tp-body{padding:20px 26px 28px;overflow-y:auto;flex:1;}
+.tp-body p{font-family:var(--sans);font-size:13px;line-height:1.7;color:rgba(255,255,255,.85);margin:0 0 12px 0;}
+.tp-body p strong{color:var(--teal-lt);font-family:var(--head);font-weight:500;}
+.tp-section{font-family:var(--head);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-lt);margin:16px 0 6px;display:block;padding-top:12px;border-top:1px solid rgba(255,255,255,.08);}
+
+/* DEV OVERLAY */
+.dev-overlay{display:none;position:fixed;bottom:60px;left:20px;width:340px;background:rgba(0,10,20,.94);backdrop-filter:blur(14px);border:1px solid rgba(168,212,218,.25);border-radius:14px;padding:18px 20px 14px;z-index:100;font-family:'Consolas','Monaco','Courier New',monospace;font-size:12px;color:rgba(255,255,255,.85);}
+.dev-overlay.visible{display:block;}
+.dev-title{font-family:var(--head);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-lt);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+.dev-title span{font-size:10px;color:rgba(255,255,255,.35);}
+.dev-time{font-size:28px;font-weight:700;color:#fff;margin-bottom:14px;font-variant-numeric:tabular-nums;}
+.dev-now-playing{font-size:11px;color:var(--teal-lt);margin-bottom:10px;padding:4px 8px;background:rgba(26,122,138,.12);border-radius:4px;display:flex;align-items:center;gap:6px;}
+.dev-now-dot{width:6px;height:6px;border-radius:50%;background:var(--teal-lt);animation:pulse-dot 1.2s ease infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.3}}
+.dev-cue-list{list-style:none;display:flex;flex-direction:column;gap:4px;margin-bottom:14px;padding:0;max-height:180px;overflow-y:auto;}
+.dev-cue-item{display:flex;align-items:center;gap:10px;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.04);}
+.dev-cue-item.fired{background:rgba(26,122,138,.2);}
+.dev-cue-item.fired .dev-cue-dot{background:var(--teal-lt);}
+.dev-cue-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;}
+.dev-cue-time{width:48px;color:rgba(255,255,255,.5);font-variant-numeric:tabular-nums;}
+.dev-cue-label{flex:1;color:rgba(255,255,255,.7);}
+.dev-btns{display:flex;gap:8px;}
+.dev-btn-s{flex:1;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:rgba(255,255,255,.8);font-family:var(--head);font-size:11px;cursor:pointer;padding:0;}
+.dev-btn-s:hover{background:rgba(255,255,255,.12);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes contentFade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.detail-fade{animation:contentFade .4s ease;}
+
+/* ── RESPONSIVE BREAKPOINTS ──────────────────────────── */
+@media (max-height: 850px) {
+  .hdr { height: 56px; flex-basis: 56px; padding: 0 28px; }
+  .brand-logo { height: 32px; }
+  .main { padding: 14px 28px 8px; gap: 22px; }
+  .ftr { height: 50px; flex-basis: 50px; padding: 0 22px; }
+  .audio-player { width: 320px; }
+}
+
+@media (min-width: 901px) and (max-width: 1199px) {
+  .main { padding: 14px 24px 10px; gap: 18px; grid-template-columns: 1fr 1fr; }
+  .audio-player { width: 280px; }
+}
+
+@media (max-width: 900px) {
+  html, body { overflow: auto; }
+  .slide { height: auto; min-height: 100vh; }
+  .main {
+    grid-template-columns: 1fr;
+    padding: 20px 22px 110px;
+    gap: 22px;
+  }
+  .wheel-col, .detail-col { min-height: 0; }
+  .wheel-wrap { max-width: 420px; margin: 0 auto; }
+  .controls { flex-direction: row; flex-wrap: wrap; }
+  .ftr { position: sticky; bottom: 0; }
+  .audio-player { width: 240px; }
+}
+
+@media (max-width: 600px) {
+  .hdr { padding: 0 14px; height: 50px; flex-basis: 50px; }
+  .scene-tag { display: none; }
+  .progress-bar { width: 70px; }
+  .brand-logo { height: 28px; }
+  .main { padding: 16px 14px 110px; gap: 18px; }
+  .top-h, .detail-title { font-size: clamp(20px, 5.5vw, 28px); }
+
+  .wheel-wrap { max-width: 100%; }
+  .click-hint-text { font-size: 11px; white-space: normal; }
+
+  .ftr {
+    grid-template-columns: 1fr;
+    height: auto;
+    flex-basis: auto;
+    padding: 10px 14px 12px;
+    row-gap: 8px;
+  }
+  .ftr-icare { font-size: 10px; order: 3; text-align: center; }
+  .audio-player { width: 100%; order: 1; }
+  .btn-row { width: 100%; justify-content: space-between; order: 2; }
+}
+</style>
+</head>
+<body>
+<div class="slide">
+
+<!-- HEADER -->
+<header class="hdr">
+  <img src="images/Methodist_Leading_Medicine_White_png.png" alt="Houston Methodist — Leading Medicine" class="brand-logo"/>
+  <div class="hdr-right">
+    <span class="scene-tag">Slide 12 — Performance Management Cycle</span>
+    <div class="progress-wrap">
+      <span class="progress-lbl">12 of 16</span>
+      <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- LEFT: Interactive cycle wheel -->
+  <div class="wheel-col">
+    <div class="wheel-head">
+      <div class="eyebrow"><div class="ey-line"></div><span class="ey-text">Slide 12 · The Performance Management Cycle</span></div>
+      <h1 class="wheel-h">Performance management is<br>a <em>cycle</em>, not an event.</h1>
+      <p class="wheel-sub">The Focal Point Review conversation is one moment in a year-round rhythm. Eight touchpoints — each one is a chance to reflect, grow, and stay connected to your development.</p>
+    </div>
+    <div class="wheel-wrap">
+      <svg class="wheel-svg" viewBox="-90 -80 740 720" xmlns="http://www.w3.org/2000/svg" id="wheelSvg">
+        <defs>
+          <filter id="wheelShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#001830" flood-opacity=".18"/>
+          </filter>
+        </defs>
+        <g id="wedgeGroup" filter="url(#wheelShadow)"></g>
+        <g id="labelGroup"></g>
+        <g id="badgeGroup"></g>
+        <!-- Center hub -->
+        <circle class="hub-ring" cx="280" cy="280" r="112"/>
+        <circle class="hub-bg" cx="280" cy="280" r="98"/>
+        <g transform="translate(280,240)">
+          <path class="hub-arrow" d="M -16 0 A 16 16 0 1 1 14 8 L 20 12 L 11 16 L 12 7 L 18 10 A 12 12 0 1 0 -12 0 Z"/>
+        </g>
+        <text class="hub-label" x="280" y="272">CONTINUOUS</text>
+        <text class="hub-title" x="280" y="298">Growth &amp;</text>
+        <text class="hub-title" x="280" y="318">Development</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- RIGHT: Detail panel -->
+  <div class="detail-col">
+    <div class="detail-card" id="detailCard">
+      <div class="detail-bar" id="detailBar"></div>
+      <div class="detail-inner">
+        <div class="detail-top">
+          <div class="detail-num-block">
+            <div class="detail-num" id="detailNum">→</div>
+            <div class="detail-num-sep"></div>
+            <div class="detail-step-label">
+              <span class="detail-step-eyebrow">The Cycle</span>
+              <span class="detail-step-count" id="detailCount">Overview</span>
+            </div>
+          </div>
+          <span class="detail-fpr-pill" id="detailFprPill">FPR Moment</span>
+        </div>
+
+        <h2 class="detail-title" id="detailTitle">How the cycle works</h2>
+
+        <div class="detail-content" id="detailContent">
+          <p class="detail-desc" id="detailDesc">The Focal Point Review conversation gets all the attention — but it's just one moment in a year-round rhythm of eight touchpoints. Some happen in a defined window. Others continue all year long. Walk through the three movements of the cycle.</p>
+
+          <div class="detail-steps" id="detailSteps" style="display:none;"></div>
+        </div>
+
+        <div class="detail-tip" id="detailTip">
+          <span class="detail-tip-label" id="detailTipLabel">Before you begin</span>
+          <span class="detail-tip-text" id="detailTipText">As you walk through each movement, think about where you are in the cycle right now — and what's coming next for you.</span>
+        </div>
+
+        <div class="detail-resources">
+          <span class="detail-resources-label">Want to go deeper?</span>
+          <div class="detail-resources-links">
+            <a href="https://houstonmethodist1.sharepoint.com/:u:/r/sites/FocalPointReview/SitePages/Home.aspx?csf=1&web=1&e=ZbzPKq" target="_blank" rel="noopener">Focal Point Review SharePoint</a>
+            <span style="color:var(--muted);">·</span>
+            <a href="https://identity.wd12.myworkday.com/wday/authgwy/houstonmethodist/upc/login" target="_blank" rel="noopener">Performance Management module in Workday</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="click-hint" id="clickHint">
+        <span class="click-hint-pulse"></span>
+        <span class="click-hint-text">Use the arrows to walk through the cycle</span>
+      </div>
+      <div class="step-dots" id="stepDots"></div>
+      <div class="ctrl-buttons">
+        <button class="ctrl-btn" id="prevBtn" aria-label="Previous step">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="ctrl-btn" id="nextBtn" aria-label="Next step">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="ftr">
+  <span class="ftr-icare"><b>I CARE</b> &nbsp;·&nbsp; Integrity &nbsp;·&nbsp; Compassion &nbsp;·&nbsp; Accountability &nbsp;·&nbsp; Respect &nbsp;·&nbsp; Excellence</span>
+  <div class="audio-player">
+    <button class="ap-btn" id="apBtn" aria-label="Play / Pause">
+      <svg id="iconPlay" viewBox="0 0 16 16"><path d="M3 2.5v11l10-5.5z"/></svg>
+      <svg id="iconPause" viewBox="0 0 16 16" style="opacity:0"><path d="M4 2h2.5v12H4zm5.5 0H12v12H9.5z"/></svg>
+    </button>
+    <div class="ap-track">
+      <div class="ap-bar-wrap" id="apBarWrap"><div class="ap-bar-fill" id="apBarFill"></div></div>
+      <div class="ap-times"><span id="apCurrent">0:00</span><span id="apDuration">0:00</span></div>
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-ghost" id="btnPrev">← Back</button>
+    <button class="btn-primary" id="btnNext">Continue →</button>
+  </div>
+</footer>
+</div>
+
+<!-- TRANSCRIPT TAB -->
+<div class="tp-tab" id="tpTab">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+    <polyline points="14 2 14 8 20 8"></polyline>
+    <line x1="16" y1="13" x2="8" y2="13"></line>
+    <line x1="16" y1="17" x2="8" y2="17"></line>
+    <line x1="10" y1="9" x2="8" y2="9"></line>
+  </svg>
+  <span>Transcript</span>
+</div>
+
+<!-- TRANSCRIPT PANEL -->
+<aside class="tp-panel" id="tpPanel">
+  <div class="tp-head">
+    <h3>Narration Transcript</h3>
+    <button class="tp-close" id="tpClose" aria-label="Close transcript">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+  <div class="tp-body">
+    <p>The Focal Point Review conversation gets all the attention — but it's just one moment in a year-round rhythm. Eight touchpoints in total. Some happen in a defined window. Others continue all year long. We've organized them into three movements.</p>
+    <p>Notice the two larger wedges on the wheel — those carry a year-round tag, because they run all year, not just at FPR time. Walk through the three movements with me. You'll come away with a clearer sense of where you are right now and what's coming next.</p>
+
+    <span class="tp-section">Movement 1 — Before the FPR</span>
+    <p>Two steps lay the foundation. First, requesting feedback — required for nursing staff and strongly encouraged for everyone else. Peer feedback comes back to you in Workday and gives you something concrete to reflect on. Second, your self-evaluation. This is where you reflect honestly on the past year against your I CARE behaviors and the goals you pursued. Be specific. "I demonstrated Accountability by leading the EHR transition for my team" tells a story that "I was accountable" does not.</p>
+
+    <span class="tp-section">Movement 2 — FPR season</span>
+    <p>These four steps are what most people think of when they hear "FPR." They happen in a defined window. Step 3 — required in-service modules. The module you're in right now is part of that. Step 4 — your manager completes their evaluation in Workday. Step 5 — the FPR conversation itself, a two-way dialogue, not a verdict. Come with two or three development goals in mind. Leaders can only support what they know you want. Step 6 — managers communicate merit awards, tied to the work you've demonstrated across the whole cycle.</p>
+
+    <span class="tp-section">Movement 3 — All year long</span>
+    <p>The last two steps continue past FPR season — and this is where most of your development actually happens. Step 7 — partner with your manager on one performance goal and one development item for the year ahead. Remember the 70-20-10 framework. Most growth comes from stretch assignments, not classes. Step 8 — regular check-ins. A 15-minute conversation with your manager every few weeks is worth more than a perfect FPR. Small, frequent touchpoints turn your development plan into actual development.</p>
+
+    <span class="tp-section">Want to go deeper?</span>
+    <p>Two resources for the full picture: the Focal Point Review SharePoint covers the process end to end, and the Performance Management module in Workday walks through each step in detail.</p>
+  </div>
+</aside>
+
+<!-- DEV TIMING OVERLAY -->
+<div class="dev-overlay" id="devOverlay">
+  <div class="dev-title">Timing Dev Panel <span>Press D to close</span></div>
+  <div class="dev-now-playing" id="devNowPlaying">
+    <span class="dev-now-dot"></span>
+    <span id="devNowLabel">Waiting...</span>
+  </div>
+  <div class="dev-time" id="devTime">0.0s</div>
+  <ul class="dev-cue-list" id="devCueList"></ul>
+  <div class="dev-btns">
+    <button class="dev-btn-s" onclick="devRestart()">↺ Restart</button>
+    <button class="dev-btn-s" onclick="devPlayPause()">⏯ Play / Pause</button>
+  </div>
+</div>
+
+<!-- AUDIO elements -->
+<audio id="audioMain" preload="auto" autoplay>
+  <source src="audio/audio_12.mp3" type="audio/mpeg">
+</audio>
+<audio id="audioStep" preload="none">
+  <source src="" type="audio/mpeg">
+</audio>
+
+<script>
+// ====== STEP DATA ======
+// Step 0 = Introduction (shown on load, not a wheel wedge)
+// Steps 1-8 = wheel wedges
+const STEPS = [
+  {
+    n: '→', isIntro: true,
+    title: "How the cycle works",
+    color: "#003B71",
+    short: null,
+    desc: "Performance management at Houston Methodist isn't a once-a-year event. It's a continuous rhythm of eight touchpoints that runs all year long — and you're in it whether you realize it or not. The FPR conversation is the moment everyone notices, but the work that makes it meaningful happens in the steps before and after. Click each step on the wheel, or use the arrows below to walk through each one.",
+    tip: "Before you begin",
+    tipText: "As you explore each step, think about where you are in the cycle right now — and what's coming next for you.",
+    tool: null, when: null, fpr: false,
+    img: "image_12-0",
+    audio: "audio/audio_12-0.mp3"
+  },
+  {
+    n: 1, isIntro: false,
+    title: "Request Feedback",
+    color: "#003B71",
+    short: "Feedback",
+    desc: "The cycle begins with feedback. Peer feedback is required for all nursing staff and strongly encouraged for everyone else, because colleagues see things about your work that you can't always see yourself. The best feedback comes from a mix of people — not just your closest collaborators, but also colleagues across roles who interact with you in different contexts. Their perspective is what makes the rest of the cycle land with weight.",
+    tip: "Pro tip",
+    tipText: "Request feedback from people across roles — not just your closest colleagues. Different perspectives reveal different strengths.",
+    tool: "Workday", when: "Happens early in the cycle", fpr: false,
+    img: "image_12-1",
+    audio: "audio/audio_12-1.mp3"
+  },
+  {
+    n: 2, isIntro: false,
+    title: "Self-Evaluation",
+    color: "#1A5C9A",
+    short: "Self-Eval",
+    desc: "You'll receive a Workday notification when it's time to begin your self-evaluation. This is where you reflect honestly on the past year — your contributions, your I CARE behaviors, the goals you pursued, and the places you stretched. Specificity is what makes this step useful: 'I demonstrated Accountability by leading the EHR transition for my team' tells a story; 'I was accountable' doesn't. The more concrete you are, the richer the FPR conversation becomes.",
+    tip: "What to bring",
+    tipText: "Use specific I CARE examples — 'I demonstrated Accountability by...' is far more powerful than a general statement.",
+    tool: "Workday", when: "Notification arrives in your inbox", fpr: false,
+    img: "image_12-2",
+    audio: "audio/audio_12-2.mp3"
+  },
+  {
+    n: 3, isIntro: false,
+    title: "In-Service Modules",
+    color: "#69813A",
+    short: "In-Service",
+    desc: "Required in-service modules are assigned through the LMS and must be completed to close out the self-evaluation step. This module you're in right now is part of that. Think of these modules not as a checkbox but as a chance to refresh how you're showing up against Houston Methodist's standards — and as something concrete to bring into the FPR conversation. Completing them on time keeps the cycle moving for you and your team.",
+    tip: "You're here",
+    tipText: "This module is your Step 3. Completing it moves you forward in the cycle — and gives you something concrete to bring to the FPR conversation.",
+    tool: "HMALL · LMS", when: "Assigned with self-evaluation", fpr: false,
+    img: "image_12-3",
+    audio: "audio/audio_12-3.mp3"
+  },
+  {
+    n: 4, isIntro: false,
+    title: "Manager Evaluation",
+    color: "#E24301",
+    short: "Mgr Eval",
+    desc: "Your supervisor completes the manager evaluation in Workday, assessing the same dimensions you reflected on. Both perspectives are ready before either of you sits down for the FPR conversation, which means the meeting itself isn't about data entry — it's about dialogue. You'll see your manager's input, and they'll see yours. That transparency is what lets the conversation start at a higher altitude than a typical performance review.",
+    tip: "FPR moment",
+    tipText: "This is the first of two FPR-specific steps. Both evaluations are complete before anyone sits down — so the conversation can be about dialogue, not data entry.",
+    tool: "Workday", when: "Completed after your self-evaluation", fpr: true,
+    img: "image_12-4",
+    audio: "audio/audio_12-4.mp3"
+  },
+  {
+    n: 5, isIntro: false,
+    title: "Performance Conversation",
+    color: "#1A7A8A",
+    short: "Conversation",
+    desc: "The FPR conversation is a two-way dialogue, not a verdict. Together, you and your leader walk through accomplishments, growth areas, the feedback you received earlier in the cycle, and development opportunities for the year ahead. Come with two to three development goals in mind — not perfectly formed, just real. Leaders can only support what they know you want, and naming the direction is what unlocks their support. This is also when stretch assignments and cross-functional opportunities get surfaced.",
+    tip: "FPR moment",
+    tipText: "Come with 2–3 development goals in mind — leaders can only support what they know you want. This conversation shapes the year ahead.",
+    tool: "In-person / Virtual", when: "The heart of the FPR", fpr: true,
+    img: "image_12-5",
+    audio: "audio/audio_12-5.mp3"
+  },
+  {
+    n: 6, isIntro: false,
+    title: "Sharing of Merit Awards",
+    color: "#AB0032",
+    short: "Merit",
+    desc: "After the FPR conversation, managers communicate merit awards to individual team members. Recognition is tied directly to the performance and growth you've demonstrated across the whole cycle — not just to one conversation. That's an important distinction: the consistent behaviors you bring all year long are what create recognition. Merit isn't decided in a 60-minute meeting; it's earned in the daily work that made the meeting possible.",
+    tip: "Worth knowing",
+    tipText: "Merit decisions are made based on performance across the whole cycle — not just the FPR conversation. Consistent behaviors all year long are what create recognition.",
+    tool: "Workday", when: "Follows the FPR conversation", fpr: false,
+    img: "image_12-6",
+    audio: "audio/audio_12-6.mp3"
+  },
+  {
+    n: 7, isIntro: false,
+    title: "Work on Goals & Development",
+    color: "#007078",
+    short: "Growth",
+    desc: "After the FPR, you and your manager partner on one performance goal and one development item for the year ahead. Workday's development tools let you track progress, document growth, and keep the goals visible — not buried in a folder you reopen once a year. Remember the 70-20-10 framework here: most of your development won't come from a course. It comes from stretch assignments, new responsibilities, and the relationships that challenge you.",
+    tip: "70-20-10",
+    tipText: "Remember: 70% of development happens through on-the-job experience. Your development goal doesn't have to be a class — it can be a stretch assignment or a new responsibility.",
+    tool: "Workday", when: "Throughout the year", fpr: false,
+    img: "image_12-7",
+    audio: "audio/audio_12-7.mp3"
+  },
+  {
+    n: 8, isIntro: false,
+    title: "Regular Check-Ins",
+    color: "#749ABB",
+    short: "Check-Ins",
+    desc: "Performance management doesn't end when the FPR closes. Workday allows ongoing check-ins to be captured and documented throughout the year, so the cycle stays alive between formal moments. A 15-minute conversation with your manager every few weeks is worth far more than a perfect FPR. Small, frequent touchpoints are what turn your development plan into actual development — and when the next cycle begins, you'll already have a year's worth of evidence to draw from.",
+    tip: "Keep the momentum",
+    tipText: "Regular check-ins turn your development plan into something alive. Don't wait for the next FPR to have the conversation — small, frequent touchpoints make a big difference.",
+    tool: "Workday", when: "Ongoing — all year long", fpr: false,
+    img: "image_12-8",
+    audio: "audio/audio_12-8.mp3"
+  }
+];
+
+// ====== GROUP DATA ======
+// Four navigation states: intro + 3 movement groups.
+// Each group highlights specific wedges on the wheel and shows multiple steps
+// at once in the detail panel — so learners get the full picture without
+// clicking each individual step.
+const GROUPS = [
+  {
+    id: 'intro',
+    title: 'How the cycle works',
+    eyebrow: 'The Cycle',
+    count: 'Overview',
+    color: '#003B71',
+    num: '→',
+    img: 'image_12-0',
+    desc: "The Focal Point Review conversation gets all the attention — but it's just one moment in a year-round rhythm. Some steps happen in a defined window. Others continue all year long. Walk through the three movements.",
+    tip: 'Before you begin',
+    tipText: "Notice the two larger wedges and the year-round tag — those steps run all year, not just at FPR time.",
+    steps: [],
+    fpr: false,
+    audio: "audio/audio_12.mp3"
+  },
+  {
+    id: 'pre-fpr',
+    title: 'Before the FPR — Set yourself up',
+    eyebrow: 'Movement 1',
+    count: 'Pre-FPR',
+    color: '#1A5C9A',
+    num: '1·2',
+    img: 'image_12-pre',
+    desc: "Two early steps lay the foundation for a meaningful FPR conversation. Both happen before you sit down with your leader.",
+    tip: 'What to bring',
+    tipText: "Request feedback from people across roles — not just your closest colleagues. Specificity in your self-evaluation is what makes the conversation land with weight.",
+    steps: [1, 2],
+    fpr: false,
+    audio: "audio/audio_12-1.mp3"
+  },
+  {
+    id: 'fpr-season',
+    title: 'FPR season — The formal cycle',
+    eyebrow: 'Movement 2',
+    count: 'FPR Season',
+    color: '#E24301',
+    num: '3·4·5·6',
+    img: 'image_12-fpr',
+    desc: "These four steps are what most people think of as 'FPR.' They run in a defined window and include the conversation itself — the moment everyone notices.",
+    tip: 'FPR moment',
+    tipText: "Come to the conversation with 2–3 development goals in mind. Leaders can only support what they know you want — naming the direction is what unlocks support.",
+    steps: [3, 4, 5, 6],
+    fpr: true,
+    audio: "audio/audio_12-2.mp3"
+  },
+  {
+    id: 'year-round',
+    title: 'All year long — Where development actually happens',
+    eyebrow: 'Movement 3',
+    count: 'Year-Round',
+    color: '#007078',
+    num: '7·8',
+    img: 'image_12-year',
+    desc: "Two steps continue all year — and this is where most of your development actually happens. The FPR sets the direction. These steps do the work.",
+    tip: '70-20-10',
+    tipText: "Most development doesn't come from a course. It comes from stretch assignments, new responsibilities, and regular conversations with your leader.",
+    steps: [7, 8],
+    fpr: false,
+    audio: "audio/audio_12-3.mp3"
+  }
+];
+
+// HM color palette for wheel wedges (steps 1-8, matching step colors)
+const WHEEL_COLORS = [
+  "#003B71", // Step 1 — Navy
+  "#1A5C9A", // Step 2 — Blue-m
+  "#69813A", // Step 3 — Green
+  "#E24301", // Step 4 — Orange (FPR)
+  "#1A7A8A", // Step 5 — Teal (FPR)
+  "#AB0032", // Step 6 — Mulberry
+  "#007078", // Step 7 — Turquoise
+  "#749ABB", // Step 8 — Lt Blue
+];
+
+// ====== BUILD THE WHEEL (steps 1-8 only) ======
+const CX = 280, CY = 280, R_OUTER = 260, R_INNER = 112;
+const wheelSteps = STEPS.filter(s => !s.isIntro);
+const WEDGE_ANGLE = 360 / wheelSteps.length;
+
+const wedgeGroup = document.getElementById('wedgeGroup');
+const labelGroup = document.getElementById('labelGroup');
+const badgeGroup = document.getElementById('badgeGroup');
+
+function polar(cx, cy, r, angleDeg) {
+  const a = (angleDeg - 90) * Math.PI / 180;
+  return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+}
+
+function describeWedge(startAngle, endAngle, outerR) {
+  const rOut = outerR || R_OUTER;
+  const o1 = polar(CX, CY, rOut, endAngle);
+  const o2 = polar(CX, CY, rOut, startAngle);
+  const i1 = polar(CX, CY, R_INNER, startAngle);
+  const i2 = polar(CX, CY, R_INNER, endAngle);
+  const large = (endAngle - startAngle) <= 180 ? 0 : 1;
+  return `M ${o1.x} ${o1.y} A ${rOut} ${rOut} 0 ${large} 0 ${o2.x} ${o2.y} L ${i1.x} ${i1.y} A ${R_INNER} ${R_INNER} 0 ${large} 1 ${i2.x} ${i2.y} Z`;
+}
+
+// Steps 7 (Goals & Development) and 8 (Check-Ins) happen year-round —
+// give them a slightly larger outer radius so the wheel visually telegraphs that.
+const R_OUTER_YEAR_ROUND = R_OUTER + 18;
+
+wheelSteps.forEach((step, wi) => {
+  const startAngle = wi * WEDGE_ANGLE;
+  const endAngle = (wi + 1) * WEDGE_ANGLE;
+  const midAngle = (startAngle + endAngle) / 2;
+  const stepIdx = wi + 1; // STEPS index (0=intro, 1-8=steps)
+  const isYearRound = (stepIdx === 7 || stepIdx === 8);
+  const wedgeOuterR = isYearRound ? R_OUTER_YEAR_ROUND : R_OUTER;
+
+  // Wedge
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute("d", describeWedge(startAngle, endAngle, wedgeOuterR));
+  path.setAttribute("fill", WHEEL_COLORS[wi]);
+  path.setAttribute("stroke", "#fff");
+  path.setAttribute("stroke-width", "2.5");
+  path.setAttribute("class", "wedge");
+  path.setAttribute("data-step", stepIdx);
+  path.addEventListener("click", () => goToGroup(groupForStep(stepIdx), true));
+  wedgeGroup.appendChild(path);
+
+  // Number
+  const numR = (wedgeOuterR + R_INNER) / 2 - 6;
+  const numPos = polar(CX, CY, numR, midAngle);
+  const numText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  numText.setAttribute("x", numPos.x);
+  numText.setAttribute("y", numPos.y + 8);
+  numText.setAttribute("text-anchor", "middle");
+  numText.setAttribute("class", "wedge-num");
+  numText.textContent = step.n;
+  wedgeGroup.appendChild(numText);
+
+  // Outer label — two lines if needed
+  const labelR = wedgeOuterR + 48;
+  const lblPos = polar(CX, CY, labelR, midAngle);
+  const words = step.short.split(' ');
+  if (words.length === 1) {
+    const lbl = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    lbl.setAttribute("x", lblPos.x);
+    lbl.setAttribute("y", lblPos.y + 5);
+    lbl.setAttribute("text-anchor", "middle");
+    lbl.setAttribute("class", "wedge-label");
+    lbl.setAttribute("data-label", stepIdx);
+    lbl.setAttribute("fill", WHEEL_COLORS[wi]);
+    lbl.textContent = step.short;
+    labelGroup.appendChild(lbl);
+  } else {
+    words.forEach((word, li) => {
+      const lbl = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      lbl.setAttribute("x", lblPos.x);
+      lbl.setAttribute("y", lblPos.y + (li * 17) - (words.length - 1) * 7);
+      lbl.setAttribute("text-anchor", "middle");
+      lbl.setAttribute("class", "wedge-label");
+      lbl.setAttribute("data-label", stepIdx);
+      lbl.setAttribute("fill", WHEEL_COLORS[wi]);
+      lbl.textContent = word;
+      labelGroup.appendChild(lbl);
+    });
+  }
+
+  // FPR marker — visible star + "FPR" label on wedge face
+  if (step.fpr) {
+    const badgeR = (R_OUTER + R_INNER) / 2 + 28;
+    const badgePos = polar(CX, CY, badgeR, midAngle);
+    // White circle background
+    const bg = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    bg.setAttribute("cx", badgePos.x);
+    bg.setAttribute("cy", badgePos.y);
+    bg.setAttribute("r", "18");
+    bg.setAttribute("fill", "rgba(255,255,255,.95)");
+    bg.setAttribute("stroke", WHEEL_COLORS[wi]);
+    bg.setAttribute("stroke-width", "2");
+    badgeGroup.appendChild(bg);
+    // FPR text
+    const bt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    bt.setAttribute("x", badgePos.x);
+    bt.setAttribute("y", badgePos.y + 5);
+    bt.setAttribute("text-anchor", "middle");
+    bt.setAttribute("font-family", "'Franklin Gothic Medium','Arial Narrow Bold',Arial,sans-serif");
+    bt.setAttribute("font-size", "13");
+    bt.setAttribute("font-weight", "700");
+    bt.setAttribute("fill", WHEEL_COLORS[wi]);
+    bt.setAttribute("letter-spacing", "1");
+    bt.textContent = "FPR";
+    badgeGroup.appendChild(bt);
+  }
+
+  // Year-round marker for steps 7 and 8 — pill-shape near the outer edge
+  if (isYearRound) {
+    const badgeR = wedgeOuterR - 18;
+    const badgePos = polar(CX, CY, badgeR, midAngle);
+    // Pill background
+    const bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    bg.setAttribute("x", badgePos.x - 36);
+    bg.setAttribute("y", badgePos.y - 11);
+    bg.setAttribute("width", "72");
+    bg.setAttribute("height", "22");
+    bg.setAttribute("rx", "11");
+    bg.setAttribute("fill", "rgba(255,255,255,.95)");
+    bg.setAttribute("stroke", WHEEL_COLORS[wi]);
+    bg.setAttribute("stroke-width", "1.5");
+    badgeGroup.appendChild(bg);
+    // Text
+    const bt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    bt.setAttribute("x", badgePos.x);
+    bt.setAttribute("y", badgePos.y + 4);
+    bt.setAttribute("text-anchor", "middle");
+    bt.setAttribute("font-family", "'Franklin Gothic Medium','Arial Narrow Bold',Arial,sans-serif");
+    bt.setAttribute("font-size", "10.5");
+    bt.setAttribute("font-weight", "700");
+    bt.setAttribute("fill", WHEEL_COLORS[wi]);
+    bt.setAttribute("letter-spacing", ".5");
+    bt.textContent = "YEAR-ROUND";
+    badgeGroup.appendChild(bt);
+  }
+});
+
+// ====== STEP DOTS (4 — one per group) ======
+const dotsWrap = document.getElementById('stepDots');
+GROUPS.forEach((group, i) => {
+  const dot = document.createElement('button');
+  dot.className = 'step-dot';
+  dot.setAttribute('aria-label', group.eyebrow + ' — ' + group.count);
+  dot.addEventListener('click', () => goToGroup(i, true));
+  dotsWrap.appendChild(dot);
+});
+
+// ====== STATE ======
+let currentGroup = 0;
+const seen = new Set();
+
+const audioMain = document.getElementById('audioMain');
+const audioStep = document.getElementById('audioStep');
+
+// Map: step index (1-8) → group index (1-3)
+function groupForStep(stepIdx) {
+  for (let gi = 1; gi < GROUPS.length; gi++) {
+    if (GROUPS[gi].steps.includes(stepIdx)) return gi;
+  }
+  return 0;
+}
+
+function renderGroup(i) {
+  const group = GROUPS[i];
+  seen.add(i);
+  currentGroup = i;
+
+  // Wheel state: intro-state = no wedges active; otherwise highlight per group
+  const wheelSvg = document.getElementById('wheelSvg');
+  wheelSvg.classList.toggle('intro-state', group.steps.length === 0);
+
+  // Wheel wedge highlights — active when their step is in this group
+  document.querySelectorAll('.wedge').forEach(w => {
+    const stepIdx = parseInt(w.getAttribute('data-step'));
+    w.classList.toggle('active', group.steps.includes(stepIdx));
+  });
+  document.querySelectorAll('.wedge-label').forEach(l => {
+    const li = parseInt(l.getAttribute('data-label'));
+    l.classList.toggle('active-lbl', group.steps.includes(li));
+  });
+
+  // Card content
+  const card = document.getElementById('detailCard');
+  card.classList.remove('detail-fade');
+  void card.offsetWidth;
+  card.classList.add('detail-fade');
+
+  document.getElementById('detailBar').style.background = group.color;
+  document.getElementById('detailNum').textContent = group.num;
+  document.getElementById('detailNum').style.color = group.color;
+  document.getElementById('detailNum').style.fontSize = (group.num.length > 2) ? '22px' : '';
+  document.getElementById('detailCount').textContent = group.count;
+  document.getElementById('detailCount').style.color = group.color;
+  document.querySelector('.detail-step-eyebrow').textContent = group.eyebrow;
+  document.getElementById('detailTitle').textContent = group.title;
+  document.getElementById('detailDesc').textContent = group.desc;
+
+  // Step list — show only when group has multiple steps
+  const stepsWrap = document.getElementById('detailSteps');
+  stepsWrap.innerHTML = '';
+  if (group.steps.length > 0) {
+    group.steps.forEach(si => {
+      const s = STEPS[si];
+      const row = document.createElement('div');
+      row.className = 'detail-step-row';
+      row.style.setProperty('--step-color', group.color);
+      row.innerHTML = `
+        <span class="ds-num">${s.n}</span>
+        <div class="ds-body">
+          <span class="ds-name">${s.title}</span>
+          <span class="ds-desc">${shortenStep(s)}</span>
+        </div>`;
+      stepsWrap.appendChild(row);
+    });
+    stepsWrap.style.display = '';
+  } else {
+    stepsWrap.style.display = 'none';
+  }
+
+  // Tip callout — color matched
+  const tip = document.getElementById('detailTip');
+  tip.style.borderLeftColor = group.color;
+  const hex = group.color;
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  tip.style.background = `rgba(${r},${g},${b},.06)`;
+  const tipLabel = document.getElementById('detailTipLabel');
+  tipLabel.textContent = group.tip;
+  tipLabel.style.color = group.color;
+  document.getElementById('detailTipText').textContent = group.tipText;
+
+  // FPR pill
+  document.getElementById('detailFprPill').classList.toggle('show', group.fpr);
+
+  // Step dots
+  document.querySelectorAll('.step-dot').forEach((d, di) => {
+    d.classList.toggle('active', di === i);
+    d.classList.toggle('seen', di !== i && seen.has(di));
+    d.style.background = di === i ? group.color : '';
+  });
+}
+
+// Pull a short 1-line summary for each step (used in the group panel)
+function shortenStep(s) {
+  // Use first sentence of the long desc, capped at ~140 chars
+  let first = (s.desc || '').split(/[.!?]\s/)[0];
+  if (first.length > 150) first = first.slice(0, 147) + '…';
+  return first + '.';
+}
+
+function goToGroup(i, userAction = false) {
+  renderGroup(i);
+  const group = GROUPS[i];
+  // Stop main intro if still playing, play group audio
+  audioMain.pause();
+  audioStep.src = group.audio;
+  audioStep.load();
+  audioStep.play().catch(() => {});
+  updateDevNow(group.audio.split('/').pop() + ' playing');
+  if (userAction) {
+    const hint = document.getElementById('clickHint');
+    if (hint) hint.classList.add('dismissed');
+  }
+}
+
+audioStep.addEventListener('ended', () => {
+  updateDevNow('audio_12-group ended');
+});
+
+function advanceStep() { goToGroup((currentGroup + 1) % GROUPS.length, true); }
+function retreatStep()  { goToGroup((currentGroup - 1 + GROUPS.length) % GROUPS.length, true); }
+
+// Controls
+document.getElementById('prevBtn').addEventListener('click', () => retreatStep());
+document.getElementById('nextBtn').addEventListener('click', () => advanceStep());
+
+// ====== AUDIO PLAYER (tracks whichever is active) ======
+const apBtn      = document.getElementById('apBtn');
+const iconPlay   = document.getElementById('iconPlay');
+const iconPause  = document.getElementById('iconPause');
+const apBarFill  = document.getElementById('apBarFill');
+const apBarWrap  = document.getElementById('apBarWrap');
+const apCurrent  = document.getElementById('apCurrent');
+const apDuration = document.getElementById('apDuration');
+
+function fmtTime(s) {
+  if (!isFinite(s)) return '0:00';
+  return `${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,'0')}`;
+}
+function activeAudio() { return !audioStep.paused ? audioStep : audioMain; }
+function updatePlayer() {
+  const a = activeAudio();
+  const dur = a.duration || 0, cur = a.currentTime || 0;
+  apBarFill.style.width = (dur > 0 ? cur/dur*100 : 0) + '%';
+  apCurrent.textContent  = fmtTime(cur);
+  apDuration.textContent = fmtTime(dur);
+  const paused = audioMain.paused && audioStep.paused;
+  iconPlay.style.opacity  = paused ? '1' : '0';
+  iconPause.style.opacity = paused ? '0' : '1';
+}
+apBtn.addEventListener('click', () => {
+  const a = activeAudio();
+  if (a.paused) a.play().catch(() => {}); else a.pause();
+  updatePlayer();
+});
+[audioMain, audioStep].forEach(a => {
+  a.addEventListener('timeupdate',     updatePlayer);
+  a.addEventListener('loadedmetadata', updatePlayer);
+  a.addEventListener('play',           updatePlayer);
+  a.addEventListener('pause',          updatePlayer);
+});
+apBarWrap.addEventListener('click', e => {
+  const a = activeAudio();
+  const rect = apBarWrap.getBoundingClientRect();
+  if (a.duration) a.currentTime = ((e.clientX - rect.left) / rect.width) * a.duration;
+});
+
+// ====== DEV PANEL ======
+const CUES = [
+  { at: 0.0,  label: 'audio_12 — main VO begins',     do: () => updateDevNow('audio_12 playing') },
+  { at: 5.0,  label: '[UPDATE] "eight touchpoints"',   do: () => {} },
+  { at: 15.0, label: '[UPDATE] "FPR is part of this"', do: () => {} },
+];
+const cueFired = CUES.map(() => false);
+
+function tick() {
+  if (!audioMain.paused) {
+    const t = audioMain.currentTime;
+    CUES.forEach((c, i) => {
+      if (!cueFired[i] && t >= c.at) {
+        cueFired[i] = true; if (c.do) c.do();
+        const el = document.querySelectorAll('.dev-cue-item')[i];
+        if (el) el.classList.add('fired');
+      }
+    });
+  }
+  const el = document.getElementById('devTime');
+  if (el) el.textContent = (audioMain.paused ? audioStep : audioMain).currentTime.toFixed(1) + 's';
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+(function buildDevCueList() {
+  const list = document.getElementById('devCueList');
+  CUES.forEach(c => {
+    const li = document.createElement('li');
+    li.className = 'dev-cue-item';
+    li.innerHTML = `<span class="dev-cue-dot"></span><span class="dev-cue-time">${c.at.toFixed(1)}s</span><span class="dev-cue-label">${c.label}</span>`;
+    list.appendChild(li);
+  });
+})();
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'd' || e.key === 'D') {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    document.getElementById('devOverlay').classList.toggle('visible');
+  }
+  if (e.key === 'ArrowRight') advanceStep();
+  if (e.key === 'ArrowLeft')  retreatStep();
+});
+
+function updateDevNow(label) {
+  const el = document.getElementById('devNowLabel');
+  if (el) el.textContent = label;
+}
+function devRestart() {
+  audioMain.currentTime = 0; audioStep.pause(); audioStep.src = '';
+  cueFired.fill(false);
+  document.querySelectorAll('.dev-cue-item').forEach(el => el.classList.remove('fired'));
+  audioMain.play().catch(() => {});
+  goToGroup(0, false);
+  updateDevNow('audio_12 playing');
+}
+function devPlayPause() {
+  const a = activeAudio();
+  if (a.paused) a.play().catch(() => {}); else a.pause();
+}
+
+// Transcript
+document.getElementById('tpTab').addEventListener('click',  () => document.getElementById('tpPanel').classList.add('open'));
+document.getElementById('tpClose').addEventListener('click', () => document.getElementById('tpPanel').classList.remove('open'));
+
+// Nav
+document.getElementById('btnPrev').addEventListener('click', () => window.parent.postMessage('prev', '*'));
+document.getElementById('btnNext').addEventListener('click', () => window.parent.postMessage('next', '*'));
+
+// Shell sends 'playAudio' when this slide becomes active — start intro audio then
+window.addEventListener('message', function(e) {
+  const d = e.data;
+  if (d === 'playAudio' || (d && d.type === 'playAudio')) {
+    // Reset to intro state and play main audio
+    audioStep.pause();
+    audioStep.currentTime = 0;
+    audioMain.currentTime = 0;
+    goToGroup(0, false);
+    audioMain.play().catch(() => {});
+    updateDevNow('audio_12 playing');
+  }
+});
+
+// Init
+renderGroup(0);
+updateDevNow('audio_12');
+</script>
+</body>
+</html>
