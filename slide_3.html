@@ -991,15 +991,15 @@ window.addEventListener('load', () => {
 //   ~51s — I CARE block reveals     (just before "Our I CARE Values — how we get there")
 //   ~70s — Status text shifts to click prompt
 const CUES = [
-  { at: 13.0, label: 'Mission block reveals', do: () => {
+  { at: 12.0, label: 'Mission block reveals', do: () => {
       document.getElementById('block-mission').classList.add('revealed');
     }
   },
-  { at: 15.1, label: 'Vision block reveals',  do: () => {
+  { at: 34.0, label: 'Vision block reveals',  do: () => {
       document.getElementById('block-vision').classList.add('revealed');
     }
   },
-  { at: 17.2, label: 'I CARE block reveals',  do: () => {
+  { at: 51.0, label: 'I CARE block reveals',  do: () => {
       document.getElementById('block-icare').classList.add('revealed');
     }
   },
