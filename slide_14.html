@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HM · Slide 14 — Forces of Change</title>
+<style>
+:root {
+  --navy:    #003B71;
+  --navy-d:  #002A52;
+  --blue:    #12497E;
+  --blue-m:  #1A5C9A;
+  --ltblue:  #749ABB;
+  --teal:    #1A7A8A;
+  --teal-lt: #A8D4DA;
+  --green:   #69813A;
+  --turq:    #007078;
+  --red:     #AB0032;
+  --orange:  #E24301;
+  --white:   #FFFFFF;
+  --bg:      #F2F6FA;
+  --soft:    #F8FAFC;
+  --line:    #DDE6F0;
+  --text:    #1A2B3C;
+  --muted:   #5A7080;
+
+  /* Force card colors */
+  --f1: #003B71;  /* Competition & Consumerism — Methodist Blue (matches slide 4 'I') */
+  --f2: #1A5C8A;  /* Technology & Access — Blue-medium (matches slide 4 'C') */
+  --f3: #1A7A8A;  /* Transparency — Teal (matches slide 4 'A') */
+  --f4: #2E6B9A;  /* Patient Expectations — Sky blue (matches slide 4 'R') */
+  --f5: #0D4F6B;  /* Workforce Expectations — Deep teal-blue (matches slide 4 'E') */
+
+  --head: 'Franklin Gothic Medium','Franklin Gothic Demi','Arial Narrow Bold',Arial,sans-serif;
+  --sans: 'Franklin Gothic Book','Franklin Gothic Medium',Calibri,Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:var(--sans);background:var(--bg);color:var(--text);}
+body::before{content:"";position:fixed;inset:0;
+  background:radial-gradient(ellipse at 0% 100%,rgba(26,122,138,.07) 0%,transparent 50%),
+             radial-gradient(ellipse at 100% 0%,rgba(0,59,113,.06) 0%,transparent 50%);
+  pointer-events:none;z-index:0;}
+.slide{width:100vw;height:100vh;display:flex;flex-direction:column;position:relative;z-index:1;}
+
+/* HEADER */
+.hdr{height:68px;flex:0 0 68px;background:var(--navy);display:flex;align-items:center;justify-content:space-between;padding:0 40px;position:relative;}
+.hdr::after{content:"";position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--navy-d) 0%,var(--blue-m) 55%,var(--teal) 100%);}
+.brand-logo{height:36px;width:auto;object-fit:contain;}
+.hdr-right{display:flex;align-items:center;gap:20px;}
+.scene-tag{padding:5px 14px;border-radius:99px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.65);font-family:var(--sans);}
+.progress-wrap{display:flex;align-items:center;gap:10px;}
+.progress-lbl{font-size:12px;color:rgba(255,255,255,.45);font-family:var(--sans);}
+.progress-bar{width:100px;height:5px;border-radius:99px;background:rgba(255,255,255,.15);overflow:hidden;}
+.progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--ltblue),var(--teal-lt));}
+
+/* MAIN */
+.main{flex:1;min-height:0;display:flex;flex-direction:column;padding:22px 44px 14px;gap:16px;}/* TOP ROW */
+.top-row{display:flex;align-items:flex-end;justify-content:space-between;flex-shrink:0;opacity:0;animation:fadeUp .5s ease .1s forwards;}
+.top-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.ey-line{width:28px;height:2px;background:var(--teal);flex-shrink:0;}
+.ey-text{font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);font-family:var(--head);}
+.top-heading{font-family:var(--head);font-size:clamp(24px,2.6vw,38px);line-height:1.06;color:var(--navy);letter-spacing:-.01em;}
+.top-heading em{font-style:italic;color:var(--teal);}
+.top-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+.instruction{font-size:clamp(13px,1vw,15px);color:var(--muted);font-style:italic;text-align:right;font-family:var(--sans);}
+.viewed-count{font-size:14px;font-weight:500;color:var(--blue);font-family:var(--head);}
+.viewed-count b{font-weight:700;}
+
+/* CARDS ROW */
+.cards-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;flex:1;min-height:0;opacity:0;animation:fadeUp .5s ease .2s forwards;}
+
+/* CARD */
+.card{border-radius:18px;position:relative;cursor:pointer;overflow:hidden;transition:transform .2s cubic-bezier(.4,0,.2,1),box-shadow .2s;display:flex;flex-direction:column;perspective:1000px;}
+.card:hover:not(.flipped){transform:translateY(-6px);box-shadow:0 20px 48px rgba(0,30,60,.2);}
+.card.flipped{cursor:default;}
+.card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,0,.2,1);flex:1;}
+.card.flipped .card-inner{transform:rotateY(180deg);}
+
+/* FRONT */
+.card-front{position:absolute;inset:0;border-radius:18px;backface-visibility:hidden;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 8px 32px rgba(0,30,60,.15);}
+.card-color-block{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 14px 14px;position:relative;overflow:hidden;}
+.card-color-block .card-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;}
+.card-color-block::before{content:"";position:absolute;inset:0;z-index:1;}
+.card-force-name{font-family:var(--head);font-size:clamp(20px,2.4vw,32px);font-weight:700;color:rgba(255,255,255,.95);letter-spacing:.005em;position:relative;z-index:2;text-align:center;line-height:1.2;padding:0 12px;text-shadow:0 4px 18px rgba(0,0,0,.25);}
+.card-strip{background:rgba(255,255,255,.97);padding:12px 14px;display:flex;flex-direction:column;gap:4px;border-top:1px solid rgba(0,0,0,.06);}
+.card-tagline{font-size:clamp(11px,.88vw,13px);color:var(--muted);line-height:1.4;font-family:var(--sans);}
+.card-cta{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:5px;margin-top:5px;font-family:var(--head);}
+
+/* BACK */
+.card-back{position:absolute;inset:0;border-radius:18px;backface-visibility:hidden;transform:rotateY(180deg);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 8px 32px rgba(0,30,60,.15);}
+.card-back-header{padding:14px 14px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0;position:relative;overflow:hidden;}
+.card-back-header .card-photo-back{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;}
+.card-back-header::before{content:"";position:absolute;inset:0;z-index:1;}
+.back-num{font-family:var(--head);font-size:clamp(28px,3.2vw,42px);font-weight:700;color:rgba(255,255,255,.95);line-height:1;flex-shrink:0;position:relative;z-index:2;}
+.back-name-block{position:relative;z-index:2;}
+.back-force-label{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6);display:block;margin-bottom:2px;font-family:var(--head);}
+.back-force-name{font-family:var(--head);font-size:clamp(13px,1.1vw,16px);font-weight:600;color:rgba(255,255,255,.95);line-height:1.1;}
+
+.card-back-body{background:rgba(255,255,255,.97);flex:1;padding:13px 14px 12px;display:flex;flex-direction:column;gap:9px;overflow-y:auto;}
+.card-back-body::-webkit-scrollbar{width:4px;}
+.card-back-body::-webkit-scrollbar-thumb{background:rgba(0,59,113,.18);border-radius:99px;}
+.card-back-body::-webkit-scrollbar-track{background:transparent;}
+.no-break{white-space:nowrap;}
+.back-section-label{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:block;font-family:var(--head);}
+.back-what-it-means{font-family:var(--head);font-size:clamp(12px,1vw,14.5px);font-style:italic;line-height:1.45;color:var(--navy);}
+.back-divider{height:1px;background:var(--line);}
+.back-connection-label{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);display:block;font-family:var(--head);}
+.back-connection{font-size:clamp(11px,.88vw,12.5px);line-height:1.5;color:var(--muted);font-family:var(--sans);}
+.back-connection b{font-weight:600;color:var(--navy);font-family:var(--head);}
+.back-response-label{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;display:block;font-family:var(--head);}
+.back-response{font-family:var(--head);font-size:clamp(11.5px,.92vw,13px);font-style:italic;line-height:1.4;color:var(--navy);}
+
+/* Check badge */
+.check-badge{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s ease .4s;z-index:10;backdrop-filter:blur(4px);}
+.check-badge svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.card.flipped .check-badge{opacity:1;}
+
+/* Per-card overlays */
+.card-1 .card-color-block::before{background:linear-gradient(160deg,rgba(0,43,82,.78),rgba(0,37,82,.85));}
+.card-1 .card-back-header::before{background:linear-gradient(160deg,rgba(0,43,82,.82),rgba(0,37,82,.90));}
+.card-1 .card-cta{color:var(--f1);}
+.card-1 .back-connection-label{color:var(--f1);}
+.card-1 .back-response-label{color:var(--f1);}
+
+.card-2 .card-color-block::before{background:linear-gradient(160deg,rgba(15,55,90,.76),rgba(10,40,70,.83));}
+.card-2 .card-back-header::before{background:linear-gradient(160deg,rgba(15,55,90,.82),rgba(10,40,70,.90));}
+.card-2 .card-cta{color:var(--f2);}
+.card-2 .back-connection-label{color:var(--f2);}
+.card-2 .back-response-label{color:var(--f2);}
+
+.card-3 .card-color-block::before{background:linear-gradient(160deg,rgba(10,80,90,.76),rgba(8,60,70,.83));}
+.card-3 .card-back-header::before{background:linear-gradient(160deg,rgba(10,80,90,.82),rgba(8,60,70,.90));}
+.card-3 .card-cta{color:var(--f3);}
+.card-3 .back-connection-label{color:var(--f3);}
+.card-3 .back-response-label{color:var(--f3);}
+
+.card-4 .card-color-block::before{background:linear-gradient(160deg,rgba(25,60,100,.76),rgba(15,45,82,.83));}
+.card-4 .card-back-header::before{background:linear-gradient(160deg,rgba(25,60,100,.82),rgba(15,45,82,.90));}
+.card-4 .card-cta{color:var(--f4);}
+.card-4 .back-connection-label{color:var(--f4);}
+.card-4 .back-response-label{color:var(--f4);}
+
+.card-5 .card-color-block::before{background:linear-gradient(160deg,rgba(8,50,75,.76),rgba(5,35,55,.83));}
+.card-5 .card-back-header::before{background:linear-gradient(160deg,rgba(8,50,75,.82),rgba(5,35,55,.90));}
+.card-5 .card-cta{color:var(--f5);}
+.card-5 .back-connection-label{color:var(--f5);}
+.card-5 .back-response-label{color:var(--f5);}
+
+/* PROGRESS BAR */
+.flip-progress{flex-shrink:0;display:flex;align-items:center;gap:14px;opacity:0;animation:fadeUp .5s ease .3s forwards;}
+.flip-track{flex:1;height:4px;background:var(--line);border-radius:2px;overflow:hidden;}
+.flip-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--orange),var(--teal));transition:width .4s cubic-bezier(.4,0,.2,1);width:0%;}
+.flip-label{font-size:12px;font-weight:500;color:var(--muted);white-space:nowrap;font-family:var(--head);}
+.flip-label b{color:var(--blue);font-weight:700;}
+
+/* FOOTER */
+.ftr{height:56px;flex:0 0 56px;background:var(--white);border-top:1px solid var(--line);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 32px;position:relative;flex-shrink:0;}
+.ftr::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue) 0%,var(--teal) 60%,transparent 100%);opacity:.4;}
+.ftr-icare{font-size:11px;letter-spacing:.07em;color:var(--muted);font-family:var(--sans);}
+.ftr-icare b{font-weight:700;color:var(--blue);letter-spacing:.1em;font-family:var(--head);}
+.btn-row{display:flex;gap:10px;align-items:center;justify-content:flex-end;}
+.audio-player{display:flex;align-items:center;gap:12px;width:380px;}
+.ap-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--line);background:var(--white);color:var(--navy);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s ease;box-shadow:0 2px 8px rgba(0,59,113,.10);position:relative;}
+.ap-btn:hover{background:var(--navy);border-color:var(--navy);color:#fff;transform:scale(1.08);}
+.ap-btn svg{width:14px;height:14px;fill:currentColor;position:absolute;transition:opacity .15s ease;}
+.ap-track{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0;}
+.ap-bar-wrap{position:relative;height:7px;background:var(--line);border-radius:99px;cursor:pointer;overflow:hidden;transition:height .15s ease;}
+.ap-bar-wrap:hover{height:9px;}
+.ap-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--blue-m),var(--teal));width:0%;transition:width .25s linear;pointer-events:none;}
+.ap-times{display:flex;justify-content:space-between;font-family:var(--sans);font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;line-height:1;}
+button{border:none;cursor:pointer;border-radius:99px;height:36px;padding:0 20px;font-size:13px;font-weight:500;font-family:var(--sans);transition:.18s ease;}
+.btn-ghost{background:var(--white);color:var(--navy);border:1px solid var(--line);}
+.btn-ghost:hover{transform:translateY(-1px);border-color:var(--ltblue);}
+.btn-primary{color:#fff;background:linear-gradient(160deg,var(--blue-m),var(--navy-d));box-shadow:0 6px 18px rgba(0,59,113,.2);opacity:.35;pointer-events:none;transition:opacity .35s,transform .18s;font-family:var(--head);}
+.btn-primary.unlocked{opacity:1;pointer-events:all;}
+.btn-primary.unlocked:hover{transform:translateY(-1px);filter:brightness(1.05);}
+
+/* TRANSCRIPT — panel + close button (trigger is inline-styled div) */
+.tp-panel{position:fixed;top:0;right:0;width:400px;height:100vh;background:rgba(10,20,35,.97);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-left:1px solid rgba(168,212,218,.2);z-index:90;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-16px 0 40px rgba(0,0,0,.3);}
+.tp-panel.open{transform:translateX(0);}
+.tp-head{display:flex;align-items:center;justify-content:space-between;padding:22px 26px 16px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;}
+.tp-head h3{font-family:var(--head);font-size:14px;color:#fff;font-weight:500;letter-spacing:.14em;text-transform:uppercase;margin:0;}
+.tp-close{width:32px;height:32px;padding:0;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s ease;}
+.tp-close:hover{background:rgba(255,255,255,.12);}
+.tp-close svg{width:14px;height:14px;stroke:#fff;}
+.tp-body{padding:18px 24px 28px;overflow-y:auto;flex:1;}
+.tp-body p{font-family:var(--sans);font-size:13px;line-height:1.7;color:rgba(255,255,255,.82);margin-bottom:12px;}
+.tp-body p:last-child{margin-bottom:0;}
+.tp-cue-label{color:var(--teal-lt);font-family:var(--head);font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-top:16px;margin-bottom:6px;opacity:.75;display:block;}
+
+/* DEV OVERLAY */
+.dev-overlay{display:none;position:fixed;bottom:60px;left:20px;width:340px;background:rgba(0,10,20,.94);backdrop-filter:blur(14px);border:1px solid rgba(168,212,218,.25);border-radius:14px;padding:18px 20px 14px;z-index:100;font-family:'Consolas','Monaco','Courier New',monospace;font-size:12px;color:rgba(255,255,255,.85);}
+.dev-overlay.visible{display:block;}
+.dev-title{font-family:var(--head);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-lt);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+.dev-title span{font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.05em;text-transform:none;}
+.dev-time{font-size:28px;font-weight:700;color:#fff;margin-bottom:14px;font-variant-numeric:tabular-nums;}
+.dev-now-playing{font-size:11px;color:var(--teal-lt);margin-bottom:10px;padding:4px 8px;background:rgba(26,122,138,.12);border-radius:4px;display:flex;align-items:center;gap:6px;}
+.dev-now-dot{width:6px;height:6px;border-radius:50%;background:var(--teal-lt);animation:pulse-dot 1.2s ease infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.3}}
+.dev-cue-list{list-style:none;display:flex;flex-direction:column;gap:5px;margin-bottom:14px;max-height:200px;overflow-y:auto;padding:0;}
+.dev-cue-item{display:flex;align-items:center;gap:10px;padding:4px 8px;border-radius:6px;background:rgba(255,255,255,.04);}
+.dev-cue-item.fired{background:rgba(26,122,138,.2);}
+.dev-cue-item.fired .dev-cue-dot{background:var(--teal-lt);}
+.dev-cue-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;}
+.dev-cue-time{width:48px;color:rgba(255,255,255,.5);font-variant-numeric:tabular-nums;}
+.dev-cue-label{flex:1;color:rgba(255,255,255,.7);}
+.dev-btns{display:flex;gap:8px;}
+.dev-btn{flex:1;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:rgba(255,255,255,.8);font-family:var(--head);font-size:11px;letter-spacing:.06em;cursor:pointer;transition:background .15s ease;padding:0;}
+.dev-btn:hover{background:rgba(255,255,255,.12);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.card{opacity:0;transform:translateY(14px);pointer-events:none;}
+.card.visible{animation:fadeUp .4s ease forwards;pointer-events:auto;}
+.card.visible.flipped{pointer-events:auto;}
+
+/* ── PREAMBLE OVERLAY (Pathway to Unparalleled) ─────── */
+.preamble-overlay{position:absolute;top:68px;left:0;right:0;bottom:0;z-index:20;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px 44px 28px;gap:14px;transition:opacity .6s ease;opacity:1;}
+.preamble-overlay.hidden{opacity:0;pointer-events:none;}
+.preamble-eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--head);font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);font-weight:700;align-self:flex-start;}
+.preamble-eyebrow .ey-line{width:36px;height:2px;background:var(--teal);}
+.preamble-heading{font-family:var(--head);font-size:clamp(28px,2.6vw,40px);font-weight:700;color:var(--navy);line-height:1.1;letter-spacing:-.01em;align-self:flex-start;margin:0;}
+.preamble-heading em{font-style:italic;color:var(--teal);font-weight:600;}
+.preamble-image-wrap{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;}
+.preamble-image-wrap img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:8px;box-shadow:0 8px 28px rgba(0,40,80,.12);}
+.main.preamble-active,.card-row.preamble-active{visibility:hidden;}
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <!-- HEADER -->
+  <header class="hdr">
+    <img class="brand-logo" src="images/Methodist_Leading_Medicine_White_png.png" alt="Houston Methodist — Leading Medicine"/>
+    <div class="hdr-right">
+      <span class="scene-tag">Slide 14 — Forces of Change</span>
+      <div class="progress-wrap">
+        <span class="progress-lbl">14 of 16</span>
+        <div class="progress-bar"><div class="progress-fill" style="width:88%"></div></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- PREAMBLE OVERLAY -->
+  <div class="preamble-overlay" id="preambleOverlay">
+    <div class="preamble-eyebrow"><div class="ey-line"></div><span>The Pathway to Unparalleled</span></div>
+    <h1 class="preamble-heading">This is <em>where we're going.</em></h1>
+    <div class="preamble-image-wrap">
+      <img src="images/image_14-6.jpg" alt="Houston Methodist Pathway to Unparalleled — Root Learning Map"/>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="top-row">
+      <div class="top-left">
+        <div class="top-eyebrow"><div class="ey-line"></div><span class="ey-text">Forces of Change</span></div>
+        <h1 class="top-heading">Why your growth matters<br><em>beyond your career.</em></h1>
+      </div>
+      <div class="top-right">
+        <p class="instruction">Flip each card to see how Houston Methodist responds — and how it connects to you.</p>
+        <span class="viewed-count"><b id="flipCount">0</b> of 5 revealed</span>
+      </div>
+    </div>
+
+    <div class="cards-row">
+
+      <!-- CARD 1: Competition & Consumerism -->
+      <div class="card card-1" id="card-0" onclick="flipCard(0)">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="card-color-block">
+              <img class="card-photo" src="images/image_14-1.jpg" alt=""/>
+              <div class="card-force-name">Competition &amp; Consumerism</div>
+            </div>
+            <div class="card-strip">
+              <span class="card-tagline">Patients have more choices. Loyalty is earned at every touchpoint — every visit, every interaction.</span>
+              <span class="card-cta">See Houston Methodist's response →</span>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="card-back-header">
+              <img class="card-photo-back" src="images/image_14-1.jpg" alt=""/>
+              <div class="back-num">1</div>
+              <div class="back-name-block">
+                <span class="back-force-label">Force of Change</span>
+                <span class="back-force-name">Competition &amp; Consumerism</span>
+              </div>
+            </div>
+            <div class="card-back-body">
+              <div>
+                <span class="back-section-label">What this means</span>
+                <p class="back-what-it-means">"Patients don't have to choose us. They choose us because of how we made them feel."</p>
+              </div>
+              <div class="back-divider"></div>
+              <div>
+                <span class="back-connection-label">The connection to you</span>
+                <p class="back-connection">Every interaction is a competitive moment. The <b>Customer Focus</b> competency in the Leadership Behaviors Model, your <b>AIDET</b> skills, and the <b>10/5 Rule</b> — these aren't just courtesies. They are how Houston Methodist competes. Your Integrity and Excellence in every interaction is what earns trust back.</p>
+              </div>
+              <div class="back-divider"></div>
+              <div>
+                <span class="back-response-label">Houston Methodist's response</span>
+                <p class="back-response">Earn trust at every touchpoint — through <span class="no-break">I CARE</span> behaviors and unparalleled service, every single time.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="check-badge"><svg viewBox="0 0 16 16"><polyline points="3,8 6.5,11.5 13,4.5"/></svg></div>
+      </div>
+
+      <!-- CARD 2: Technology & Access -->
+      <div class="card card-2" id="card-1" onclick="flipCard(1)">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="card-color-block">
+              <img class="card-photo" src="images/image_14-2.jpg" alt=""/>
+              <div class="card-force-name">Technology &amp; Access</div>
+            </div>
+            <div class="card-strip">
+              <span class="card-tagline">Care is moving into new spaces — virtually, at home, on devices. The geography of healthcare keeps expanding.</span>
+              <span class="card-cta">See Houston Methodist's response →</span>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="card-back-header">
+              <img class="card-photo-back" src="images/image_14-2.jpg" alt=""/>
+              <div class="back-num">2</div>
+              <div class="back-name-block">
+                <span class="back-force-label">Force of Change</span>
+                <span class="back-force-name">Technology &amp; Access</span>
+              </div>
+            </div>
+            <div class="card-back-body">
+              <div>
+                <span class="back-section-label">What this means</span>
+                <p class="back-what-it-means">"The tools change. The expectation of excellence doesn't."</p>
+              </div>
+              <div class="back-divider"></div>
+              <div>
+                <span class="back-connection-label">The connection to you</span>
+                <p class="back-connection">This is exactly what <b>Change &amp; Innovation</b> in the Leadership Behaviors Model prepares you for — adapting when processes shift, welcoming new tools, and using feedback to improve. The <b>70% of development</b> that happens through experience includes learning new systems before they're fully rolled out.</p>
+              </div>
+              <div class="back-divider"></div>
+              <div>
+                <span class="back-response-label">Houston Methodist's response</span>
+                <p class="back-response">Adapt continuously — meet patients wherever they are, with the same standard of excellence.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="check-badge"><svg viewBox="0 0 16 16"><polyline points="3,8 6.5,11.5 13,4.5"/></svg></div>
+      </div>
+
+      <!-- CARD 3: Transparency -->
+      <div class="card card-3" id="card-2" onclick="flipCard(2)">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="card-color-block">
+              <img class="card-photo" src="images/image_14-3.jpg" alt=""/>
+              <div class="card-force-name">Transparency</div>
+            </div>
+            <div class="card-strip">
+              <span class="card-tagline">Quality scores, outcomes, and reviews are public. There's nowhere to hide — and that's a good thing.</span>
+              <span class="card-cta">See Houston Methodist's response →</span>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="card-back-header">
+              <img class="card-photo-back" src="images/image_14-3.jpg" alt=""/>
+              <div class="back-num">3</div>
+              <div class="back-name-block">
+                <span class="back-force-label">Force of Change</span>
+                <span class="back-force-name">Transparency</span>
+              </div>
+            </div>
+            <div class="card-back-body">
+              <div>
+                <span class="back-section-label">What this means</span>
+                <p class="back-what-it-means">"Every behavior shows up in the data, eventually. Excellence is its own defense."</p>
+              </div>
+              <div class="back-divider"></div>
+              <div>
+                <span class="back-connection-label">The connection to you</span>
+                <p class="back-connection"><b>Safety &amp; Quality</b> and <b>Integrity</b> aren't just values — they're what shows up in HCAHPS scores, quality reviews, and public outcomes data. Your daily behaviors contribute directly to Houston Methodist's reputation. The FPR assesses your <b><span class="no-break">I CARE</span> behaviors</b> precisely because they have organizational-level impact.</p>
+              </div>
+              <div class="back-divider"></div>
+              <div>
+                <span class="back-response-label">Houston Methodist's response</span>
+                <p class="back-response">Lead with integrity — every outcome reflects everyone, so every behavior counts.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="check-badge"><svg viewBox="0 0 16 16"><polyline points="3,8 6.5,11.5 13,4.5"/></svg></div>
+      </div>
+
+      <!-- CARD 4: Patient Expectations -->
+      <div class="card card-4" id="card-3" onclick="flipCard(3)">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="card-color-block">
+              <img class="card-photo" src="images/image_14-4.jpg" alt=""/>
+              <div class="card-force-name">Patient Expectations</div>
+            </div>
+            <div class="card-strip">
+              <span class="card-tagline">The bar keeps rising. Patients expect care that's personalized, compassionate, and seamless at every step.</span>
+              <span class="card-cta">See Houston Methodist's response →</span>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="card-back-header">
+              <img class="card-photo-back" src="images/image_14-4.jpg" alt=""/>
+              <div class="back-num">4</div>
+              <div class="back-name-block">
+                <span class="back-force-label">Force of Change</span>
+                <span class="back-force-name">Patient Expectations</span>
+              </div>
+            </div>
+            <div class="card-back-body">
+              <div>
+                <span class="back-section-label">What this means</span>
+                <p class="back-what-it-means">"Patients remember how they felt. The clinical outcome matters — and so does every moment around it."</p>
+              </div>
+              <div class="back-divider"></div>
+              <div>
+                <span class="back-connection-label">The connection to you</span>
+                <p class="back-connection">This is the whole point of <b>AIDET, Manage Up,</b> and the <b>service standards</b> you revisited earlier. <b>Compassion</b> and <b>Respect</b> from <span class="no-break">I CARE</span> aren't soft skills — they're how Houston Methodist meets rising expectations. Every role shapes the patient experience, whether you touch the patient directly or not.</p>
+              </div>
+              <div class="back-divider"></div>
+              <div>
+                <span class="back-response-label">Houston Methodist's response</span>
+                <p class="back-response">Personalize every experience — through AIDET, Manage Up, and the service standards you already practice.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="check-badge"><svg viewBox="0 0 16 16"><polyline points="3,8 6.5,11.5 13,4.5"/></svg></div>
+      </div>
+
+      <!-- CARD 5: Workforce Expectations -->
+      <div class="card card-5" id="card-4" onclick="flipCard(4)">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="card-color-block">
+              <img class="card-photo" src="images/image_14-5.jpg" alt=""/>
+              <div class="card-force-name">Workforce Expectations</div>
+            </div>
+            <div class="card-strip">
+              <span class="card-tagline">Today's employees expect purpose, inclusion, and real opportunities to grow — not just a job, but a path forward.</span>
+              <span class="card-cta">See Houston Methodist's response →</span>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="card-back-header">
+              <img class="card-photo-back" src="images/image_14-5.jpg" alt=""/>
+              <div class="back-num">5</div>
+              <div class="back-name-block">
+                <span class="back-force-label">Force of Change</span>
+                <span class="back-force-name">Workforce Expectations</span>
+              </div>
+            </div>
+            <div class="card-back-body">
+              <div>
+                <span class="back-section-label">What this means</span>
+                <p class="back-what-it-means">"You chose Houston Methodist. Houston Methodist has to keep earning that choice — just like patients do."</p>
+              </div>
+              <div class="back-divider"></div>
+              <div>
+                <span class="back-connection-label">The connection to you</span>
+                <p class="back-connection">This force is answered by everything in this module: the <b>Leadership Behaviors Model</b> that defines what growth looks like, the <b>Focal Point Review</b> that makes development a real conversation, the <b>70-20-10 framework</b> that gives you a path, and <b>Culture &amp; Engagement</b> behaviors that make sure every voice is heard.</p>
+              </div>
+              <div class="back-divider"></div>
+              <div>
+                <span class="back-response-label">Houston Methodist's response</span>
+                <p class="back-response">Invest in development — through the FPR, 70-20-10, and a culture where everyone has room to grow.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="check-badge"><svg viewBox="0 0 16 16"><polyline points="3,8 6.5,11.5 13,4.5"/></svg></div>
+      </div>
+
+    </div>
+
+    <!-- Progress bar -->
+    <div class="flip-progress">
+      <span class="flip-label"><b id="progressCount">0</b> of 5 cards revealed</span>
+      <div class="flip-track"><div class="flip-fill" id="flipFill"></div></div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="ftr">
+    <span class="ftr-icare"><b>I CARE</b> &nbsp;·&nbsp; Integrity &nbsp;·&nbsp; Compassion &nbsp;·&nbsp; Accountability &nbsp;·&nbsp; Respect &nbsp;·&nbsp; Excellence</span>
+    <div class="audio-player">
+      <button class="ap-btn" id="apBtn" aria-label="Play / Pause">
+        <svg id="iconPlay" viewBox="0 0 16 16"><path d="M3 2.5v11l10-5.5z"/></svg>
+        <svg id="iconPause" viewBox="0 0 16 16" style="opacity:0"><path d="M4 2h2.5v12H4zm5.5 0H12v12H9.5z"/></svg>
+      </button>
+      <div class="ap-track">
+        <div class="ap-bar-wrap" id="apBarWrap"><div class="ap-bar-fill" id="apBarFill"></div></div>
+        <div class="ap-times"><span id="apCurrent">0:00</span><span id="apDuration">0:00</span></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-ghost" onclick="navPrev()">← Back</button>
+      <button class="btn-primary unlocked" id="continueBtn" onclick="navNext()">Continue →</button>
+    </div>
+  </footer>
+
+</div>
+
+<!-- AUDIO -->
+<audio id="audioPreamble" preload="auto"><source src="audio/audio_14-6.mp3" type="audio/mpeg"></audio>
+<audio id="audioMain" preload="auto"><source src="audio/audio_14.mp3" type="audio/mpeg"></audio>
+<audio id="audioCard0" preload="auto"><source src="audio/audio_14-1.mp3" type="audio/mpeg"></audio>
+<audio id="audioCard1" preload="auto"><source src="audio/audio_14-2.mp3" type="audio/mpeg"></audio>
+<audio id="audioCard2" preload="auto"><source src="audio/audio_14-3.mp3" type="audio/mpeg"></audio>
+<audio id="audioCard3" preload="auto"><source src="audio/audio_14-4.mp3" type="audio/mpeg"></audio>
+<audio id="audioCard4" preload="auto"><source src="audio/audio_14-5.mp3" type="audio/mpeg"></audio>
+
+<!-- TRANSCRIPT TAB -->
+<div id="transcriptTab" style="position:fixed;right:0;top:50%;transform:translateY(-50%);background:rgba(0,30,60,.85);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);border-right:none;border-radius:10px 0 0 10px;color:rgba(255,255,255,.9);padding:14px 8px;cursor:pointer;z-index:80;display:flex;flex-direction:column;align-items:center;gap:8px;transition:background .2s ease;">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+    <polyline points="14 2 14 8 20 8"></polyline>
+    <line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line>
+  </svg>
+  <span style="writing-mode:vertical-rl;transform:rotate(180deg);font-family:'Franklin Gothic Medium',Arial,sans-serif;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#fff;">Transcript</span>
+</div>
+
+<div class="tp-panel" id="transcriptPanel">
+  <div class="tp-head">
+    <h3>Narration Transcript</h3>
+    <button class="tp-close" onclick="toggleTranscript()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="tp-body">
+    <span class="tp-cue-label">Opening — The Pathway to Unparalleled</span>
+    <p>Before we get into the forces shaping healthcare, take a moment with this map. It's called the Pathway to Unparalleled — and it's how Houston Methodist sees the bigger picture. Mission at the center. Values along the path. The forces of change ahead. And the people, the research, the patient care, the community work that all of it leads to.</p>
+    <p>This is where we're going. The five cards in front of you are a closer look at the forces driving us there.</p>
+
+    <p>Healthcare isn't standing still. And neither is Houston Methodist.</p>
+    <p>Five forces are reshaping this industry right now — and understanding them isn't just context. It's the reason everything we've covered in this module matters.</p>
+    <p>Each card in front of you names one of those forces. Flip it to see what it means, how it connects to the behaviors, values, and development tools you've been exploring — and how Houston Methodist responds.</p>
+    <p>This isn't a threat briefing. It's the context for why your growth, your <span class="no-break">I CARE</span> behaviors, and your leadership matter at an organizational level.</p>
+
+    <span class="tp-cue-label">On flip — Competition &amp; Consumerism</span>
+    <p>Patients have more choices than ever. Loyalty isn't given — it's earned at every touchpoint. The Customer Focus competency you explored in the Leadership Behaviors Model, your AIDET skills, the 10/5 Rule — these are how Houston Methodist competes. Every interaction either builds trust or erodes it.</p>
+
+    <span class="tp-cue-label">On flip — Technology &amp; Access</span>
+    <p>Care is moving into new places — virtually, at home, on devices. This is exactly what Change and Innovation in the Leadership Behaviors Model prepares you for. Adapting when things shift. Welcoming new tools. Using feedback to improve. The 70% of your development that happens through on-the-job experience includes navigating change before it feels comfortable.</p>
+
+    <span class="tp-cue-label">On flip — Transparency</span>
+    <p>Quality scores and outcomes are public. Every behavior shows up in the data eventually. This is why Safety and Quality and Integrity aren't just words — they're what shows up in HCAHPS scores and public outcomes. Your daily behaviors contribute directly to Houston Methodist's reputation and to the trust patients place in us.</p>
+
+    <span class="tp-cue-label">On flip — Patient Expectations</span>
+    <p>Patients remember how they felt. The clinical outcome matters — and so does every moment around it. This is the whole point of AIDET, Manage Up, and the service standards you revisited earlier. Compassion and Respect from <span class="no-break">I CARE</span> aren't soft skills. They're how Houston Methodist meets a rising bar — and every role shapes the patient experience, whether or not you touch the patient directly.</p>
+
+    <span class="tp-cue-label">On flip — Workforce Expectations</span>
+    <p>Today's employees expect purpose, inclusion, and real opportunities to grow. This force is answered by everything in this module — the Leadership Behaviors Model, the Focal Point Review, the 70-20-10 framework, and Culture and Engagement behaviors that make sure every voice is heard. You chose Houston Methodist. Houston Methodist has to keep earning that choice.</p>
+  </div>
+</div>
+
+<!-- DEV OVERLAY -->
+<div class="dev-overlay" id="devOverlay">
+  <div class="dev-title">Timing Dev Panel <span>Press D to close</span></div>
+  <div class="dev-now-playing" id="devNowPlaying">
+    <span class="dev-now-dot"></span>
+    <span id="devNowLabel">Waiting...</span>
+  </div>
+  <div class="dev-time" id="devTime">0.0s</div>
+  <ul class="dev-cue-list" id="devCueList"></ul>
+  <div class="dev-btns">
+    <button class="dev-btn" onclick="devRestart()">↺ Restart</button>
+    <button class="dev-btn" onclick="devPlayPause()">⏯ Play / Pause</button>
+    <button class="dev-btn" onclick="devSkipToCards()">⏭ Show cards</button>
+  </div>
+</div>
+
+<script>
+/* ── TRANSCRIPT ─────────────────────────────────────── */
+function toggleTranscript() {
+  document.getElementById('transcriptPanel').classList.toggle('open');
+}
+document.getElementById('transcriptTab').addEventListener('click', toggleTranscript);
+
+/* ── NAV ────────────────────────────────────────────── */
+function navNext() { window.parent.postMessage('next', '*'); }
+function navPrev() { window.parent.postMessage('prev', '*'); }
+
+/* ── AUDIO ──────────────────────────────────────────── */
+const audioPreamble = document.getElementById('audioPreamble');
+const audioMain = document.getElementById('audioMain');
+const cardAudios = [0,1,2,3,4].map(i => document.getElementById('audioCard' + i));
+let audioStarted = false;
+
+function startAudio() {
+  if (audioStarted) return;
+  audioStarted = true;
+  // Start with the preamble; main VO chains in on `ended`
+  audioPreamble.play().then(() => {
+    updateDevNow('Preamble (audio_14-6) playing');
+  }).catch((err) => {
+    // Autoplay blocked — keep overlay visible, will start on first user click
+    updateDevNow('Preamble blocked — click to start');
+    audioStarted = false;
+  });
+}
+
+// When preamble ends, dismiss the overlay and play the main VO
+audioPreamble.addEventListener('ended', () => {
+  dismissPreamble();
+});
+
+// If the preamble audio fails to load (404 / missing file), skip straight to main
+audioPreamble.addEventListener('error', () => {
+  updateDevNow('Preamble audio missing — skipping to main');
+  dismissPreamble();
+});
+
+function dismissPreamble() {
+  const overlay = document.getElementById('preambleOverlay');
+  if (overlay) overlay.classList.add('hidden');
+  audioMain.play().catch(() => {});
+  updateDevNow('Main VO (audio_14)');
+}
+
+window.addEventListener('load', () => {
+  startAudio();
+  document.addEventListener('click', startAudio, { once: true });
+});
+
+function stopCardAudio() {
+  cardAudios.forEach(a => { a.pause(); a.currentTime = 0; });
+}
+
+// Shell sends 'playAudio' when this slide becomes active — restart from preamble
+window.addEventListener('message', function(e) {
+  const d = e.data;
+  if (d === 'playAudio' || (d && d.type === 'playAudio')) {
+    audioStarted = false;
+    audioPreamble.pause(); audioPreamble.currentTime = 0;
+    audioMain.pause();     audioMain.currentTime = 0;
+    stopCardAudio();
+    const overlay = document.getElementById('preambleOverlay');
+    if (overlay) overlay.classList.remove('hidden');
+    startAudio();
+  }
+});
+
+/* ── CARD FLIP ──────────────────────────────────────── */
+const flipped = new Set();
+const total = 5;
+const forceLabels = [
+  'Competition & Consumerism (audio_14-1)',
+  'Technology & Access (audio_14-2)',
+  'Transparency (audio_14-3)',
+  'Patient Expectations (audio_14-4)',
+  'Workforce Expectations (audio_14-5)'
+];
+
+function flipCard(i) {
+  if (flipped.has(i)) return;
+  if (!document.getElementById('card-' + i).classList.contains('visible')) return;
+  flipped.add(i);
+  document.getElementById('card-' + i).classList.add('flipped');
+
+  audioMain.pause();
+  stopCardAudio();
+  cardAudios[i].play().catch(() => {});
+  updateDevNow(forceLabels[i]);
+
+  const n = flipped.size;
+  document.getElementById('flipCount').textContent = n;
+  document.getElementById('progressCount').textContent = n;
+  document.getElementById('flipFill').style.width = (n / total * 100) + '%';
+
+  if (n === total) {
+    document.getElementById('continueBtn').classList.add('unlocked');
+  }
+}
+
+/* ── AUDIO-CUED CARD REVEALS ────────────────────────── */
+const CUES = [
+  { at: 0.0,  label: 'Main VO begins',                          do: null },
+  { at: 3.0,  label: '[UPDATE] Card 1 appears — Competition',   do: () => document.getElementById('card-0').classList.add('visible') },
+  { at: 4.2,  label: '[UPDATE] Card 2 appears — Technology',    do: () => document.getElementById('card-1').classList.add('visible') },
+  { at: 5.4,  label: '[UPDATE] Card 3 appears — Transparency',  do: () => document.getElementById('card-2').classList.add('visible') },
+  { at: 6.6,  label: '[UPDATE] Card 4 appears — Patient Exp.',  do: () => document.getElementById('card-3').classList.add('visible') },
+  { at: 7.8,  label: '[UPDATE] Card 5 appears — Workforce',     do: () => document.getElementById('card-4').classList.add('visible') },
+];
+
+const cueFired = CUES.map(() => false);
+
+function checkCues() {
+  const t = audioMain.currentTime;
+  CUES.forEach((c, i) => {
+    if (!cueFired[i] && t >= c.at) {
+      cueFired[i] = true;
+      if (c.do) c.do();
+      const item = document.querySelectorAll('.dev-cue-item')[i];
+      if (item) item.classList.add('fired');
+    }
+  });
+}
+
+function tick() {
+  checkCues();
+  const active = audioMain.paused ? (cardAudios.find(a => !a.paused) || audioMain) : audioMain;
+  const el = document.getElementById('devTime');
+  if (el) el.textContent = active.currentTime.toFixed(1) + 's';
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+/* ── AUDIO PLAYER UI ────────────────────────────────── */
+const apBtn      = document.getElementById('apBtn');
+const iconPlay   = document.getElementById('iconPlay');
+const iconPause  = document.getElementById('iconPause');
+const apBarFill  = document.getElementById('apBarFill');
+const apBarWrap  = document.getElementById('apBarWrap');
+const apCurrent  = document.getElementById('apCurrent');
+const apDuration = document.getElementById('apDuration');
+
+function fmtTime(s) {
+  if (!isFinite(s)) return '0:00';
+  return Math.floor(s/60) + ':' + Math.floor(s%60).toString().padStart(2,'0');
+}
+function updatePlayer() {
+  const dur = audioMain.duration || 0, cur = audioMain.currentTime || 0;
+  apBarFill.style.width  = (dur > 0 ? cur/dur*100 : 0) + '%';
+  apCurrent.textContent  = fmtTime(cur);
+  apDuration.textContent = fmtTime(dur);
+  const anyPlaying = !audioMain.paused || cardAudios.some(a => !a.paused);
+  iconPlay.style.opacity  = anyPlaying ? '0' : '1';
+  iconPause.style.opacity = anyPlaying ? '1' : '0';
+}
+apBtn.addEventListener('click', () => {
+  if (audioMain.paused && cardAudios.every(a => a.paused)) {
+    stopCardAudio(); audioMain.play().catch(() => {}); updateDevNow('Main VO (audio_14)');
+  } else { audioMain.pause(); stopCardAudio(); }
+  updatePlayer();
+});
+audioMain.addEventListener('timeupdate',     updatePlayer);
+audioMain.addEventListener('loadedmetadata', updatePlayer);
+audioMain.addEventListener('play',           updatePlayer);
+audioMain.addEventListener('pause',          updatePlayer);
+apBarWrap.addEventListener('click', e => {
+  const pct = (e.clientX - apBarWrap.getBoundingClientRect().left) / apBarWrap.offsetWidth;
+  if (audioMain.duration > 0) audioMain.currentTime = pct * audioMain.duration;
+});
+cardAudios.forEach(clip => {
+  clip.addEventListener('play',  updatePlayer);
+  clip.addEventListener('pause', updatePlayer);
+  clip.addEventListener('ended', updatePlayer);
+});
+
+/* ── DEV OVERLAY ────────────────────────────────────── */
+(function buildDevCueList() {
+  const list = document.getElementById('devCueList');
+  CUES.forEach(c => {
+    const li = document.createElement('li');
+    li.className = 'dev-cue-item';
+    li.innerHTML = '<span class="dev-cue-dot"></span><span class="dev-cue-time">' + c.at.toFixed(1) + 's</span><span class="dev-cue-label">' + c.label + '</span>';
+    list.appendChild(li);
+  });
+})();
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'd' || e.key === 'D') {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    document.getElementById('devOverlay').classList.toggle('visible');
+  }
+});
+
+function updateDevNow(label) { document.getElementById('devNowLabel').textContent = label; }
+
+function devRestart() {
+  audioMain.currentTime = 0; cueFired.fill(false); stopCardAudio();
+  for (let i = 0; i < 5; i++) {
+    const c = document.getElementById('card-' + i);
+    c.classList.remove('visible','flipped');
+  }
+  flipped.clear();
+  document.getElementById('flipCount').textContent = '0';
+  document.getElementById('progressCount').textContent = '0';
+  document.getElementById('flipFill').style.width = '0%';
+  document.getElementById('continueBtn').classList.remove('unlocked');
+  document.querySelectorAll('.dev-cue-item').forEach(el => el.classList.remove('fired'));
+  audioMain.play().catch(() => {});
+  updateDevNow('Main VO (audio_14)');
+}
+function devPlayPause() {
+  const active = cardAudios.find(a => !a.paused) || audioMain;
+  if (active.paused) active.play().catch(() => {}); else active.pause();
+}
+function devSkipToCards() {
+  audioMain.pause();
+  for (let i = 0; i < 5; i++) document.getElementById('card-' + i).classList.add('visible');
+  updateDevNow('Ready for card flips');
+}
+</script>
+</body>
+</html>
